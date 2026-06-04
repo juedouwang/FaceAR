@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>PartyFaceAR MediaPipe</title>
+    <link rel="stylesheet" href="./src/styles.css">
+    <script src="./vendor/jeeliz/libs/three/v112/three.min.js"></script>
+    <script src="./vendor/three/examples/js/loaders/GLTFLoader.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="stage" aria-label="MediaPipe AR preview">
+        <video id="inputVideo" class="verify-video" muted playsinline loop preload="auto"></video>
+        <canvas id="arCanvas" width="960" height="720"></canvas>
+        <canvas id="beautyCanvas" width="960" height="720"></canvas>
+        <div id="facePickerOverlay" class="face-picker-overlay" aria-label="Clickable face selector"></div>
+        <div class="status-bar" id="statusBar">Initializing MediaPipe AR...</div>
+      </section>
+
+      <aside class="control-panel">
+        <header>
+          <p class="eyebrow">Web AR Demo</p>
+          <h1>PartyFaceAR</h1>
+          <p class="subtitle">Multi-face differentiated AR effects powered by MediaPipe Face Landmarker.</p>
+        </header>
+
+        <div class="control-group">
+          <label for="inputMode">Input</label>
+          <div class="segmented" id="inputMode">
+            <button type="button" data-input-mode="camera">Camera</button>
+            <button type="button" class="is-active" data-input-mode="video">Video</button>
+          </div>
+          <input id="videoFileInput" class="file-input" type="file" accept="video/*">
+        </div>
+
+        <div class="control-group">
+          <label for="assignmentMode">Assignment</label>
+          <div class="segmented" id="assignmentMode">
+            <button type="button" class="is-active" data-assignment-mode="auto">Auto</button>
+            <button type="button" data-assignment-mode="manual">Manual</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="manualSlot">Manual effect binding</label>
+          <div class="selected-face-summary" id="selectedFaceLabel">Selected face: none</div>
+          <div class="manual-grid">
+            <select id="manualSlot" aria-label="Face slot"></select>
+            <select id="manualEffect" aria-label="Effect"></select>
+          </div>
+        </div>
+
+        <div class="control-group identity-panel">
+          <label for="referenceFaceInput">Identity binding</label>
+          <div class="identity-grid">
+            <input id="referenceNameInput" class="text-input" type="text" value="Person A" aria-label="Reference person name">
+            <select id="referenceEffect" aria-label="Reference effect"></select>
+          </div>
+          <input id="referenceFaceInput" class="file-input" type="file" accept="image/*">
+          <button type="button" id="registerReferenceButton" class="wide-button">Register reference face</button>
+          <div id="referencePeopleList" class="reference-list" aria-label="Registered reference people"></div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" id="toggleEffectsButton">Hide effects</button>
+          <button type="button" id="resetBindingsButton">Reset bindings</button>
+        </div>
+
+        <section class="debug-panel" aria-label="Tracking debug panel">
+          <div class="debug-kpis">
+            <div><span id="faceCount">0</span><small>faces</small></div>
+            <div><span id="fpsValue">0</span><small>fps</small></div>
+            <div><span id="modeValue">auto</span><small>mode</small></div>
+          </div>
+          <div class="slot-meter" id="slotMeter" aria-label="MediaPipe face slots"></div>
+          <div id="trackList" class="track-list"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/mediapipeApp.js"></script>
+  </body>
+</html>

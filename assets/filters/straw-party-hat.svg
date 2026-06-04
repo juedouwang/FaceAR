@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs>
+    <radialGradient id="straw" cx="50%" cy="38%" r="68%">
+      <stop offset="0" stop-color="#ffe4a3"/>
+      <stop offset="0.58" stop-color="#d99a3d"/>
+      <stop offset="1" stop-color="#7a4617"/>
+    </radialGradient>
+    <linearGradient id="brim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6c3d15"/>
+      <stop offset="0.16" stop-color="#e2a94b"/>
+      <stop offset="0.5" stop-color="#ffe9a9"/>
+      <stop offset="0.84" stop-color="#d68c32"/>
+      <stop offset="1" stop-color="#653710"/>
+    </linearGradient>
+    <filter id="hatShadow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000" flood-opacity="0.34"/>
+    </filter>
+    <pattern id="weave" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(23)">
+      <path d="M0 16 H34 M16 0 V34" stroke="#8a551d" stroke-width="3" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <g filter="url(#hatShadow)">
+    <ellipse cx="450" cy="375" rx="408" ry="74" fill="url(#brim)"/>
+    <path d="M196 351 C234 144 320 58 450 54 C580 58 666 144 704 351 C585 397 315 397 196 351Z" fill="url(#straw)"/>
+    <path d="M196 351 C234 144 320 58 450 54 C580 58 666 144 704 351 C585 397 315 397 196 351Z" fill="url(#weave)" opacity="0.78"/>
+    <path d="M205 271 C330 307 570 307 695 271 L691 339 C567 382 333 382 209 339Z" fill="#8b1725"/>
+    <path d="M238 268 C353 292 547 292 662 268" stroke="#f9c2c9" stroke-width="14" opacity="0.42"/>
+    <ellipse cx="450" cy="375" rx="408" ry="74" fill="none" stroke="#fff2bd" stroke-width="18" opacity="0.45"/>
+  </g>
+</svg>

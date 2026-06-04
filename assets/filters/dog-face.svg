@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640">
+  <defs>
+    <linearGradient id="ear" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a86533"/>
+      <stop offset="1" stop-color="#5b2f19"/>
+    </linearGradient>
+    <linearGradient id="innerEar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4b58d"/>
+      <stop offset="1" stop-color="#a45b41"/>
+    </linearGradient>
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <g filter="url(#softShadow)">
+    <path d="M252 51 C145 76 93 175 116 294 C142 353 212 320 250 241 C286 165 316 75 252 51Z" fill="url(#ear)"/>
+    <path d="M648 51 C755 76 807 175 784 294 C758 353 688 320 650 241 C614 165 584 75 648 51Z" fill="url(#ear)"/>
+    <path d="M242 99 C181 124 155 188 166 260 C203 255 237 206 260 130Z" fill="url(#innerEar)" opacity="0.72"/>
+    <path d="M658 99 C719 124 745 188 734 260 C697 255 663 206 640 130Z" fill="url(#innerEar)" opacity="0.72"/>
+    <path d="M354 395 C389 348 511 348 546 395 C556 444 507 486 450 486 C393 486 344 444 354 395Z" fill="#b77744"/>
+    <ellipse cx="450" cy="384" rx="78" ry="46" fill="#77431f"/>
+    <ellipse cx="450" cy="376" rx="44" ry="25" fill="#2a1b15"/>
+    <path d="M450 397 C446 444 415 466 374 471" stroke="#4a2a18" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <path d="M450 397 C454 444 485 466 526 471" stroke="#4a2a18" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <path d="M430 484 C446 528 482 527 496 485 C480 497 447 497 430 484Z" fill="#ff6b8b"/>
+    <path d="M330 415 C260 395 214 388 155 394" stroke="#4a2a18" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+    <path d="M570 415 C640 395 686 388 745 394" stroke="#4a2a18" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+  </g>
+</svg>

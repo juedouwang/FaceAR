@@ -1,0 +1,2141 @@
+{
+  "baseUrl": "http://127.0.0.1:8000",
+  "seconds": 8,
+  "sampleFps": 4,
+  "results": [
+    {
+      "sample": "party-hats-crop-wide_faces.webm",
+      "url": "./samples/party-hats-crop-wide_faces.webm",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 4,
+      "averageFaces": 4,
+      "twoPlusFrames": 33,
+      "threePlusFrames": 33,
+      "twoPlusRatio": 1,
+      "threePlusRatio": 1,
+      "countHistogram": {
+        "4": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 0.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 0.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 0.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 1,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 1.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 1.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 1.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 2,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 2.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 2.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 2.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 3,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 3.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 3.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 3.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 4,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 4.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 4.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 4.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 5.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 5.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 5.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 6,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 6.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 6.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 6.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 7,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 7.25,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 7.5,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 7.75,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        },
+        {
+          "time": 8,
+          "faceCount": 4,
+          "blendshapeCount": 4,
+          "matrixCount": 4
+        }
+      ],
+      "elapsedMs": 12391
+    },
+    {
+      "sample": "birthday-party-hats-mixkit-4608.mp4",
+      "url": "./samples/birthday-party-hats-mixkit-4608.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 3,
+      "averageFaces": 3,
+      "twoPlusFrames": 33,
+      "threePlusFrames": 33,
+      "twoPlusRatio": 1,
+      "threePlusRatio": 1,
+      "countHistogram": {
+        "3": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 0.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 0.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 0.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 1,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 1.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 1.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 1.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 2,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 2.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 2.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 2.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 3,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 3.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 3.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 3.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 4,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 4.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 4.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 4.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 5.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 5.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 5.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 6,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 6.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 6.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 6.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 7,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 7.25,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 7.5,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 7.75,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        },
+        {
+          "time": 8,
+          "faceCount": 3,
+          "blendshapeCount": 3,
+          "matrixCount": 3
+        }
+      ],
+      "elapsedMs": 10895
+    },
+    {
+      "sample": "friends-selfie-pool-mixkit-43089.mp4",
+      "url": "./samples/friends-selfie-pool-mixkit-43089.mp4",
+      "duration": 5.172,
+      "sampleFps": 4,
+      "frames": 21,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 21
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 5387
+    },
+    {
+      "sample": "friends-group-selfie-mixkit-45657.mp4",
+      "url": "./samples/friends-group-selfie-mixkit-45657.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 2406
+    },
+    {
+      "sample": "friends-smiling-camera-mixkit-5891.mp4",
+      "url": "./samples/friends-smiling-camera-mixkit-5891.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 2394
+    },
+    {
+      "sample": "friends-window-selfie-mixkit-8780.mp4",
+      "url": "./samples/friends-window-selfie-mixkit-8780.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 4994
+    },
+    {
+      "sample": "nightclub-two-girls-mixkit-42292.mp4",
+      "url": "./samples/nightclub-two-girls-mixkit-42292.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 5110
+    },
+    {
+      "sample": "pexels-three-friends-selfie-35050402.mp4",
+      "url": "./samples/pexels-three-friends-selfie-35050402.mp4",
+      "duration": 5.2,
+      "sampleFps": 4,
+      "frames": 21,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 21
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 5621
+    },
+    {
+      "sample": "pexels-group-friends-5708805.mp4",
+      "url": "./samples/pexels-group-friends-5708805.mp4",
+      "duration": 3.455,
+      "sampleFps": 4,
+      "frames": 14,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 14
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 3310
+    },
+    {
+      "sample": "pexels-group-selfie-6214756.mp4",
+      "url": "./samples/pexels-group-selfie-6214756.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 4783
+    },
+    {
+      "sample": "pexels-friends-party-5529160.mp4",
+      "url": "./samples/pexels-friends-party-5529160.mp4",
+      "duration": 8,
+      "sampleFps": 4,
+      "frames": 33,
+      "maxFaces": 0,
+      "averageFaces": 0,
+      "twoPlusFrames": 0,
+      "threePlusFrames": 0,
+      "twoPlusRatio": 0,
+      "threePlusRatio": 0,
+      "countHistogram": {
+        "0": 33
+      },
+      "samples": [
+        {
+          "time": 0,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 0.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 1.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 2.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 3.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 4.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 5.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 6.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.25,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.5,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 7.75,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        },
+        {
+          "time": 8,
+          "faceCount": 0,
+          "blendshapeCount": 0,
+          "matrixCount": 0
+        }
+      ],
+      "elapsedMs": 2786
+    },
+    {
+      "sample": "pexels-group-selfie-crop-6214756.mp4",
+      "url": "./samples/pexels-group-selfie-crop-6214756.mp4",
+      "error": "PipelineStatus::DEMUXER_ERROR_NO_SUPPORTED_STREAMS: FFmpegDemuxer: no supported streams"
+    }
+  ]
+}

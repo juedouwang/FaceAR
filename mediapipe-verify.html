@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>MediaPipe Face Verification</title>
+    <link rel="stylesheet" href="./src/styles.css">
+  </head>
+  <body>
+    <main class="app-shell verify-shell">
+      <section class="stage" aria-label="MediaPipe verification preview">
+        <video id="verifyVideo" class="verify-video" muted playsinline preload="auto"></video>
+        <canvas id="verifyCanvas" width="960" height="720"></canvas>
+        <div class="status-bar" id="verifyStatus">Initializing MediaPipe...</div>
+      </section>
+
+      <aside class="control-panel">
+        <header>
+          <p class="eyebrow">Engine Verification</p>
+          <h1>MediaPipe Check</h1>
+          <p class="subtitle">Batch-screen real videos for simultaneous multi-face landmark detection.</p>
+        </header>
+
+        <div class="control-group">
+          <label for="videoUrlInput">Video URL</label>
+          <input id="videoUrlInput" class="text-input" type="text" value="./samples/friends-selfie-pool-mixkit-43089.mp4">
+        </div>
+
+        <div class="manual-grid">
+          <div class="control-group">
+            <label for="sampleSecondsInput">Seconds</label>
+            <input id="sampleSecondsInput" class="text-input" type="number" min="1" max="30" step="1" value="8">
+          </div>
+          <div class="control-group">
+            <label for="sampleFpsInput">Sample FPS</label>
+            <input id="sampleFpsInput" class="text-input" type="number" min="1" max="12" step="1" value="4">
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="button" id="runVerifyButton">Run check</button>
+        </div>
+
+        <section class="debug-panel" aria-label="MediaPipe detection stats">
+          <div class="debug-kpis">
+            <div><span id="mpMaxFaces">0</span><small>max faces</small></div>
+            <div><span id="mpThreeFaceRatio">0%</span><small>3+ ratio</small></div>
+            <div><span id="mpFrames">0</span><small>frames</small></div>
+          </div>
+          <div id="mpStats" class="track-list"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/mediapipeVerify.js"></script>
+  </body>
+</html>

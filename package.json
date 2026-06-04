@@ -1,0 +1,27 @@
+{
+  "name": "party-face-ar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-face differentiated AR effect demo using MediaPipe tracking and Jeeliz/WebAR-style effects.",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "node tests/run-tests.mjs",
+    "screen:mediapipe": "node tools/run-mediapipe-video-screening.mjs",
+    "verify:mediapipe-ar": "node tools/verify-mediapipe-ar.mjs",
+    "verify:manual-binding": "node tools/verify-manual-face-binding.mjs",
+    "verify:identity-binding": "node tools/verify-identity-binding.mjs",
+    "verify:identity-negative": "node tools/verify-identity-negative.mjs",
+    "profile:mediapipe-ar": "node tools/profile-mediapipe-ar.mjs",
+    "verify:all": "npm test && npm run screen:mediapipe && npm run verify:mediapipe-ar && npm run verify:manual-binding && npm run verify:identity-binding && npm run verify:identity-negative && npm run profile:mediapipe-ar"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "@vladmandic/face-api": "^1.7.15",
+    "face-api.js": "^0.22.2"
+  }
+}
