@@ -1,6 +1,6 @@
 # Deployment
 
-PartyFaceAR is a static web app. It does not require an application server, database, or API backend.
+PersonaShield is a static web app. It does not require an application server, database, cloud face API, or API backend.
 
 For the current course delivery, local preview is the accepted deployment mode. GitHub Pages, Vercel, or Netlify are
 optional future/public sharing paths, not required deliverables.
@@ -14,14 +14,14 @@ python -m http.server 8000
 
 Open:
 
-- Main MediaPipe demo: <http://127.0.0.1:8000/mediapipe-ar.html>
-- Jeeliz prototype: <http://127.0.0.1:8000/>
+- Main PersonaShield prototype: <http://127.0.0.1:8000/mediapipe-ar.html>
+- Root redirect: <http://127.0.0.1:8000/>
 
 Camera mode must run on `localhost`, `127.0.0.1`, or HTTPS because browser camera access requires a secure context.
 
 ## GitHub Pages
 
-This repository includes `.github/workflows/pages.yml`. If `PartyFaceAR` is pushed as the root of a standalone GitHub
+This repository includes `.github/workflows/pages.yml`. If this folder is pushed as the root of a standalone GitHub
 repository, the workflow deploys the static site automatically.
 
 1. Push this directory as the root of a GitHub repository.

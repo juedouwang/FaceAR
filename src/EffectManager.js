@@ -6,7 +6,7 @@ export class EffectManager {
     this.maxFaces = maxFaces;
     this.definitions = EFFECT_DEFINITIONS;
     this.assignmentMode = "auto";
-    this.effectProfile = "showcase";
+    this.effectProfile = "privacy";
     this.effectsVisible = true;
     this.manualBindings = new Map();
     this.manualTrackBindings = new Map();
@@ -29,7 +29,7 @@ export class EffectManager {
   }
 
   setEffectProfile(profile) {
-    this.effectProfile = ["stable", "showcase", "cinematic"].includes(profile) ? profile : "showcase";
+    this.effectProfile = ["privacy", "stable", "showcase", "cinematic"].includes(profile) ? profile : "privacy";
     this.trackBindings.clear();
     this.refreshAll();
   }
@@ -272,6 +272,9 @@ function facePriority(track) {
 }
 
 function getAutoEffectPool(effectProfile) {
+  if (effectProfile === "privacy" || effectProfile === "stable" || effectProfile === "showcase") {
+    return ["privacyAllow"];
+  }
   if (effectProfile === "stable") {
     return ["glasses", "partyGlasses", "makeup"];
   }
@@ -282,6 +285,9 @@ function getAutoEffectPool(effectProfile) {
 }
 
 function getPreferredEffects(track, index, effectProfile = "stable") {
+  if (effectProfile === "privacy" || effectProfile === "stable" || effectProfile === "showcase") {
+    return ["privacyAllow"];
+  }
   if (effectProfile === "cinematic") {
     return getCinematicPreferredEffects(track, index);
   }
@@ -372,6 +378,9 @@ function getCinematicPreferredEffects(track, index) {
 }
 
 function isEffectSafeForTrack(effectId, track, index) {
+  if (["privacyAllow", "avatarMale", "avatarFemale", "privacyBlur"].includes(effectId)) {
+    return true;
+  }
   const x = Math.abs(track.x ?? 0);
   const size = track.s ?? 0;
   const partialOrEdgeFace = isPartialOrEdgeFace(track);
@@ -433,10 +442,7 @@ function distance2D(a, b) {
 }
 
 function getSafeFallbackEffect(track) {
-  if (isPartialOrEdgeFace(track)) {
-    return "makeup";
-  }
-  return "glasses";
+  return "privacyAllow";
 }
 
 export const __effectManagerTestHooks = {

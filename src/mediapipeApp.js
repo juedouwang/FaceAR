@@ -75,6 +75,7 @@ const faceOverlay = new LandmarkFaceOverlay({
   canvas: beautyCanvas,
   maxFaces: SETTINGS.maxFaces
 });
+faceOverlay.setVisible(false);
 const effectManager = new EffectManager({ THREE: window.THREE, maxFaces: SETTINGS.maxFaces });
 const referenceFaceManager = new ReferenceFaceManager({ effectDefinitions: effectManager.definitions });
 const recognizer = new FaceApiIdentityRecognizer({
@@ -99,8 +100,11 @@ window.__PARTY_FACE_AR_MEDIAPIPE__ = {
   identity: null
 };
 window.__PARTY_FACE_AR_MEDIAPIPE_API__ = {
-  registerReferenceFromTrack: registerReferenceFromTrackForVerification
+  registerReferenceFromTrack: registerReferenceFromTrackForVerification,
+  captureProtectedFrame
 };
+window.__PERSONA_SHIELD__ = window.__PARTY_FACE_AR_MEDIAPIPE__;
+window.__PERSONA_SHIELD_API__ = window.__PARTY_FACE_AR_MEDIAPIPE_API__;
 
 effectManager.attachToFaceObjects(renderer.faceObjects);
 
@@ -108,12 +112,12 @@ ui.bindHandlers({
   onInputModeChange: handleInputModeChange,
   onAssignmentModeChange: (mode) => {
     effectManager.setAssignmentMode(mode);
-    ui.setStatus(`Assignment mode: ${mode}`);
+    ui.setStatus(`Privacy action assignment mode: ${mode}`);
   },
   onFaceSelect: (track) => {
     effectManager.setAssignmentMode("manual");
     ui.setAssignmentMode?.("manual");
-    ui.setStatus(`Selected Track ${track.id} / Face ${track.slotIndex + 1}. Choose an effect to bind.`);
+    ui.setStatus(`Selected Track ${track.id} / Face ${track.slotIndex + 1}. Choose a privacy action.`);
   },
   onManualBindingChange: (target, effectId) => {
     effectManager.setAssignmentMode("manual");
@@ -121,13 +125,12 @@ ui.bindHandlers({
     effectManager.bindManualEffect(target, effectId);
     const effect = effectManager.getEffectDefinition(effectId);
     const trackLabel = Number.isFinite(target?.trackId) ? `track ${target.trackId}` : `face ${Number(target?.slotIndex ?? target) + 1}`;
-    ui.setStatus(`Manual binding: ${trackLabel} -> ${effect.label}`);
+    ui.setStatus(`Manual privacy action: ${trackLabel} -> ${effect.label}`);
   },
   onVideoFileChange: handleVideoFileChange,
   onToggleEffects: () => {
     appState.effectsVisible = !appState.effectsVisible;
     effectManager.setEffectsVisible(appState.effectsVisible);
-    faceOverlay.setVisible(appState.effectsVisible);
     ui.setEffectsButton(appState.effectsVisible);
   },
   onResetBindings: () => {
@@ -135,7 +138,7 @@ ui.bindHandlers({
     effectManager.resetBindings();
     identityTrackBinder.reset();
     ui.renderIdentityState(identityTrackBinder.getDebugState([]));
-    ui.setStatus("Bindings reset. Tracks will be rebuilt from the next detected faces.");
+    ui.setStatus("Bindings reset. Privacy decisions will be rebuilt from the next detected faces.");
   },
   onReferenceFaceRegister: handleReferenceFaceRegister,
   onReferenceEffectChange: (personId, effectId) => {
@@ -145,7 +148,7 @@ ui.bindHandlers({
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
     if (person) {
-      ui.setStatus(`Updated ${person.name}: ${person.effectLabel}`);
+      ui.setStatus(`Updated ${person.name}: ${person.actionLabel ?? person.effectLabel}`);
     }
   },
   onReferenceRemove: (personId) => {
@@ -154,15 +157,16 @@ ui.bindHandlers({
     identityTrackBinder.reset();
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
-    ui.setStatus("Reference face removed. Identity tracks will be rebuilt.");
-  }
+    ui.setStatus("Protected identity removed. Identity tracks will be rebuilt.");
+  },
+  onCaptureFrame: captureProtectedFrame
 });
 
 window.addEventListener("resize", resizeCanvas);
 
 window.addEventListener("load", async () => {
   try {
-    ui.setStatus("Loading MediaPipe Face Landmarker...");
+    ui.setStatus("Loading privacy-aware face tracking...");
     const params = new URLSearchParams(window.location.search);
     applyRuntimeParams(params);
     await initDetectionBackend();
@@ -199,7 +203,7 @@ async function handleInputModeChange(mode) {
   if (mode === "camera") {
     await startWithCamera();
   } else {
-    ui.setStatus("Choose a local video file with 3-4 visible faces.");
+    ui.setStatus("Choose a local video file with visible faces.");
     document.getElementById("videoFileInput").click();
   }
 }
@@ -223,7 +227,7 @@ async function handleReferenceFaceRegister({ name, effectId, file }) {
     return;
   }
   try {
-    ui.setStatus("Detecting the reference face...");
+    ui.setStatus("Detecting the reference face locally...");
     const { descriptor, imageDataUrl } = await recognizer.createReferenceDescriptorFromFile(file);
     const person = referenceFaceManager.addPerson({
       name,
@@ -235,7 +239,7 @@ async function handleReferenceFaceRegister({ name, effectId, file }) {
     identityTrackBinder.reset();
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
-    ui.setStatus(`Registered ${person.name}: ${person.effectLabel}`);
+    ui.setStatus(`Registered ${person.name}: ${person.actionLabel ?? person.effectLabel}`);
   } catch (error) {
     ui.setStatus(`Reference registration failed: ${error.message}`);
   }
@@ -252,7 +256,7 @@ async function initDetectionBackend() {
     try {
       await initDetectorWorker();
       appState.detectionBackend = "worker";
-      ui.setStatus("MediaPipe detector running in a worker.");
+      ui.setStatus("Face detector running in a worker.");
       return;
     } catch (error) {
       console.warn("MediaPipe worker detector failed; falling back to main thread:", error);
@@ -465,6 +469,7 @@ function renderFrame() {
     detectionBackend: appState.detectionBackend,
     identity: identityState
   };
+  window.__PERSONA_SHIELD__ = window.__PARTY_FACE_AR_MEDIAPIPE__;
 
   appState.animationId = requestAnimationFrame(renderFrame);
 }
@@ -489,6 +494,27 @@ async function registerReferenceFromTrackForVerification({ trackId, name, effect
   const identityState = identityTrackBinder.update(appState.latestPredictedTracks, performance.now(), { sourceElement: video });
   ui.renderIdentityState(identityState);
   return person;
+}
+
+function captureProtectedFrame() {
+  const width = video.videoWidth || canvas.width;
+  const height = video.videoHeight || canvas.height;
+  if (!width || !height) {
+    ui.setStatus("No video frame is available to capture yet.");
+    return "";
+  }
+
+  const output = document.createElement("canvas");
+  output.width = width;
+  output.height = height;
+  const context = output.getContext("2d");
+  context.drawImage(video, 0, 0, width, height);
+  context.drawImage(canvas, 0, 0, width, height);
+  context.drawImage(beautyCanvas, 0, 0, width, height);
+  const dataUrl = output.toDataURL("image/png");
+  ui.setProtectedFrame?.(dataUrl);
+  ui.setStatus("Protected frame captured from the privacy-processed output.");
+  return dataUrl;
 }
 
 function cropTrackImage(track) {

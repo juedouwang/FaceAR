@@ -1,4 +1,4 @@
-name: Deploy static PartyFaceAR demo
+name: Deploy static PersonaShield demo
 
 on:
   push:

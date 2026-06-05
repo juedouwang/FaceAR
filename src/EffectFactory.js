@@ -1,4 +1,37 @@
-export const EFFECT_DEFINITIONS = [
+const PRIVACY_ACTION_DEFINITIONS = [
+  {
+    id: "privacyAllow",
+    label: "Allow real appearance",
+    color: "#45e0a3",
+    category: "privacy",
+    privacyMode: "allow"
+  },
+  {
+    id: "avatarMale",
+    label: "Male digital substitute",
+    color: "#4cc9f0",
+    category: "privacy",
+    privacyMode: "replace",
+    avatarType: "male"
+  },
+  {
+    id: "avatarFemale",
+    label: "Female digital substitute",
+    color: "#f72585",
+    category: "privacy",
+    privacyMode: "replace",
+    avatarType: "female"
+  },
+  {
+    id: "privacyBlur",
+    label: "Privacy blur shield",
+    color: "#ffd166",
+    category: "privacy",
+    privacyMode: "blur"
+  }
+];
+
+const LEGACY_EFFECT_DEFINITIONS = [
   { id: "glasses", label: "Jeeliz mirrored sunglasses", color: "#4cc9f0" },
   { id: "partyGlasses", label: "Jeeliz party glasses", color: "#ffd166" },
   { id: "makeup", label: "Jeeliz face paint", color: "#f72585" },
@@ -10,6 +43,15 @@ export const EFFECT_DEFINITIONS = [
   { id: "helmet", label: "Jeeliz AR helmet", color: "#adb5bd" },
   { id: "anonymous", label: "Jeeliz full mask", color: "#f8f9fa" },
   { id: "crown", label: "Textured party hat", color: "#f8961e" }
+].map((definition) => ({
+  ...definition,
+  category: "legacy",
+  selectable: false
+}));
+
+export const EFFECT_DEFINITIONS = [
+  ...PRIVACY_ACTION_DEFINITIONS,
+  ...LEGACY_EFFECT_DEFINITIONS
 ];
 
 const ASSET_ROOT = "./assets/jeeliz";
@@ -18,6 +60,14 @@ const geometryCache = new Map();
 
 export function createEffect(effectId, THREE) {
   switch (effectId) {
+    case "privacyAllow":
+      return createPrivacyPassThrough(THREE);
+    case "avatarMale":
+      return createPrivacyAvatar(THREE, "male");
+    case "avatarFemale":
+      return createPrivacyAvatar(THREE, "female");
+    case "privacyBlur":
+      return createPrivacyBlurShield(THREE);
     case "glasses":
       return createJeelizGlasses(THREE);
     case "partyGlasses":
@@ -44,6 +94,199 @@ export function createEffect(effectId, THREE) {
     default:
       return createJeelizFacePaint(THREE);
   }
+}
+
+function createPrivacyPassThrough(THREE) {
+  const group = createEffectGroup(THREE, "effect-privacy-allow");
+  group.userData.update = () => {};
+  return group;
+}
+
+function createPrivacyAvatar(THREE, avatarType) {
+  const isFemale = avatarType === "female";
+  const group = createEffectGroup(THREE, `effect-digital-substitute-${avatarType}`);
+  group.userData.update = ({ anchors, faceObject }) => {
+    fitGroupToFaceMask(group, anchors, faceObject, {
+      x: 0,
+      y: -0.035,
+      z: 0.34,
+      scale: 1.62
+    });
+  };
+
+  const shield = new THREE.Mesh(
+    new THREE.SphereGeometry(0.42, 48, 24),
+    new THREE.MeshPhongMaterial({
+      color: isFemale ? 0xf7c8d8 : 0xb9d7f4,
+      shininess: 46,
+      specular: 0xffffff,
+      transparent: false,
+      depthWrite: false
+    })
+  );
+  shield.scale.set(1.02, 1.32, 0.14);
+  shield.position.set(0, -0.06, 0.26);
+  shield.renderOrder = 40;
+
+  const rim = new THREE.Mesh(
+    new THREE.TorusGeometry(0.42, 0.018, 12, 72),
+    new THREE.MeshBasicMaterial({
+      color: isFemale ? 0xff7aa8 : 0x45a3ff,
+      transparent: true,
+      opacity: 0.82,
+      depthWrite: false
+    })
+  );
+  rim.scale.set(1.02, 1.32, 0.1);
+  rim.position.set(0, -0.06, 0.285);
+  rim.renderOrder = 42;
+
+  const hairMaterial = new THREE.MeshPhongMaterial({
+    color: isFemale ? 0x2a1628 : 0x15243b,
+    shininess: 22,
+    specular: 0x111111,
+    depthWrite: false
+  });
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.43, 42, 18), hairMaterial);
+  hair.scale.set(isFemale ? 1.08 : 1.0, isFemale ? 0.68 : 0.42, 0.12);
+  hair.position.set(0, isFemale ? 0.31 : 0.39, 0.31);
+  hair.renderOrder = 43;
+
+  const eyeMaterial = new THREE.MeshBasicMaterial({
+    color: 0x111827,
+    transparent: true,
+    opacity: 0.9,
+    depthWrite: false
+  });
+  [-1, 1].forEach((side) => {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 8), eyeMaterial);
+    eye.scale.set(1.35, 0.58, 0.08);
+    eye.position.set(side * 0.14, 0.04, 0.43);
+    eye.renderOrder = 45;
+    group.add(eye);
+  });
+
+  const mouth = new THREE.Mesh(
+    new THREE.SphereGeometry(0.052, 18, 8),
+    new THREE.MeshBasicMaterial({
+      color: isFemale ? 0xd9467c : 0x2563eb,
+      transparent: true,
+      opacity: 0.78,
+      depthWrite: false
+    })
+  );
+  mouth.scale.set(1.8, 0.34, 0.08);
+  mouth.position.set(0, -0.2, 0.44);
+  mouth.renderOrder = 45;
+
+  const badge = createAvatarPrivacyBadge(THREE, isFemale);
+  badge.position.set(0, -0.48, 0.48);
+  badge.scale.setScalar(0.54);
+  badge.renderOrder = 46;
+
+  group.add(shield, rim, hair, mouth, badge);
+  group.userData.privacyMode = "replace";
+  group.userData.avatarType = avatarType;
+  return group;
+}
+
+function createPrivacyBlurShield(THREE) {
+  const group = createEffectGroup(THREE, "effect-privacy-blur-shield");
+  group.userData.update = ({ anchors, faceObject }) => {
+    fitGroupToFaceMask(group, anchors, faceObject, {
+      x: 0,
+      y: -0.04,
+      z: 0.36,
+      scale: 1.76
+    });
+  };
+
+  const backing = new THREE.Mesh(
+    new THREE.SphereGeometry(0.42, 32, 16),
+    new THREE.MeshBasicMaterial({
+      color: 0x111827,
+      transparent: false,
+      depthWrite: false
+    })
+  );
+  backing.scale.set(1.12, 1.38, 0.1);
+  backing.position.set(0, -0.06, 0.28);
+  backing.renderOrder = 40;
+
+  const cellMaterialA = new THREE.MeshBasicMaterial({
+    color: 0xdbeafe,
+    transparent: true,
+    opacity: 0.92,
+    depthWrite: false
+  });
+  const cellMaterialB = new THREE.MeshBasicMaterial({
+    color: 0x93c5fd,
+    transparent: true,
+    opacity: 0.92,
+    depthWrite: false
+  });
+  const cellSize = 0.112;
+  for (let row = -4; row <= 4; row += 1) {
+    for (let col = -4; col <= 4; col += 1) {
+      const nx = col / 4;
+      const ny = row / 4;
+      if ((nx * nx) / 0.98 + (ny * ny) / 1.28 > 1) {
+        continue;
+      }
+      const cell = new THREE.Mesh(
+        new THREE.PlaneGeometry(cellSize, cellSize),
+        (row + col) % 2 === 0 ? cellMaterialA : cellMaterialB
+      );
+      cell.position.set(col * cellSize * 0.9, row * cellSize * 0.96 - 0.04, 0.45);
+      cell.renderOrder = 45;
+      group.add(cell);
+    }
+  }
+
+  const badge = createAvatarPrivacyBadge(THREE, false);
+  badge.position.set(0, -0.5, 0.5);
+  badge.scale.setScalar(0.5);
+  badge.renderOrder = 46;
+  group.add(backing, badge);
+  group.userData.privacyMode = "blur";
+  return group;
+}
+
+function createAvatarPrivacyBadge(THREE, isFemale) {
+  const group = new THREE.Group();
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.56, 0.18),
+    new THREE.MeshBasicMaterial({
+      color: isFemale ? 0x831843 : 0x0f3a5f,
+      transparent: true,
+      opacity: 0.92,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    })
+  );
+  const dot = new THREE.Mesh(
+    new THREE.CircleGeometry(0.04, 18),
+    new THREE.MeshBasicMaterial({
+      color: 0x45e0a3,
+      transparent: true,
+      opacity: 0.96,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    })
+  );
+  dot.position.set(-0.2, 0, 0.01);
+  const bar = new THREE.Mesh(
+    new THREE.BoxGeometry(0.22, 0.034, 0.01),
+    new THREE.MeshBasicMaterial({
+      color: 0xf8fafc,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false
+    })
+  );
+  bar.position.set(0.08, 0, 0.02);
+  group.add(plate, dot, bar);
+  return group;
 }
 
 function createJeelizGlasses(THREE) {

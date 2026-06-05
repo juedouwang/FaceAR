@@ -5,16 +5,17 @@ export class ReferenceFaceManager {
     this.nextPersonNumber = 1;
   }
 
-  addPerson({ name, effectId, descriptor, imageDataUrl = "", status = "ready" }) {
+  addPerson({ name, effectId, privacyMode = null, avatarType = null, descriptor, imageDataUrl = "", status = "ready" }) {
     const normalizedDescriptor = normalizeDescriptor(descriptor);
     if (!normalizedDescriptor) {
       throw new Error("Reference face descriptor is missing or invalid");
     }
 
-    const safeEffectId = this.hasEffect(effectId) ? effectId : this.effectDefinitions[0]?.id;
+    const safeEffectId = this.hasEffect(effectId) ? effectId : this.getDefaultPrivacyActionId();
     if (!safeEffectId) {
-      throw new Error("No AR effects are available for identity binding");
+      throw new Error("No privacy actions are available for identity binding");
     }
+    const action = this.getEffectDefinition(safeEffectId);
 
     const personId = `person-${this.nextPersonNumber++}`;
     const displayName = String(name || `Person ${this.nextPersonNumber - 1}`).trim();
@@ -22,6 +23,8 @@ export class ReferenceFaceManager {
       personId,
       name: displayName || `Person ${this.nextPersonNumber - 1}`,
       effectId: safeEffectId,
+      privacyMode: privacyMode ?? action?.privacyMode ?? "replace",
+      avatarType: avatarType ?? action?.avatarType ?? null,
       descriptor: normalizedDescriptor,
       imageDataUrl,
       status,
@@ -41,7 +44,10 @@ export class ReferenceFaceManager {
     if (!person || !this.hasEffect(effectId)) {
       return null;
     }
+    const action = this.getEffectDefinition(effectId);
     person.effectId = effectId;
+    person.privacyMode = action?.privacyMode ?? person.privacyMode ?? "replace";
+    person.avatarType = action?.avatarType ?? null;
     person.updatedAt = Date.now();
     return this.toPublicPerson(person);
   }
@@ -85,6 +91,12 @@ export class ReferenceFaceManager {
     return this.effectDefinitions.some((effect) => effect.id === effectId);
   }
 
+  getDefaultPrivacyActionId() {
+    return this.effectDefinitions.find((effect) => effect.category === "privacy" && effect.privacyMode === "replace")?.id
+      ?? this.effectDefinitions.find((effect) => effect.category === "privacy")?.id
+      ?? this.effectDefinitions[0]?.id;
+  }
+
   clear() {
     this.people.clear();
   }
@@ -97,6 +109,9 @@ export class ReferenceFaceManager {
       effectId: person.effectId,
       effectLabel: effect?.label ?? person.effectId,
       effectColor: effect?.color ?? "#94a3b8",
+      privacyMode: person.privacyMode ?? effect?.privacyMode ?? "replace",
+      avatarType: person.avatarType ?? effect?.avatarType ?? null,
+      actionLabel: effect?.label ?? person.effectId,
       imageDataUrl: person.imageDataUrl,
       status: person.status,
       descriptorProvider: person.descriptor?.provider ?? "unknown",

@@ -1,14 +1,23 @@
-# 验证结果汇总
+# PersonaShield 验证结果汇总
 
-生成位置：本地 `PartyFaceAR` 工作区。生成日期：2026-06-02。
+生成位置：本地 PersonaShield 工程（当前目录名 `PartyFaceAR`）。生成日期：2026-06-05。
 
 ## 当前目标状态
 
-项目目标为“基于参考头像的人脸身份绑定 AR 特效系统”：用户上传人物 A/B 的参考头像并选择对应特效；系统在摄像头或视频中识别 A/B，并自动为其叠加对应特效。
+项目已从原来的“多人脸差异化 AR 特效 Demo”改造为：
 
-当前代码已经完成工程级身份绑定链路：多人脸检测、短时追踪、不同特效渲染、点击选脸、track 级手动绑定、FaceAPI 128 维人脸 descriptor、`trackId -> personId -> effectId` 身份级特效绑定，以及陌生参考图误绑定回归测试。
+**PersonaShield：面向 AI 眼镜拍摄场景的数字替身隐私防护原型。**
 
-说明：MediaPipe 负责实时多人脸检测、关键点和 AR 锚点；`@vladmandic/face-api` 负责真实人脸识别 embedding。当前实现不是安全身份认证系统，但已经不再使用单纯 landmark 几何相似度作为身份判断。
+当前版本支持：
+
+- 本地参考人脸注册；
+- FaceAPI 128 维 descriptor 身份匹配；
+- MediaPipe 多人脸检测、关键点和短时追踪；
+- `personId -> trackId -> privacyAction` 绑定；
+- 男性数字替身、女性数字替身、隐私遮挡和允许真实出镜四类隐私动作；
+- 点击选脸后的手动隐私动作绑定；
+- 受保护画面截图输出；
+- 正例身份绑定和陌生参考图负例拒绝测试。
 
 ## 本地运行地址
 
@@ -18,9 +27,15 @@ python -m http.server 8000
 ```
 
 - 主页面：`http://127.0.0.1:8000/mediapipe-ar.html`
-- 身份绑定正例验证页：`http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=showcase&pauseAt=0.25`
+- 验证页：`http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25`
 
 ## 已验证命令
+
+```powershell
+npm run verify:all
+```
+
+该命令包含：
 
 ```powershell
 npm test
@@ -32,58 +47,58 @@ npm run verify:identity-negative
 npm run profile:mediapipe-ar
 ```
 
-## 基础层量化结果
+## 自动化验证结果
 
 | 验证项 | 结果 |
 | --- | --- |
-| Track/effect/identity 单元测试 | 通过，包含异步识别和陌生人不绑定测试 |
-| MediaPipe 视频筛选 | `party-hats-crop-wide_faces.webm` 在 33/33 个采样帧中达到 4 张脸 |
-| 暂停帧浏览器验证 | 4 个活动 track，60 FPS |
-| 实时浏览器验证 | 4 个活动 track，61 FPS |
-| 手动点击选脸绑定验证 | 4 个活动 track；点击 `Track 1 / Face 1` 后绑定为 `Jeeliz tiger mask`；页面进入 manual 模式 |
-| 身份绑定正例 | `Person A/B` 均为 FaceAPI 128 维 descriptor；2 个身份绑定 track；61 FPS |
-| 身份绑定负例 | 注册陌生人参考头像后，4 个活动 track 中身份绑定数为 0 |
-| 性能统计 | p50 FPS 58.817，平均 FPS 57.781 |
-| 活动人脸数量统计 | p50 活动人脸数 4，平均活动人脸数 3.813 |
+| 单元测试 | 通过，覆盖 tracking、隐私动作 fallback、ReferenceFaceManager、异步身份识别和负例不绑定 |
+| MediaPipe 视频筛选 | `party-hats-crop-wide_faces.webm` 达到 4 张脸，`birthday-party-hats-mixkit-4608.mp4` 达到 3 张脸 |
+| 主浏览器验证 | 4 个活动 track，暂停帧 FPS 60 |
+| 手动隐私动作绑定 | 点击 `Track 1 / Face 1` 后绑定 `Privacy blur shield`，页面进入 manual 模式 |
+| 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，2 个身份绑定 track，FPS 59 |
+| 身份绑定负例 | 注册 `Stranger -> privacyBlur` 后，4 个活动 track 的身份绑定数为 0 |
+| 受保护帧输出 | 成功导出 `verification-personashield-protected-frame.png` |
+| 性能 profile | p50 FPS 64.465，avg FPS 65.522，p50 活动人脸数 4 |
 
 ## 可视化证据
 
-- `docs/verification-mediapipe-ar-showcase.png`：暂停帧结果，展示 4 张人脸、不同特效、HUD 中的 track/slot 和 FPS。
-- `docs/verification-mediapipe-ar-realtime-current.png`：实时播放结果，展示 4 张活动人脸和 50 FPS 以上实时渲染。
-- `docs/verification-manual-face-binding.png`：点击选脸并手动指定特效的结果，展示被高亮选中的人脸框、Manual 模式和右侧当前选中状态。
-- `docs/verification-identity-binding.png`：参考头像身份绑定正例，展示注册人物列表、track 身份状态和两名人物的不同身份级特效。
-- `docs/verification-identity-negative.png`：陌生参考图负例，展示陌生人已注册但当前视频无人被绑定为该身份。
-- `docs/verification-reference-person-a.png` 和 `docs/verification-reference-person-b.png`：正例自动化验证中通过上传控件注册的两张参考头像。
-- `docs/verification-stranger-reference.png`：负例自动化验证中注册的陌生人参考头像。
-- `docs/party-face-ar-showcase-demo.webm`：动态演示视频，用于展示连续画面中的检测、追踪和特效跟随。
+- `docs/verification-mediapipe-ar-privacy.png`：主界面暂停帧，展示 4 个活动 track、默认 `Allow real appearance`、FPS 和 HUD。
+- `docs/verification-manual-privacy-action.png`：手动点击选脸后，为指定 track 应用 `Privacy blur shield`。
+- `docs/verification-personashield-identity-binding.png`：注册 `Person A/B` 后，分别绑定男性/女性数字替身。
+- `docs/verification-personashield-protected-frame.png`：合成后的受保护画面输出，只包含视频和隐私替身层，不包含右侧 UI。
+- `docs/verification-personashield-negative.png`：注册陌生参考图后，当前视频人脸不被错误绑定。
+- `docs/verification-reference-person-a.png` 和 `docs/verification-reference-person-b.png`：自动化正例中裁剪出的参考人脸。
+- `docs/verification-stranger-reference.png`：自动化负例中使用的陌生参考人脸。
 
-## 身份绑定正例结果
+## 身份绑定正例详情
 
-`npm run verify:identity-binding` 的自动化流程：
+`npm run verify:identity-binding` 自动完成以下流程：
 
-1. 打开本地 `mediapipe-ar.html?video=partyHats4&profile=showcase&pauseAt=0.25`。
+1. 打开 `mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25`。
 2. 等待至少 2 个活动人脸 track。
-3. 从暂停帧中裁剪两张人脸 PNG 作为参考头像来源。
-4. 通过页面上传控件注册 `Person A` 和 `Person B`，分别绑定 `glasses` 和 `tiger`。
-5. 使用 FaceAPI 提取 128 维 descriptor。
-6. 验证两个活跃 track 绑定到两个不同人物和两个不同特效。
-7. 输出可视化截图。
+3. 从暂停帧中裁剪两张人脸，作为 `Person A` 和 `Person B` 的参考图。
+4. 通过页面上传控件注册两个受保护身份。
+5. 为 `Person A` 选择 `Male digital substitute`。
+6. 为 `Person B` 选择 `Female digital substitute`。
+7. 使用 FaceAPI 提取 128 维 descriptor。
+8. 验证两个活动 track 分别绑定到两个不同人物和两个不同隐私动作。
+9. 输出整页截图和受保护帧截图。
 
 本次结果：
 
-- `Person A`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `Jeeliz mirrored sunglasses`，距离 0.0910。
-- `Person B`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `Jeeliz tiger mask`，距离 0.0638。
+- `Person A`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `avatarMale`，距离 0.0910。
+- `Person B`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `avatarFemale`，距离 0.0638。
 - 活动 track 数：4。
 - 身份绑定 track 数：2。
-- FPS：61。
+- FPS：59。
 
-## 身份绑定负例结果
+## 身份绑定负例详情
 
-`npm run verify:identity-negative` 的自动化流程：
+`npm run verify:identity-negative` 自动完成以下流程：
 
-1. 打开同一个本地验证视频。
-2. 从 `docs/candidate-frames/pool.jpg` 裁剪一张视频中不存在的陌生人参考图。
-3. 注册 `Stranger -> werewolf`。
+1. 打开同一验证视频。
+2. 从 `docs/candidate-frames/pool.jpg` 裁剪一张当前视频中不存在的陌生人参考图。
+3. 注册 `Stranger -> Privacy blur shield`。
 4. 等待 FaceAPI 对当前活动 track 做身份识别。
 5. 验证当前视频中的 4 个活动 track 均没有绑定到 `Stranger`。
 
@@ -92,12 +107,25 @@ npm run profile:mediapipe-ar
 - `Stranger`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128。
 - 活动 track 数：4。
 - 身份绑定 track 数：0。
-- 四个活动 track 均为 `below-threshold`，最佳拒绝距离范围约 0.7378-0.9144，高于阈值 0.5。
+- 4 个活动 track 均为 `below-threshold`。
+- 距离范围约 0.7378-0.9144，高于阈值 0.5。
+
+## 性能结果
+
+`npm run profile:mediapipe-ar` 采样 35 次：
+
+- 后端：worker 35/35。
+- FPS：min 58.619，p50 64.465，p90 70.947，max 79.900，avg 65.522。
+- 检测耗时：p50 64.100 ms。
+- worker round trip：p50 70.700 ms。
+- 活动人脸：min 3，p50 4，avg 3.714。
+- jitter：p50 0.024，avg 0.038。
 
 ## 已知限制
 
-- FaceAPI 识别不是身份认证，不能用于门禁、安全支付等场景。
-- 单张参考图对姿态、光照、清晰度和遮挡较敏感。
-- 当前 FaceAPI 推理在主线程串行执行，首次加载模型和首次注册会比几何 descriptor 慢。
-- 小脸或强侧脸可能无法提取 descriptor，此时系统会保持未绑定，而不是强行贴上身份特效。
-- 当前交付范围是本地静态演示，公网部署不作为验收要求。
+- 当前是本地 WebAR 原型，不接入真实 AI 眼镜硬件。
+- FaceAPI 身份识别不是法律意义上的身份认证。
+- 单张参考图仍受光照、姿态、清晰度影响。
+- 当前只能约束合规拍摄端，无法阻止不接入协议的设备。
+- 数字替身仍是基础几何头像，可继续增强视觉质量。
+- 当前输出为受保护 PNG 帧，后续可扩展为受保护视频录制。

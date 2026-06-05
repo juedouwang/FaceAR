@@ -257,6 +257,23 @@ select {
   border-color: rgba(69, 224, 163, 0.82);
 }
 
+.download-link {
+  display: block;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid rgba(76, 201, 240, 0.38);
+  border-radius: 6px;
+  background: rgba(76, 201, 240, 0.1);
+  color: #d8f3ff;
+  font-size: 0.82rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+.download-link[hidden] {
+  display: none;
+}
+
 .button-row button:hover,
 .segmented button:hover {
   border-color: rgba(255, 255, 255, 0.34);

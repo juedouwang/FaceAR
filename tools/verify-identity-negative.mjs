@@ -9,10 +9,10 @@ const outputDir = path.join(rootDir, "docs");
 const baseUrl = process.env.PARTY_FACE_AR_URL || "http://127.0.0.1:8000";
 const screenshotPath = process.env.MP_AR_IDENTITY_NEGATIVE_SCREENSHOT
   ? path.resolve(rootDir, process.env.MP_AR_IDENTITY_NEGATIVE_SCREENSHOT)
-  : path.join(outputDir, "verification-identity-negative.png");
+  : path.join(outputDir, "verification-personashield-negative.png");
 const referencePath = path.join(outputDir, "verification-stranger-reference.png");
 const url = process.env.MP_AR_IDENTITY_NEGATIVE_URL
-  || `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=showcase&pauseAt=0.25`;
+  || `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25`;
 const sourceReferenceUrl = `${baseUrl}/docs/candidate-frames/pool.jpg`;
 
 await fs.mkdir(outputDir, { recursive: true });
@@ -39,7 +39,7 @@ try {
   await fs.writeFile(referencePath, Buffer.from(strangerDataUrl.split(",")[1], "base64"));
 
   await page.fill("#referenceNameInput", "Stranger");
-  await page.selectOption("#referenceEffect", "werewolf");
+  await page.selectOption("#referenceEffect", "privacyBlur");
   await page.setInputFiles("#referenceFaceInput", referencePath);
   await page.click("#registerReferenceButton", { noWaitAfter: true, timeout: 90000 });
   await page.waitForFunction(() => (

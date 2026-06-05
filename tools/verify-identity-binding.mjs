@@ -9,11 +9,14 @@ const outputDir = path.join(rootDir, "docs");
 const baseUrl = process.env.PARTY_FACE_AR_URL || "http://127.0.0.1:8000";
 const screenshotPath = process.env.MP_AR_IDENTITY_SCREENSHOT
   ? path.resolve(rootDir, process.env.MP_AR_IDENTITY_SCREENSHOT)
-  : path.join(outputDir, "verification-identity-binding.png");
+  : path.join(outputDir, "verification-personashield-identity-binding.png");
+const protectedFramePath = process.env.MP_AR_PROTECTED_FRAME
+  ? path.resolve(rootDir, process.env.MP_AR_PROTECTED_FRAME)
+  : path.join(outputDir, "verification-personashield-protected-frame.png");
 const minFps = Number(process.env.MP_AR_IDENTITY_MIN_FPS || 24);
 const shouldCheckFps = process.env.MP_AR_IDENTITY_CHECK_FPS === "1";
 const url = process.env.MP_AR_IDENTITY_URL
-  || `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=showcase&pauseAt=0.25`;
+  || `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25`;
 
 await fs.mkdir(outputDir, { recursive: true });
 
@@ -63,8 +66,8 @@ try {
       };
     };
     return [
-      tracks[0] ? cropTrack(tracks[0], "Person A", "glasses") : null,
-      tracks[1] ? cropTrack(tracks[1], "Person B", "tiger") : null
+      tracks[0] ? cropTrack(tracks[0], "Person A", "avatarMale") : null,
+      tracks[1] ? cropTrack(tracks[1], "Person B", "avatarFemale") : null
     ].filter(Boolean);
   });
 
@@ -117,6 +120,11 @@ try {
   });
 
   await page.screenshot({ path: screenshotPath, fullPage: true });
+  const protectedFrameDataUrl = await page.evaluate(() => window.__PERSONA_SHIELD_API__?.captureProtectedFrame?.() ?? "");
+  if (!protectedFrameDataUrl.startsWith("data:image/png;base64,")) {
+    throw new Error("Expected protected frame capture to return a PNG data URL");
+  }
+  await fs.writeFile(protectedFramePath, Buffer.from(protectedFrameDataUrl.split(",")[1], "base64"));
 
   const activeBindings = (state.identity?.bindings ?? []).filter((binding) => binding.active);
   const effectIds = new Set(activeBindings.map((binding) => binding.effectId));
@@ -130,7 +138,7 @@ try {
     throw new Error(`Expected at least 2 active identity bindings, got ${activeBindings.length}`);
   }
   if (effectIds.size < 2 || personIds.size < 2) {
-    throw new Error("Expected two different people with two different effects");
+    throw new Error("Expected two different people with two different privacy actions");
   }
   if (shouldCheckFps && state.fps < minFps) {
     throw new Error(`Expected FPS >= ${minFps}, got ${state.fps}`);
@@ -156,7 +164,8 @@ try {
       distance: Number(binding.distance.toFixed(4)),
       confidence: Number(binding.confidence.toFixed(3))
     })),
-    screenshot: path.relative(rootDir, screenshotPath)
+    screenshot: path.relative(rootDir, screenshotPath),
+    protectedFrame: path.relative(rootDir, protectedFramePath)
   }, null, 2));
 } finally {
   await browser.close();

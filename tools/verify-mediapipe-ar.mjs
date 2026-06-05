@@ -8,7 +8,7 @@ const rootDir = path.resolve(__dirname, "..");
 const outputDir = path.join(rootDir, "docs");
 const baseUrl = process.env.PARTY_FACE_AR_URL || "http://127.0.0.1:8000";
 const minFaces = Number(process.env.MP_AR_MIN_FACES || 3);
-const profile = process.env.MP_AR_PROFILE || "showcase";
+const profile = process.env.MP_AR_PROFILE || "privacy";
 const screenshotPath = process.env.MP_AR_SCREENSHOT
   ? path.resolve(rootDir, process.env.MP_AR_SCREENSHOT)
   : path.join(outputDir, `verification-mediapipe-ar-${profile}.png`);

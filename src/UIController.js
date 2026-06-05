@@ -1,6 +1,12 @@
 export class UIController {
   constructor({ effectDefinitions, maxFaces }) {
     this.effectDefinitions = effectDefinitions;
+    this.privacyActionDefinitions = effectDefinitions.filter((definition) => (
+      definition.category === "privacy" && definition.selectable !== false
+    ));
+    if (!this.privacyActionDefinitions.length) {
+      this.privacyActionDefinitions = effectDefinitions.filter((definition) => definition.selectable !== false);
+    }
     this.maxFaces = maxFaces;
     this.elements = {
       statusBar: document.getElementById("statusBar"),
@@ -16,6 +22,8 @@ export class UIController {
       videoFileInput: document.getElementById("videoFileInput"),
       toggleEffectsButton: document.getElementById("toggleEffectsButton"),
       resetBindingsButton: document.getElementById("resetBindingsButton"),
+      captureFrameButton: document.getElementById("captureFrameButton"),
+      downloadFrameLink: document.getElementById("downloadFrameLink"),
       referenceNameInput: document.getElementById("referenceNameInput"),
       referenceEffect: document.getElementById("referenceEffect"),
       referenceFaceInput: document.getElementById("referenceFaceInput"),
@@ -66,6 +74,9 @@ export class UIController {
     this.elements.resetBindingsButton.addEventListener("click", () => {
       this.clearSelectedFace();
       handlers.onResetBindings?.();
+    });
+    this.elements.captureFrameButton?.addEventListener("click", () => {
+      handlers.onCaptureFrame?.();
     });
     this.elements.registerReferenceButton?.addEventListener("click", () => {
       handlers.onReferenceFaceRegister?.({
@@ -124,7 +135,17 @@ export class UIController {
   }
 
   setEffectsButton(isVisible) {
-    this.elements.toggleEffectsButton.textContent = isVisible ? "Hide effects" : "Show effects";
+    this.elements.toggleEffectsButton.textContent = isVisible ? "Hide protection" : "Show protection";
+  }
+
+  setProtectedFrame(dataUrl) {
+    const link = this.elements.downloadFrameLink;
+    if (!link) {
+      return;
+    }
+    link.href = dataUrl;
+    link.hidden = false;
+    link.textContent = "Download latest protected frame";
   }
 
   setInputMode(mode) {
@@ -164,7 +185,7 @@ export class UIController {
       const confidence = Math.round((track.detected ?? 0) * 100);
       const lost = track.active ? "tracking" : `lost ${Math.round(track.lostMs)}ms`;
       const selectedClass = track.id === this.selectedTrackId ? " is-selected" : "";
-      const identityText = identity?.personName
+      const identityText = isConfirmedIdentity(identity)
         ? `${identity.personName} / d ${formatDistance(identity.distance)}`
         : statusLabel(identity?.status ?? identity?.lastStatus);
       return `
@@ -186,12 +207,12 @@ export class UIController {
       `<option value="${index}">Face ${index + 1}</option>`
     )).join("");
 
-    this.elements.manualEffect.innerHTML = this.effectDefinitions.map((effect) => (
+    this.elements.manualEffect.innerHTML = this.privacyActionDefinitions.map((effect) => (
       `<option value="${effect.id}">${effect.label}</option>`
     )).join("");
 
     if (this.elements.referenceEffect) {
-      this.elements.referenceEffect.innerHTML = this.effectDefinitions.map((effect) => (
+      this.elements.referenceEffect.innerHTML = this.privacyActionDefinitions.map((effect) => (
         `<option value="${effect.id}">${effect.label}</option>`
       )).join("");
     }
@@ -257,7 +278,7 @@ export class UIController {
         const identity = this.getIdentityForTrack(track.id);
         const selectedClass = track.id === this.selectedTrackId ? " is-selected" : "";
         const confidence = Math.round((track.detected ?? 0) * 100);
-        const identityLabel = identity?.personName ? `${identity.personName} / ${effect.label}` : `${effect.label} / ${confidence}%`;
+        const identityLabel = isConfirmedIdentity(identity) ? `${identity.personName} / ${effect.label}` : `${effect.label} / ${confidence}%`;
         return `
           <button
             type="button"
@@ -328,7 +349,7 @@ export class UIController {
     }
     const people = this.identityState.registeredPeople ?? [];
     if (!people.length) {
-      list.innerHTML = `<div class="reference-empty">No reference faces registered</div>`;
+      list.innerHTML = `<div class="reference-empty">No protected identities registered</div>`;
       return;
     }
     list.innerHTML = people.map((person) => {
@@ -341,12 +362,12 @@ export class UIController {
           <img src="${person.imageDataUrl}" alt="${escapeHtml(person.name)} reference face">
           <div>
             <div class="reference-name">${escapeHtml(person.name)}</div>
-            <select data-reference-effect data-person-id="${person.personId}" aria-label="${escapeHtml(person.name)} effect">
-              ${this.effectDefinitions.map((effect) => (
+            <select data-reference-effect data-person-id="${person.personId}" aria-label="${escapeHtml(person.name)} privacy action">
+              ${this.privacyActionDefinitions.map((effect) => (
                 `<option value="${effect.id}" ${effect.id === person.effectId ? "selected" : ""}>${effect.label}</option>`
               )).join("")}
             </select>
-            <div class="reference-status">${status}</div>
+            <div class="reference-status">${privacyModeLabel(person.privacyMode)} / ${status}</div>
           </div>
           <button type="button" class="icon-button" data-remove-person data-person-id="${person.personId}" aria-label="Remove ${escapeHtml(person.name)}">&times;</button>
         </article>
@@ -441,6 +462,25 @@ function statusLabel(status) {
     "duplicate-removed": "duplicate removed"
   };
   return labels[status] ?? status;
+}
+
+function isConfirmedIdentity(identity) {
+  if (!identity) {
+    return false;
+  }
+  return identity.active
+    || identity.matched
+    || ["matched", "global-matched", "tracking"].includes(identity.status)
+    || ["matched", "global-matched", "tracking"].includes(identity.lastStatus);
+}
+
+function privacyModeLabel(mode) {
+  const labels = {
+    allow: "allow real face",
+    replace: "digital substitute",
+    blur: "privacy shield"
+  };
+  return labels[mode] ?? "privacy action";
 }
 
 function escapeHtml(value) {

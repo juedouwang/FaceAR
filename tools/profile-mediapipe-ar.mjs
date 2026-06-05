@@ -3,7 +3,7 @@ import { chromium } from "playwright";
 const baseUrl = process.env.PARTY_FACE_AR_URL || "http://127.0.0.1:8000";
 const durationMs = Number(process.env.MP_AR_PROFILE_MS || 12000);
 const sampleEveryMs = Number(process.env.MP_AR_PROFILE_STEP_MS || 250);
-const profile = process.env.MP_AR_PROFILE || "showcase";
+const profile = process.env.MP_AR_PROFILE || "privacy";
 const url = process.env.MP_AR_VERIFY_URL || `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=${profile}`;
 
 const browser = await chromium.launch({ headless: true });

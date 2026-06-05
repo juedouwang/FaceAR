@@ -7,6 +7,7 @@ export class MediaPipeEffectRenderer {
       canvas,
       alpha: true,
       antialias: false,
+      preserveDrawingBuffer: true,
       powerPreference: "high-performance"
     });
     this.renderer.setPixelRatio(1);

@@ -9,9 +9,20 @@ MediaPipe Face Landmarker does not ship Douyin/TikTok-style commercial filter pa
 - Face pose and transformation data.
 - Blendshape scores for expression-driven effects.
 
-The visual filters in this project are built on top of those outputs.
+The privacy overlays and legacy visual filters in this project are built on top of those outputs.
 
-## Current Effect Set
+## Current Privacy Action Set
+
+The main PersonaShield UI now exposes privacy actions instead of entertainment filters:
+
+| Action | Implementation | Source |
+| --- | --- | --- |
+| Allow real appearance | Keeps the live face unchanged when a registered person permits recording | Project logic |
+| Male digital substitute | Procedural Three.js avatar head, hair, shoulders, and face shield scaled to cover the tracked face | Project implementation |
+| Female digital substitute | Procedural Three.js avatar head, hair, shoulders, and face shield scaled to cover the tracked face | Project implementation |
+| Privacy blur shield | Opaque privacy/mosaic shield anchored to the tracked face | Project implementation |
+
+## Legacy Effect Set
 
 | Effect | Implementation | Source |
 | --- | --- | --- |
@@ -29,7 +40,7 @@ The visual filters in this project are built on top of those outputs.
 
 ## Third-Party Asset Credits
 
-The current main visual cycle reuses Apache-2.0 demo assets from `jeeliz/jeelizFaceFilter`:
+The repository also keeps Apache-2.0 demo assets from `jeeliz/jeelizFaceFilter` as fallback and comparison material:
 
 - `assets/jeeliz/glassesVTO/`: reflective sunglasses VTO frame/lens geometry and environment map.
 - `assets/jeeliz/football_makeup/`: alpha-mapped face paint mesh and texture.
@@ -58,8 +69,10 @@ course/resume report screenshot.
 ## Design Decision
 
 The goal is not to copy proprietary Douyin/TikTok filters. Those assets are normally commercial and not reusable in an
-open-source course project. Instead, this project uses a safe combination:
+open-source course project. PersonaShield uses the legacy open-source AR assets as background comparison material, while
+the primary deliverable is the identity-aware privacy action pipeline:
 
 - Open-source/CC-attributed 3D models for recognizable AR accessories.
-- Programmatic particles, rings, masks, and color accents for visual polish.
+- Procedural digital substitutes and privacy shields for face replacement.
 - MediaPipe landmarks and stable track IDs for real-time multi-person attachment.
+- FaceAPI identity descriptors for binding registered people to their selected privacy actions.

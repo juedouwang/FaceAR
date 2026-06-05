@@ -102,47 +102,44 @@ assert.equal(__effectManagerTestHooks.isPartialOrEdgeFace(fullFaceTrack), false)
 assert.equal(__effectManagerTestHooks.isPartialOrEdgeFace(edgeFaceTrack), true);
 assert.equal(__effectManagerTestHooks.isEffectSafeForTrack("mask", edgeFaceTrack, 0), false);
 assert.equal(__effectManagerTestHooks.isEffectSafeForTrack("crown", edgeFaceTrack, 1), false);
-assert.equal(__effectManagerTestHooks.getSafeFallbackEffect(edgeFaceTrack), "makeup");
-assert.deepEqual(__effectManagerTestHooks.getPreferredEffects(edgeFaceTrack, 0), ["makeup", "partyGlasses", "glasses"]);
+assert.equal(__effectManagerTestHooks.getSafeFallbackEffect(edgeFaceTrack), "privacyAllow");
+assert.deepEqual(__effectManagerTestHooks.getPreferredEffects(edgeFaceTrack, 0), ["privacyAllow"]);
 
 const testEffectManager = new __effectManagerTestHooks.EffectManager({ maxFaces: 4 });
 testEffectManager.setAssignmentMode("manual");
-testEffectManager.bindManualEffect({ trackId: 7, slotIndex: 0 }, "tiger");
-assert.equal(testEffectManager.getEffectForTrack({ id: 7, slotIndex: 0, ...fullFaceTrack }), "tiger");
-assert.notEqual(testEffectManager.getEffectForTrack({ id: 8, slotIndex: 0, ...fullFaceTrack }), "tiger");
+testEffectManager.bindManualEffect({ trackId: 7, slotIndex: 0 }, "privacyBlur");
+assert.equal(testEffectManager.getEffectForTrack({ id: 7, slotIndex: 0, ...fullFaceTrack }), "privacyBlur");
+assert.notEqual(testEffectManager.getEffectForTrack({ id: 8, slotIndex: 0, ...fullFaceTrack }), "privacyBlur");
 testEffectManager.bindIdentityEffect({
   trackId: 7,
   personId: "person-a",
   personName: "A",
-  effectId: "glasses",
+  effectId: "avatarMale",
   distance: 0.05
 });
-assert.equal(testEffectManager.getEffectForTrack({ id: 7, slotIndex: 0, ...fullFaceTrack }), "glasses");
+assert.equal(testEffectManager.getEffectForTrack({ id: 7, slotIndex: 0, ...fullFaceTrack }), "avatarMale");
 assert.equal(testEffectManager.getTrackSummary({ id: 7, slotIndex: 0, ...fullFaceTrack }).identity.personName, "A");
 
 console.log("EffectManager assignment tests passed");
 
 const referenceManager = new ReferenceFaceManager({
-  effectDefinitions: __effectManagerTestHooks.EffectManager.prototype.definitions ?? [
-    { id: "glasses", label: "Glasses", color: "#fff" },
-    { id: "tiger", label: "Tiger", color: "#f80" }
-  ]
+  effectDefinitions: testEffectManager.definitions
 });
 const personA = referenceManager.addPerson({
   name: "A",
-  effectId: "glasses",
+  effectId: "avatarMale",
   descriptor: { provider: "test", vector: [1, 0, 0] },
   imageDataUrl: "data:image/png;base64,a"
 });
 const personB = referenceManager.addPerson({
   name: "B",
-  effectId: "tiger",
+  effectId: "avatarFemale",
   descriptor: { provider: "test", vector: [0, 1, 0] },
   imageDataUrl: "data:image/png;base64,b"
 });
 assert.equal(referenceManager.getPeople().length, 2);
-assert.equal(referenceManager.getEffectForPerson(personB.personId), "tiger");
-assert.equal(referenceManager.updatePersonEffect(personA.personId, "tiger").effectId, "tiger");
+assert.equal(referenceManager.getEffectForPerson(personB.personId), "avatarFemale");
+assert.equal(referenceManager.updatePersonEffect(personA.personId, "privacyBlur").effectId, "privacyBlur");
 assert.equal(referenceManager.removePerson(personB.personId), true);
 
 console.log("ReferenceFaceManager tests passed");
@@ -159,8 +156,8 @@ const descriptorB = recognizer.createDescriptor(geometryB, { source: "unit-b" })
 assert.ok(descriptorA.vector.length > 100);
 assert.ok(descriptorDistance(descriptorA, descriptorA2) < descriptorDistance(descriptorA, descriptorB));
 const match = recognizer.matchDescriptor(descriptorA2, [
-  { personId: "a", name: "A", effectId: "glasses", descriptor: descriptorA },
-  { personId: "b", name: "B", effectId: "tiger", descriptor: descriptorB }
+  { personId: "a", name: "A", effectId: "avatarMale", descriptor: descriptorA },
+  { personId: "b", name: "B", effectId: "avatarFemale", descriptor: descriptorB }
 ]);
 assert.equal(match.matched, true);
 assert.equal(match.personId, "a");
@@ -169,19 +166,19 @@ console.log("FaceEmbeddingRecognizer tests passed");
 
 const binderReferenceManager = new ReferenceFaceManager({
   effectDefinitions: [
-    { id: "glasses", label: "Glasses", color: "#fff" },
-    { id: "tiger", label: "Tiger", color: "#f80" }
+    { id: "avatarMale", label: "Male digital substitute", color: "#4cc9f0", category: "privacy", privacyMode: "replace", avatarType: "male" },
+    { id: "avatarFemale", label: "Female digital substitute", color: "#f72585", category: "privacy", privacyMode: "replace", avatarType: "female" }
   ]
 });
 const binderPersonA = binderReferenceManager.addPerson({
   name: "A",
-  effectId: "glasses",
+  effectId: "avatarMale",
   descriptor: descriptorA,
   imageDataUrl: "data:image/png;base64,a"
 });
 binderReferenceManager.addPerson({
   name: "B",
-  effectId: "tiger",
+  effectId: "avatarFemale",
   descriptor: descriptorB,
   imageDataUrl: "data:image/png;base64,b"
 });
@@ -203,7 +200,7 @@ const trackA = {
 let identityState = binder.update([trackA], 5000);
 assert.equal(identityState.boundTrackCount, 1);
 assert.equal(binder.getBindingForTrack(42).personId, binderPersonA.personId);
-assert.equal(binder.getEffectBindings().get(42).effectId, "glasses");
+assert.equal(binder.getEffectBindings().get(42).effectId, "avatarMale");
 identityState = binder.update([{ ...trackA, active: false, detectedNow: false }], 5200);
 assert.equal(identityState.boundTrackCount, 0);
 
@@ -215,19 +212,19 @@ const ambiguousRecognizer = new FaceEmbeddingRecognizer({
 });
 const globalReferenceManager = new ReferenceFaceManager({
   effectDefinitions: [
-    { id: "glasses", label: "Glasses", color: "#fff" },
-    { id: "tiger", label: "Tiger", color: "#f80" }
+    { id: "avatarMale", label: "Male digital substitute", color: "#4cc9f0", category: "privacy", privacyMode: "replace", avatarType: "male" },
+    { id: "avatarFemale", label: "Female digital substitute", color: "#f72585", category: "privacy", privacyMode: "replace", avatarType: "female" }
   ]
 });
 globalReferenceManager.addPerson({
   name: "A",
-  effectId: "glasses",
+  effectId: "avatarMale",
   descriptor: descriptorA,
   imageDataUrl: "data:image/png;base64,a"
 });
 globalReferenceManager.addPerson({
   name: "B",
-  effectId: "tiger",
+  effectId: "avatarFemale",
   descriptor: descriptorB,
   imageDataUrl: "data:image/png;base64,b"
 });
@@ -262,13 +259,13 @@ console.log("IdentityTrackBinder global assignment tests passed");
 
 const asyncReferenceManager = new ReferenceFaceManager({
   effectDefinitions: [
-    { id: "glasses", label: "Glasses", color: "#fff" },
-    { id: "tiger", label: "Tiger", color: "#f80" }
+    { id: "avatarMale", label: "Male digital substitute", color: "#4cc9f0", category: "privacy", privacyMode: "replace", avatarType: "male" },
+    { id: "privacyBlur", label: "Privacy blur shield", color: "#ffd166", category: "privacy", privacyMode: "blur" }
   ]
 });
 const asyncPerson = asyncReferenceManager.addPerson({
   name: "A",
-  effectId: "glasses",
+  effectId: "avatarMale",
   descriptor: { provider: "face-api-face-recognition-net", vector: [0, 0, 0] },
   imageDataUrl: "data:image/png;base64,a"
 });

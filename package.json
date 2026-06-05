@@ -1,8 +1,8 @@
 {
-  "name": "party-face-ar",
+  "name": "personashield",
   "version": "0.1.0",
   "private": true,
-  "description": "Multi-face differentiated AR effect demo using MediaPipe tracking and Jeeliz/WebAR-style effects.",
+  "description": "Identity-aware digital substitute prototype for privacy-preserving AI glasses capture scenarios.",
   "type": "module",
   "scripts": {
     "start": "python -m http.server 8000",

@@ -9,8 +9,8 @@ const outputDir = path.join(rootDir, "docs");
 const baseUrl = process.env.PARTY_FACE_AR_URL || "http://127.0.0.1:8000";
 const screenshotPath = process.env.MP_AR_MANUAL_SCREENSHOT
   ? path.resolve(rootDir, process.env.MP_AR_MANUAL_SCREENSHOT)
-  : path.join(outputDir, "verification-manual-face-binding.png");
-const targetEffectId = process.env.MP_AR_MANUAL_EFFECT || "tiger";
+  : path.join(outputDir, "verification-manual-privacy-action.png");
+const targetEffectId = process.env.MP_AR_MANUAL_EFFECT || "privacyBlur";
 
 await fs.mkdir(outputDir, { recursive: true });
 
@@ -27,7 +27,7 @@ page.on("pageerror", (error) => {
 });
 
 try {
-  const url = `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=showcase&pauseAt=0.25`;
+  const url = `${baseUrl}/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25`;
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForFunction(() => window.__PARTY_FACE_AR_MEDIAPIPE__?.ready === true, null, { timeout: 90000 });
   await page.waitForFunction(() => document.querySelectorAll(".face-picker-box").length >= 3, null, { timeout: 90000 });
@@ -82,7 +82,7 @@ try {
     throw new Error(`Expected selected track ${targetTrackId}, got ${after.selectedTrackId}`);
   }
   if (after.selectedBoxEffectId !== targetEffectId) {
-    throw new Error(`Expected selected face effect ${targetEffectId}, got ${after.selectedBoxEffectId}`);
+    throw new Error(`Expected selected privacy action ${targetEffectId}, got ${after.selectedBoxEffectId}`);
   }
   if (after.mode !== "manual") {
     throw new Error(`Expected manual assignment mode, got ${after.mode}`);

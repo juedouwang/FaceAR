@@ -4,72 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>PartyFaceAR</title>
+    <title>PersonaShield</title>
+    <meta http-equiv="refresh" content="0; url=./mediapipe-ar.html">
     <link rel="stylesheet" href="./src/styles.css">
-    <script src="./vendor/jeeliz/dist/jeelizFaceFilter.js"></script>
-    <script src="./vendor/jeeliz/libs/three/v112/three.min.js"></script>
-    <script src="./vendor/three/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="./vendor/jeeliz/helpers/JeelizThreeHelper.js"></script>
   </head>
   <body>
     <main class="app-shell">
-      <section class="stage" aria-label="AR preview">
-        <canvas id="jeeFaceFilterCanvas" width="960" height="720"></canvas>
-        <div id="facePickerOverlay" class="face-picker-overlay" aria-label="Clickable face selector"></div>
-        <div class="status-bar" id="statusBar">Initializing...</div>
+      <section class="stage" aria-label="PersonaShield launch">
+        <div class="status-bar">Opening PersonaShield privacy prototype...</div>
       </section>
-
       <aside class="control-panel">
         <header>
-          <p class="eyebrow">Web AR Demo</p>
-          <h1>PartyFaceAR</h1>
-          <p class="subtitle">Multi-face differentiated AR effects powered by Jeeliz FaceFilter.</p>
+          <p class="eyebrow">AI glasses privacy prototype</p>
+          <h1>PersonaShield</h1>
+          <p class="subtitle">Identity-aware digital substitutes for privacy-preserving first-person capture.</p>
         </header>
-
-        <div class="control-group">
-          <label for="inputMode">Input</label>
-          <div class="segmented" id="inputMode">
-            <button type="button" class="is-active" data-input-mode="camera">Camera</button>
-            <button type="button" data-input-mode="video">Video</button>
-          </div>
-          <input id="videoFileInput" class="file-input" type="file" accept="video/*">
-        </div>
-
-        <div class="control-group">
-          <label for="assignmentMode">Assignment</label>
-          <div class="segmented" id="assignmentMode">
-            <button type="button" class="is-active" data-assignment-mode="auto">Auto</button>
-            <button type="button" data-assignment-mode="manual">Manual</button>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label for="manualSlot">Manual effect binding</label>
-          <div class="selected-face-summary" id="selectedFaceLabel">Selected face: none</div>
-          <div class="manual-grid">
-            <select id="manualSlot" aria-label="Face slot"></select>
-            <select id="manualEffect" aria-label="Effect"></select>
-          </div>
-        </div>
-
-        <div class="button-row">
-          <button type="button" id="toggleEffectsButton">Hide effects</button>
-          <button type="button" id="resetBindingsButton">Reset bindings</button>
-        </div>
-
-        <section class="debug-panel" aria-label="Tracking debug panel">
-          <div class="debug-kpis">
-            <div><span id="faceCount">0</span><small>faces</small></div>
-            <div><span id="fpsValue">0</span><small>fps</small></div>
-            <div><span id="modeValue">auto</span><small>mode</small></div>
-          </div>
-          <div class="slot-meter" id="slotMeter" aria-label="Raw Jeeliz slot confidences"></div>
-          <div id="trackList" class="track-list"></div>
-        </section>
+        <a class="download-link" href="./mediapipe-ar.html">Open PersonaShield</a>
       </aside>
     </main>
-
-    <video id="inputVideo" class="hidden-video" muted playsinline loop></video>
-    <script type="module" src="./src/app.js"></script>
+    <script>
+      window.location.replace("./mediapipe-ar.html");
+    </script>
   </body>
 </html>

@@ -1,69 +1,84 @@
-# PartyFaceAR
+# PersonaShield
 
-PartyFaceAR is a Web AR demo for differentiated multi-face effects. The first prototype was built on
-[`jeeliz/jeelizFaceFilter`](https://github.com/jeeliz/jeelizFaceFilter). After screening real multi-person clips, the
-active demo uses MediaPipe Face Landmarker as the detection base while reusing Jeeliz/WebAR-style effects and the same
-track/effect/UI project layer.
+PersonaShield is a local WebAR prototype for privacy-preserving AI glasses capture scenarios. It turns the original
+multi-face AR effects demo into an identity-aware privacy workflow: a user registers a reference face, chooses a privacy
+action, and the browser replaces or shields the matched live face during camera/video playback.
 
-## Goal
+The project is designed as a course and resume demo, not as a production identity-authentication system. It runs locally
+as a static web app and does not require a backend server, cloud face API, database, public deployment, or real AI glasses
+hardware.
 
-The target MVP is a reference-face identity binding AR demo for a social AR glasses scenario. The user registers one or
-more reference face images, assigns an effect to each registered person, then starts a camera or local video. When a
-registered person appears in the scene, the app should recognize that face, bind the matching identity to the active
-short-term track, and render that person's selected AR effect.
+## Concept
 
-The current implementation now includes a local identity-binding pipeline with real face descriptors. MediaPipe remains
-the fast multi-face detection, landmark, pose, and AR-anchor layer, while `@vladmandic/face-api` extracts 128-dimensional
-face-recognition descriptors from reference images and low-frequency live track crops. A registered stranger reference is
-rejected instead of being bound to an arbitrary active face. This is still not a production-grade identity-authentication
-system, but it is a real face-recognition MVP rather than a landmark-geometry-only demo.
+The target scenario is first-person capture by AI glasses. Current smart glasses make recording much easier than phone
+recording, but most privacy mechanisms still focus on capture indicators or device permissions. PersonaShield explores a
+stronger bystander-side idea:
 
-## Features
+```text
+registered identity -> privacy preference -> real-time face recognition -> digital substitute rendering
+```
 
-- Detect up to 4 faces with MediaPipe Face Landmarker in the migrated demo.
-- Keep the Jeeliz prototype available for comparison.
-- Render different Three.js effects per face track.
-- Provide Jeeliz-style VTO sunglasses, Miel Pops party glasses, football face paint, puppy face, tiger mask, helmet,
-  Anonymous mask, and textured hat effects.
-- Keep effect binding on a stable track ID using screen-position matching and same-slot fallback.
-- Support automatic assignment and clickable manual face binding: click a face box, then choose that face's effect.
-- Register reference face images, choose a per-person effect, and match registered people when they appear in
-  camera/video.
-- Combine low-frequency identity matching with `FaceTrackManager` so recognized tracks keep their identity effect
-  without rerunning recognition every frame.
-- Toggle effects, reset bindings, and inspect FPS/face count/track state.
-- Run from camera input or local/sample video input.
+If a registered person appears in the video and has chosen protection, the preview and exported protected frame show a
+digital substitute or privacy shield instead of the real face.
 
-## Run
+## MVP Features
+
+- Detect and track up to 4 faces using MediaPipe Face Landmarker.
+- Register protected identities from local reference face images.
+- Extract local FaceAPI 128-dimensional face descriptors from reference images and low-frequency live track crops.
+- Bind matched identities to stable short-term face tracks.
+- Choose one privacy action per identity:
+  - `Allow real appearance`
+  - `Male digital substitute`
+  - `Female digital substitute`
+  - `Privacy blur shield`
+- Manually click a face and apply a privacy action as a fallback or demonstration tool.
+- Show per-track status, matched identity, distance, FPS, and active face count.
+- Capture a protected PNG frame by compositing the video and privacy overlay canvases.
+- Verify positive identity binding and negative stranger rejection with Playwright scripts.
+
+Legacy Jeeliz/WebAR effect assets remain in the repository as fallback and comparison material, but the main UI now
+focuses on privacy actions instead of entertainment filters.
+
+## Architecture
+
+```text
+reference image
+  -> FaceAPI local descriptor
+  -> ReferenceFaceManager
+  -> personId + privacyAction + descriptor
+
+camera/local video
+  -> MediaPipe Face Landmarker
+  -> FaceTrackManager short-term tracking
+  -> IdentityTrackBinder low-frequency recognition
+  -> EffectManager privacy action binding
+  -> Three.js digital substitute rendering
+```
+
+MediaPipe handles multi-face detection, landmarks, and tracking anchors. FaceAPI handles local face-recognition
+descriptors. The identity binder combines low-frequency recognition with high-frequency tracking so the browser does not
+rerun face recognition every frame.
+
+## Run Locally
 
 ```powershell
-cd .\PartyFaceAR
+cd "D:\研究生文件\20_Areas\研究生课程\增强现实与高级图形学\PartyFaceAR"
 python -m http.server 8000
 ```
 
 Open:
 
-- Camera mode: <http://127.0.0.1:8000/>
-- Verified real multi-face demo: <http://127.0.0.1:8000/?video=party>
-- MediaPipe 4-face migrated demo: <http://127.0.0.1:8000/mediapipe-ar.html>
-- MediaPipe detection screening page: <http://127.0.0.1:8000/mediapipe-verify.html>
-- Single-face smoke test: <http://127.0.0.1:8000/?video=sample>
+- Main privacy prototype: <http://127.0.0.1:8000/mediapipe-ar.html>
+- Paused verification frame: <http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25>
+- MediaPipe screening page: <http://127.0.0.1:8000/mediapipe-verify.html>
 
 Camera access requires `localhost`, `127.0.0.1`, or HTTPS in most browsers.
-
-## Local delivery
-
-PartyFaceAR is delivered as a local static web app for the course demo. It does not require a backend server, database,
-public URL, or cloud deployment. A local static file server such as `python -m http.server 8000` is enough.
-
-Optional public deployment notes are kept in `docs/deployment.md`, but public deployment is not part of the current
-acceptance scope.
 
 ## Test
 
 ```powershell
-cd .\PartyFaceAR
-node tests/run-tests.mjs
+npm test
 npm run screen:mediapipe
 npm run verify:mediapipe-ar
 npm run verify:manual-binding
@@ -73,125 +88,30 @@ npm run profile:mediapipe-ar
 npm run verify:all
 ```
 
-Current automated test coverage:
+The verification scripts generate screenshots under `docs/`, including identity binding, negative stranger rejection,
+manual privacy action binding, and MediaPipe runtime checks.
 
-- Creates 3 active tracks from 3 detections.
-- Keeps track IDs stable during short motion.
-- Handles short detection loss and recovery.
-- Preserves track identity when two detection slots swap positions.
-- Stores registered reference people, selected effects, and descriptors.
-- Matches a live track descriptor to registered people and binds `trackId -> personId -> effectId`.
-- Prioritizes identity binding over manual and automatic effect assignment.
-- Verifies clickable manual binding by selecting a face box, changing its effect, and saving a visual screenshot.
-- Verifies identity binding by registering two reference tracks, assigning different effects, and saving a visual
-  screenshot with two active identity-bound tracks.
-- Verifies the negative identity case by registering a stranger reference and asserting that no current video track is
-  bound to that identity.
+## Current Scope
 
-Manual effect-binding verification is also part of acceptance. In the MediaPipe demo, each active face gets a clickable
-preview box labeled `Track X / Face Y`. Click the target face, choose an effect in `Manual effect binding`, and verify
-that the selected track keeps the chosen effect during normal non-crossing motion.
+This prototype intentionally does not implement:
 
-The current local verification summary is documented in `docs/verification-summary.md`.
+- real AI glasses SDK integration;
+- public deployment as a required deliverable;
+- Alipay or financial-grade identity verification;
+- decentralized identity / DID;
+- a production biometric authentication system;
+- legal enforcement against non-compliant cameras.
 
-## Key changes from Jeeliz demo
+The product positioning is:
 
-Jeeliz already provides the face detector, pose output, multi-face slots, and Three.js helper. PartyFaceAR adds:
+```text
+a reference implementation for compliant AI-glasses-style capture clients
+```
 
-- `src/FaceTrackManager.js`: stable track IDs, lost-track grace window, nearest-neighbor matching, same-slot fallback.
-- `src/EffectManager.js`: effect registry, automatic/manual binding, track-level effect persistence.
-- `src/EffectFactory.js`: Jeeliz demo asset adapters plus project-built polish overlays.
-- `src/UIController.js`: input/mode controls and debug panel.
-- `src/app.js`: app orchestration, camera/video input, Jeeliz initialization, render loop integration.
-- `src/MediaPipeFaceSource.js`: MediaPipe Face Landmarker adapter for 4-face landmarks and blendshape-ready results.
-- `src/MediaPipeEffectRenderer.js`: Three.js overlay renderer for the migrated MediaPipe demo.
-
-Identity-recognition additions:
-
-- `src/ReferenceFaceManager.js`: stores registered people, reference images, selected effects, and face descriptors.
-- `src/FaceApiIdentityRecognizer.js`: loads local FaceAPI models, extracts 128-dimensional face-recognition descriptors
-  from reference images and live track crops, then computes descriptor distances.
-- `src/IdentityTrackBinder.js`: binds `personId -> trackId -> effectId`, supports async low-frequency recognition, and
-  rechecks identity only when a new/uncertain track appears or the binding becomes stale.
-- `src/UIController.js`: exposes the reference-person registration panel, per-person effect selectors, and identity
-  status in face boxes and the track list.
-- `vendor/face-api/` and `vendor/tfjs-backend-wasm/`: local browser bundle, model weights, and TFJS WASM assets used by
-  the identity-recognition layer without CDN dependency.
-
-## Effect assets
-
-MediaPipe provides the face tracking base, not a ready-made short-video filter library. The current visual layer combines
-Jeeliz demo-quality 3D assets and project-built procedural overlays:
-
-- Apache-2.0 Jeeliz demo assets: reflective VTO glasses, textured hat, dog ears, and dog nose.
-- Apache-2.0 Jeeliz demo assets: Miel Pops party glasses, football makeup, Rupy helmet, Anonymous mask, and tiger mask.
-- Project-built overlays: soft muzzle, glam highlights, sparkles, bowtie, and halo.
-- CC-BY glTF sunglasses and party/clown hat assets from MindAR face-tracking examples / Sketchfab are included as
-  documented references/fallback material.
-- Asset credits and licensing notes: `docs/effect-assets.md`.
-
-## Current verification status
-
-### MediaPipe migration
-
-The MediaPipe screening script samples existing real videos with `numFaces: 4`, blendshapes enabled, and facial
-transformation matrices enabled. Results are written to `docs/mediapipe-video-screening.md`.
-
-Current best evidence from the 2026-06-02 verification run:
-
-- `samples/party-hats-crop-wide_faces.webm`: 4 simultaneous faces on 33/33 sampled frames.
-- `samples/birthday-party-hats-mixkit-4608.mp4`: 3 simultaneous faces on 33/33 sampled frames.
-- Paused browser verification: `npm run verify:mediapipe-ar` reached 4 active tracks at 60 FPS and rendered different
-  Jeeliz-style effects on different faces.
-- Realtime browser verification:
-  `MP_AR_REALTIME=1 MP_AR_MIN_FPS=24 MP_AR_SCREENSHOT=docs/verification-mediapipe-ar-realtime-current.png npm run verify:mediapipe-ar`
-  reached 4 active tracks at 61 FPS.
-- Performance profiling over 32 stable samples: p50 FPS 58.952, average FPS 58.401, p50 active faces 4, average active
-  faces 3.719, p50 worker detection round trip 106.4 ms.
-- Manual binding verification: `npm run verify:manual-binding` selected `Track 1 / Face 1`, bound it to the Jeeliz tiger
-  mask, switched the UI to manual mode, and saved `docs/verification-manual-face-binding.png`.
-- Identity binding verification: `npm run verify:identity-binding` cropped two reference face PNGs from the paused
-  sample frame, registered them through the reference upload UI, assigned `glasses` and `tiger`, extracted FaceAPI
-  128-dimensional descriptors, matched two active tracks to two different people, and saved
-  `docs/verification-identity-binding.png`.
-- Negative identity verification: `npm run verify:identity-negative` registered a stranger reference from a different
-  image, kept 4 active video tracks, produced 0 identity bindings, and saved
-  `docs/verification-identity-negative.png`.
-- Evidence screenshots: `docs/verification-mediapipe-ar-showcase.png` and
-  `docs/verification-mediapipe-ar-realtime-current.png`, plus the manual-binding screenshot
-  `docs/verification-manual-face-binding.png`, identity-binding screenshot
-  `docs/verification-identity-binding.png`, and negative identity screenshot
-  `docs/verification-identity-negative.png`.
-
-This validates the decision to migrate the detection layer from Jeeliz to MediaPipe Face Landmarker.
-
-### Jeeliz prototype
-
-Legacy proof-of-concept verified locally on `http://127.0.0.1:8000/?video=party` with the real Mixkit stock video
-["Friends taking a selfie by a pool"](https://mixkit.co/free-stock-video/friends-taking-a-selfie-by-a-pool-43089/):
-
-- Page loads without resource errors.
-- Jeeliz initializes in video mode.
-- The demo reaches 2 simultaneous active face tracks on different real people.
-- Different effects are bound to different tracks, for example Cyber glasses and Neon halo.
-- Debug panel reports active track IDs, Jeeliz slots, effect names, confidence, and FPS.
-- Local verification reached above 200 FPS on the test machine.
-- Evidence screenshot: `docs/verification-pool-selfie.png`.
-
-Additional candidate videos were tested because some party/wide-shot clips had multiple people but only one stable
-front-facing face at a time. `?video=nightclub` also reaches 2 simultaneous tracks briefly, while `?video=partyWide`,
-`?video=party2`, `?video=friends`, `?video=windowSelfie`, and `?video=groupSelfie` are kept only as optional screening
-inputs.
+The engineering goal is to prove that bystander privacy preferences can be registered, matched, visualized, and executed
+locally in a real-time browser video pipeline.
 
 ## License
 
 The copied Jeeliz runtime files under `vendor/jeeliz` retain the original Apache-2.0 license. This project layer is also
 intended for Apache-2.0 compatible use.
-
-The bundled Mixkit demo videos are free stock videos available under the license stated on each Mixkit item page:
-
-- `samples/friends-selfie-pool-mixkit-43089.mp4`: "Friends taking a selfie by a pool".
-- `samples/birthday-party-hats-mixkit-4608.mp4`: "Excited young people partying with party hats".
-
-The derived `samples/party-hats-crop-wide_faces.webm` clip is a crop of the Mixkit party-hats source video used only to
-keep four real faces large enough for repeatable automated verification. It does not duplicate or synthesize faces.
