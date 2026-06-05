@@ -18,8 +18,8 @@ The main PersonaShield UI now exposes privacy actions instead of entertainment f
 | Action | Implementation | Source |
 | --- | --- | --- |
 | Allow real appearance | Keeps the live face unchanged when a registered person permits recording | Project logic |
-| Male digital substitute | Procedural Three.js cartoon digital human with head, hair silhouette, ears, eyes, brows, nose, smile, shoulders, privacy halo, and status badge | Project implementation |
-| Female digital substitute | Procedural Three.js cartoon digital human with head, longer hair silhouette, ears, eyes, brows, nose, smile, shoulders, privacy halo, and status badge | Project implementation |
+| Male digital substitute | Procedural Three.js 3D bust avatar with volumetric head, hair blocks, ears, raised eyes, brows, nose, smile, neck, shoulders, clothing, and status badge | Project implementation |
+| Female digital substitute | Procedural Three.js 3D bust avatar with volumetric head, long hair blocks, ears, raised eyes, brows, nose, smile, neck, shoulders, clothing, and status badge | Project implementation |
 | Privacy blur shield | Opaque privacy/mosaic shield anchored to the tracked face | Project implementation |
 
 ## Legacy Effect Set
@@ -73,6 +73,6 @@ open-source course project. PersonaShield uses the legacy open-source AR assets 
 the primary deliverable is the identity-aware privacy action pipeline:
 
 - Open-source/CC-attributed 3D models for recognizable AR accessories.
-- Procedural cartoon digital humans and privacy shields for face replacement.
+- Procedural 3D cartoon bust avatars and privacy shields for face replacement.
 - MediaPipe landmarks and stable track IDs for real-time multi-person attachment.
 - FaceAPI identity descriptors for binding registered people to their selected privacy actions.

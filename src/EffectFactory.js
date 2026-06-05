@@ -108,116 +108,65 @@ function createPrivacyAvatar(THREE, avatarType) {
   group.userData.update = ({ anchors, faceObject }) => {
     fitGroupToFaceMask(group, anchors, faceObject, {
       x: 0,
-      y: -0.048,
-      z: 0.36,
-      scale: 1.84
+      y: -0.075,
+      z: 0.42,
+      scale: 1.78
     });
   };
 
   const palette = isFemale
     ? {
-        skin: 0xf2b9a5,
-        skinShadow: 0xd99182,
+        skin: 0xf0aa91,
+        skinShadow: 0xd48775,
         hair: 0x2b1735,
         hairAccent: 0x8b3f83,
         shirt: 0x4f46e5,
         collar: 0xfdf2f8,
         accent: 0xf72585,
+        rim: 0xfbcfe8,
         cheek: 0xff7aa8,
         mouth: 0xbe185d
       }
     : {
-        skin: 0xf0c29c,
-        skinShadow: 0xc98d6b,
+        skin: 0xe9ad7c,
+        skinShadow: 0xbd7f5d,
         hair: 0x17213a,
         hairAccent: 0x2e6f9e,
         shirt: 0x0f766e,
         collar: 0xe0f2fe,
         accent: 0x38bdf8,
+        rim: 0xbae6fd,
         cheek: 0xfb923c,
         mouth: 0x1d4ed8
       };
 
-  const halo = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 48, 18),
-    createAvatarMaterial(THREE, {
-      color: isFemale ? 0xff8fc8 : 0x7dd3fc,
-      opacity: 0.34,
-      phong: false
-    })
-  );
-  halo.name = "avatar-privacy-halo";
-  halo.scale.set(1.18, 1.42, 0.06);
-  halo.position.set(0, -0.04, 0.19);
-  halo.renderOrder = 32;
-
-  const shoulder = new THREE.Mesh(
-    new THREE.SphereGeometry(0.36, 32, 14),
-    createAvatarMaterial(THREE, { color: palette.shirt, shininess: 20 })
-  );
-  shoulder.name = "avatar-shoulders";
-  shoulder.scale.set(1.85, 0.5, 0.14);
-  shoulder.position.set(0, -0.58, 0.24);
-  shoulder.renderOrder = 34;
-
-  const collar = new THREE.Mesh(
-    new THREE.SphereGeometry(0.18, 24, 10),
-    createAvatarMaterial(THREE, { color: palette.collar, opacity: 0.96, phong: false })
-  );
-  collar.name = "avatar-collar";
-  collar.scale.set(1.8, 0.36, 0.08);
-  collar.position.set(0, -0.48, 0.36);
-  collar.renderOrder = 36;
-
-  const neck = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.095, 0.12, 0.25, 24),
-    createAvatarMaterial(THREE, { color: palette.skinShadow, shininess: 26 })
-  );
-  neck.name = "avatar-neck";
-  neck.position.set(0, -0.38, 0.34);
-  neck.renderOrder = 37;
-
-  const faceShadow = new THREE.Mesh(
-    new THREE.SphereGeometry(0.41, 44, 22),
-    createAvatarMaterial(THREE, { color: palette.skinShadow, opacity: 0.5, phong: false })
-  );
-  faceShadow.name = "avatar-face-shadow";
-  faceShadow.scale.set(1.04, 1.2, 0.09);
-  faceShadow.position.set(0.026, -0.08, 0.28);
-  faceShadow.renderOrder = 38;
-
+  addAvatarBust(THREE, group, palette, isFemale);
+  addAvatarHair(THREE, group, palette, isFemale);
   const face = new THREE.Mesh(
-    new THREE.SphereGeometry(0.41, 56, 28),
-    createAvatarMaterial(THREE, { color: palette.skin, phong: false })
+    new THREE.SphereGeometry(0.39, 64, 32),
+    createAvatarMaterial(THREE, { color: palette.skin, shininess: 48, specular: 0xfff4df })
   );
   face.name = "avatar-face";
-  face.scale.set(0.98, 1.2, 0.18);
-  face.position.set(0, -0.06, 0.35);
+  face.scale.set(0.96, 1.12, 0.46);
+  face.position.set(0, -0.04, 0.38);
   face.renderOrder = 40;
 
-  const rim = new THREE.Mesh(
-    new THREE.TorusGeometry(0.43, 0.016, 12, 88),
-    createAvatarMaterial(THREE, {
-      color: palette.accent,
-      opacity: 0.8,
-      phong: false,
-      side: THREE.DoubleSide
-    })
+  const chinVolume = new THREE.Mesh(
+    new THREE.SphereGeometry(0.18, 28, 14),
+    createAvatarMaterial(THREE, { color: palette.skinShadow, opacity: 0.28, shininess: 20 })
   );
-  rim.name = "avatar-face-rim";
-  rim.scale.set(1.0, 1.22, 0.1);
-  rim.position.set(0, -0.06, 0.43);
-  rim.renderOrder = 43;
+  chinVolume.name = "avatar-chin-volume";
+  chinVolume.scale.set(1.35, 0.46, 0.2);
+  chinVolume.position.set(0, -0.33, 0.55);
+  chinVolume.renderOrder = 41;
 
-  group.add(halo, shoulder, collar, neck, faceShadow);
-  addAvatarHair(THREE, group, palette, isFemale);
-  group.add(face, rim);
+  group.add(face, chinVolume);
+  addAvatarHeadVolumes(THREE, group, palette);
   addAvatarFaceDetails(THREE, group, palette, isFemale);
-  addAvatarPrivacySignals(THREE, group, palette, isFemale);
 
   const badge = createAvatarPrivacyBadge(THREE, isFemale);
-  badge.position.set(0, -0.74, 0.52);
-  badge.scale.setScalar(0.58);
+  badge.position.set(0, -0.78, 0.68);
+  badge.scale.setScalar(0.5);
   badge.renderOrder = 56;
 
   group.add(badge);
@@ -226,105 +175,202 @@ function createPrivacyAvatar(THREE, avatarType) {
   return group;
 }
 
+function addAvatarBust(THREE, group, palette, isFemale) {
+  const torso = new THREE.Mesh(
+    new THREE.SphereGeometry(0.34, 40, 18),
+    createAvatarMaterial(THREE, { color: palette.shirt, shininess: 36, specular: 0x88ffff })
+  );
+  torso.name = "avatar-3d-torso";
+  torso.scale.set(isFemale ? 1.45 : 1.58, 0.74, 0.42);
+  torso.position.set(0, -0.68, 0.27);
+  torso.renderOrder = 30;
+
+  const chestShade = new THREE.Mesh(
+    new THREE.SphereGeometry(0.27, 28, 12),
+    createAvatarMaterial(THREE, { color: palette.accent, opacity: 0.32, phong: false })
+  );
+  chestShade.name = "avatar-torso-accent";
+  chestShade.scale.set(1.4, 0.42, 0.16);
+  chestShade.position.set(0, -0.62, 0.58);
+  chestShade.renderOrder = 38;
+
+  const neck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.105, 0.13, 0.26, 28),
+    createAvatarMaterial(THREE, { color: palette.skinShadow, shininess: 34 })
+  );
+  neck.name = "avatar-3d-neck";
+  neck.position.set(0, -0.43, 0.38);
+  neck.renderOrder = 32;
+
+  const collarMaterial = createAvatarMaterial(THREE, { color: palette.collar, shininess: 28 });
+  [-1, 1].forEach((side) => {
+    const collar = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.09, 0.08), collarMaterial);
+    collar.name = `avatar-collar-3d-${side}`;
+    collar.position.set(side * 0.12, -0.55, 0.61);
+    collar.rotation.z = side * 0.4;
+    collar.renderOrder = 42;
+    group.add(collar);
+  });
+
+  [-1, 1].forEach((side) => {
+    const shoulder = new THREE.Mesh(
+      new THREE.SphereGeometry(0.2, 28, 12),
+      createAvatarMaterial(THREE, { color: palette.shirt, shininess: 30 })
+    );
+    shoulder.name = `avatar-rounded-shoulder-${side}`;
+    shoulder.scale.set(1.4, 0.58, 0.38);
+    shoulder.position.set(side * 0.34, -0.66, 0.31);
+    shoulder.renderOrder = 31;
+    group.add(shoulder);
+  });
+
+  group.add(torso, chestShade, neck);
+}
+
+function addAvatarHeadVolumes(THREE, group, palette) {
+  const sideMaterial = createAvatarMaterial(THREE, { color: palette.skinShadow, opacity: 0.22, shininess: 18 });
+  [-1, 1].forEach((side) => {
+    const cheekVolume = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 12), sideMaterial);
+    cheekVolume.name = `avatar-cheek-volume-${side}`;
+    cheekVolume.scale.set(0.55, 1.22, 0.25);
+    cheekVolume.position.set(side * 0.31, -0.11, 0.28);
+    cheekVolume.renderOrder = 34;
+
+    const jawVolume = new THREE.Mesh(new THREE.SphereGeometry(0.12, 22, 10), sideMaterial);
+    jawVolume.name = `avatar-jaw-volume-${side}`;
+    jawVolume.scale.set(0.72, 0.8, 0.2);
+    jawVolume.position.set(side * 0.23, -0.3, 0.3);
+    jawVolume.renderOrder = 34;
+
+    group.add(cheekVolume, jawVolume);
+  });
+}
+
 function addAvatarHair(THREE, group, palette, isFemale) {
   const hairMaterial = createAvatarMaterial(THREE, {
     color: palette.hair,
-    shininess: 28,
+    shininess: 44,
     specular: 0x222222
   });
   const accentMaterial = createAvatarMaterial(THREE, {
     color: palette.hairAccent,
-    opacity: 0.82,
-    phong: false
+    shininess: 36,
+    specular: 0x335577
   });
 
   if (isFemale) {
-    const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.45, 46, 22), hairMaterial);
+    const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.43, 56, 26), hairMaterial);
     backHair.name = "avatar-long-hair-back";
-    backHair.scale.set(1.12, 1.48, 0.16);
-    backHair.position.set(0, -0.04, 0.25);
-    backHair.renderOrder = 35;
+    backHair.scale.set(1.16, 1.42, 0.34);
+    backHair.position.set(0, -0.08, 0.24);
+    backHair.renderOrder = 28;
 
-    const crown = new THREE.Mesh(new THREE.SphereGeometry(0.44, 46, 18), hairMaterial);
+    const crown = new THREE.Mesh(new THREE.SphereGeometry(0.4, 48, 20), hairMaterial);
     crown.name = "avatar-hair-crown";
-    crown.scale.set(1.14, 0.66, 0.14);
-    crown.position.set(0, 0.31, 0.52);
-    crown.renderOrder = 48;
+    crown.scale.set(1.18, 0.66, 0.36);
+    crown.position.set(0, 0.27, 0.43);
+    crown.renderOrder = 44;
 
     [-1, 1].forEach((side) => {
-      const sideLock = new THREE.Mesh(new THREE.SphereGeometry(0.19, 28, 14), hairMaterial);
+      const sideLock = createAvatarCapsule(THREE, 0.075, 0.46, hairMaterial);
       sideLock.name = `avatar-hair-side-${side}`;
-      sideLock.scale.set(0.94, 2.08, 0.14);
-      sideLock.position.set(side * 0.35, -0.12, 0.5);
-      sideLock.renderOrder = 48;
+      sideLock.scale.set(1.18, 1.0, 0.72);
+      sideLock.position.set(side * 0.34, -0.08, 0.5);
+      sideLock.rotation.z = side * 0.08;
+      sideLock.renderOrder = 45;
       group.add(sideLock);
     });
 
-    [-0.18, 0.02, 0.2].forEach((x, index) => {
-      const bang = new THREE.Mesh(new THREE.SphereGeometry(0.105, 24, 12), index === 1 ? accentMaterial : hairMaterial);
+    [
+      { x: -0.19, y: 0.22, z: 0.66, sx: 1.5, rz: 0.25, accent: false },
+      { x: 0.02, y: 0.25, z: 0.69, sx: 1.65, rz: -0.08, accent: true },
+      { x: 0.2, y: 0.2, z: 0.66, sx: 1.35, rz: -0.3, accent: false }
+    ].forEach((part, index) => {
+      const bang = new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 14), part.accent ? accentMaterial : hairMaterial);
       bang.name = `avatar-soft-bang-${index}`;
-      bang.scale.set(1.4, 0.74, 0.12);
-      bang.position.set(x, 0.23 - index * 0.018, 0.59);
-      bang.rotation.z = (index - 1) * 0.22;
+      bang.scale.set(part.sx, 0.84, 0.42);
+      bang.position.set(part.x, part.y, part.z);
+      bang.rotation.z = part.rz;
       bang.renderOrder = 50;
       group.add(bang);
     });
+
+    const shine = new THREE.Mesh(
+      new THREE.SphereGeometry(0.085, 18, 10),
+      createAvatarMaterial(THREE, { color: palette.rim, opacity: 0.42, phong: false })
+    );
+    shine.name = "avatar-hair-soft-highlight";
+    shine.scale.set(1.6, 0.56, 0.14);
+    shine.position.set(0.16, 0.28, 0.74);
+    shine.rotation.z = -0.18;
+    shine.renderOrder = 51;
+    group.add(shine);
 
     group.add(backHair, crown);
     return;
   }
 
-  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.41, 42, 18), hairMaterial);
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.39, 44, 18), hairMaterial);
   crown.name = "avatar-short-hair-crown";
-  crown.scale.set(1.08, 0.62, 0.14);
-  crown.position.set(0, 0.3, 0.52);
-  crown.renderOrder = 48;
+  crown.scale.set(1.08, 0.62, 0.34);
+  crown.position.set(0, 0.29, 0.45);
+  crown.renderOrder = 44;
 
-  const quiff = new THREE.Mesh(new THREE.SphereGeometry(0.17, 28, 14), accentMaterial);
+  const quiff = new THREE.Mesh(new THREE.SphereGeometry(0.15, 30, 14), accentMaterial);
   quiff.name = "avatar-hair-quiff";
-  quiff.scale.set(1.4, 0.72, 0.14);
-  quiff.position.set(0.1, 0.39, 0.61);
+  quiff.scale.set(1.45, 0.78, 0.38);
+  quiff.position.set(0.1, 0.38, 0.67);
   quiff.rotation.z = -0.35;
   quiff.renderOrder = 50;
 
+  const shine = new THREE.Mesh(
+    new THREE.SphereGeometry(0.075, 18, 10),
+    createAvatarMaterial(THREE, { color: palette.rim, opacity: 0.36, phong: false })
+  );
+  shine.name = "avatar-short-hair-highlight";
+  shine.scale.set(1.5, 0.52, 0.12);
+  shine.position.set(0.17, 0.37, 0.75);
+  shine.rotation.z = -0.25;
+  shine.renderOrder = 51;
+
   [-1, 1].forEach((side) => {
-    const sideHair = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 12), hairMaterial);
+    const sideHair = new THREE.Mesh(new THREE.SphereGeometry(0.12, 24, 12), hairMaterial);
     sideHair.name = `avatar-short-side-hair-${side}`;
-    sideHair.scale.set(0.64, 1.15, 0.12);
-    sideHair.position.set(side * 0.35, 0.12, 0.51);
-    sideHair.renderOrder = 48;
+    sideHair.scale.set(0.68, 1.08, 0.28);
+    sideHair.position.set(side * 0.34, 0.12, 0.5);
+    sideHair.renderOrder = 45;
     group.add(sideHair);
   });
 
-  group.add(crown, quiff);
+  group.add(crown, quiff, shine);
 }
 
 function addAvatarFaceDetails(THREE, group, palette, isFemale) {
-  const white = createAvatarMaterial(THREE, { color: 0xfafafa, phong: false });
-  const pupil = createAvatarMaterial(THREE, { color: 0x111827, phong: false });
-  const brow = createAvatarMaterial(THREE, { color: palette.hair, opacity: 0.92, phong: false });
-  const cheek = createAvatarMaterial(THREE, { color: palette.cheek, opacity: isFemale ? 0.42 : 0.28, phong: false });
+  const white = createAvatarMaterial(THREE, { color: 0xfafafa, shininess: 18 });
+  const pupil = createAvatarMaterial(THREE, { color: 0x111827, shininess: 22 });
+  const brow = createAvatarMaterial(THREE, { color: palette.hair, shininess: 20 });
+  const cheek = createAvatarMaterial(THREE, { color: palette.cheek, opacity: isFemale ? 0.36 : 0.24, phong: false });
 
   [-1, 1].forEach((side) => {
     const ear = new THREE.Mesh(
-      new THREE.SphereGeometry(0.08, 22, 10),
+      new THREE.SphereGeometry(0.074, 22, 12),
       createAvatarMaterial(THREE, { color: palette.skinShadow, shininess: 18 })
     );
     ear.name = `avatar-ear-${side}`;
-    ear.scale.set(0.72, 1.18, 0.08);
-    ear.position.set(side * 0.41, -0.02, 0.38);
+    ear.scale.set(0.72, 1.15, 0.34);
+    ear.position.set(side * 0.39, -0.015, 0.41);
     ear.renderOrder = 39;
 
     const eyeWhite = new THREE.Mesh(new THREE.SphereGeometry(0.061, 22, 10), white);
     eyeWhite.name = `avatar-eye-white-${side}`;
-    eyeWhite.scale.set(1.42, 0.72, 0.07);
-    eyeWhite.position.set(side * 0.145, 0.045, 0.55);
+    eyeWhite.scale.set(1.34, 0.72, 0.22);
+    eyeWhite.position.set(side * 0.14, 0.045, 0.72);
     eyeWhite.renderOrder = 50;
 
     const eyePupil = new THREE.Mesh(new THREE.SphereGeometry(0.028, 18, 8), pupil);
     eyePupil.name = `avatar-eye-pupil-${side}`;
-    eyePupil.scale.set(0.86, 1.0, 0.06);
-    eyePupil.position.set(side * 0.155, 0.036, 0.585);
+    eyePupil.scale.set(0.84, 1.0, 0.12);
+    eyePupil.position.set(side * 0.152, 0.036, 0.775);
     eyePupil.renderOrder = 51;
 
     const highlight = new THREE.Mesh(
@@ -332,41 +378,43 @@ function addAvatarFaceDetails(THREE, group, palette, isFemale) {
       createAvatarMaterial(THREE, { color: 0xffffff, opacity: 0.9, phong: false })
     );
     highlight.name = `avatar-eye-highlight-${side}`;
-    highlight.position.set(side * 0.144, 0.052, 0.607);
+    highlight.position.set(side * 0.144, 0.052, 0.805);
     highlight.renderOrder = 52;
 
-    const eyebrow = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.018, 0.012), brow);
+    const eyebrow = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.13, 12), brow);
     eyebrow.name = `avatar-eyebrow-${side}`;
-    eyebrow.position.set(side * 0.145, 0.145, 0.56);
-    eyebrow.rotation.z = side * (isFemale ? 0.12 : 0.08);
+    eyebrow.position.set(side * 0.145, 0.14, 0.745);
+    eyebrow.rotation.z = Math.PI / 2 + side * (isFemale ? 0.12 : 0.08);
+    eyebrow.rotation.x = Math.PI / 2;
     eyebrow.renderOrder = 52;
 
     const blush = new THREE.Mesh(new THREE.SphereGeometry(0.06, 18, 8), cheek);
     blush.name = `avatar-cheek-${side}`;
-    blush.scale.set(1.45, 0.54, 0.05);
-    blush.position.set(side * 0.23, -0.09, 0.545);
+    blush.scale.set(1.25, 0.5, 0.08);
+    blush.position.set(side * 0.225, -0.1, 0.72);
     blush.renderOrder = 49;
 
     group.add(ear, eyeWhite, eyePupil, highlight, eyebrow, blush);
   });
 
   const nose = new THREE.Mesh(
-    new THREE.SphereGeometry(0.032, 18, 8),
-    createAvatarMaterial(THREE, { color: palette.skinShadow, opacity: 0.58, phong: false })
+    new THREE.ConeGeometry(0.045, 0.105, 22),
+    createAvatarMaterial(THREE, { color: palette.skinShadow, shininess: 24 })
   );
   nose.name = "avatar-nose";
-  nose.scale.set(0.72, 1.45, 0.08);
-  nose.position.set(0, -0.06, 0.57);
+  nose.scale.set(0.72, 1.0, 0.72);
+  nose.position.set(0, -0.055, 0.77);
+  nose.rotation.x = Math.PI / 2;
   nose.renderOrder = 51;
 
   const smile = new THREE.Mesh(
-    new THREE.TorusGeometry(0.09, 0.008, 8, 26, Math.PI),
-    createAvatarMaterial(THREE, { color: palette.mouth, opacity: 0.9, phong: false })
+    new THREE.TorusGeometry(0.085, 0.01, 10, 30, Math.PI),
+    createAvatarMaterial(THREE, { color: palette.mouth, shininess: 22 })
   );
   smile.name = "avatar-smile";
-  smile.position.set(0, -0.205, 0.58);
+  smile.position.set(0, -0.205, 0.78);
   smile.rotation.z = Math.PI;
-  smile.scale.set(isFemale ? 1.15 : 0.95, isFemale ? 0.62 : 0.5, 0.08);
+  smile.scale.set(isFemale ? 1.15 : 0.95, isFemale ? 0.62 : 0.5, 0.16);
   smile.renderOrder = 52;
 
   const lowerLip = new THREE.Mesh(
@@ -374,42 +422,25 @@ function addAvatarFaceDetails(THREE, group, palette, isFemale) {
     createAvatarMaterial(THREE, { color: palette.mouth, opacity: isFemale ? 0.42 : 0.26, phong: false })
   );
   lowerLip.name = "avatar-lower-lip";
-  lowerLip.scale.set(2.0, 0.32, 0.06);
-  lowerLip.position.set(0, -0.22, 0.57);
+  lowerLip.scale.set(1.8, 0.3, 0.12);
+  lowerLip.position.set(0, -0.225, 0.75);
   lowerLip.renderOrder = 51;
 
   group.add(nose, smile, lowerLip);
 }
 
-function addAvatarPrivacySignals(THREE, group, palette, isFemale) {
-  const signalMaterial = createAvatarMaterial(THREE, {
-    color: palette.accent,
-    opacity: 0.74,
-    phong: false,
-    side: THREE.DoubleSide
-  });
-  const nodeMaterial = createAvatarMaterial(THREE, {
-    color: isFemale ? 0xffd6e7 : 0xbae6fd,
-    opacity: 0.86,
-    phong: false,
-    side: THREE.DoubleSide
-  });
-
-  [-1, 1].forEach((side) => {
-    const arc = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.006, 8, 32, Math.PI * 0.86), signalMaterial);
-    arc.name = `avatar-privacy-signal-${side}`;
-    arc.position.set(side * 0.43, -0.22, 0.54);
-    arc.rotation.z = side > 0 ? -Math.PI * 0.52 : Math.PI * 0.48;
-    arc.scale.set(0.9, 1.45, 0.08);
-    arc.renderOrder = 53;
-
-    const node = new THREE.Mesh(new THREE.CircleGeometry(0.026, 18), nodeMaterial);
-    node.name = `avatar-privacy-node-${side}`;
-    node.position.set(side * 0.46, -0.04, 0.59);
-    node.renderOrder = 54;
-
-    group.add(arc, node);
-  });
+function createAvatarCapsule(THREE, radius, height, material) {
+  const group = new THREE.Group();
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 24), material);
+  shaft.name = "avatar-capsule-shaft";
+  const capTop = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 12), material);
+  capTop.name = "avatar-capsule-top";
+  capTop.position.y = height / 2;
+  const capBottom = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 12), material);
+  capBottom.name = "avatar-capsule-bottom";
+  capBottom.position.y = -height / 2;
+  group.add(shaft, capTop, capBottom);
+  return group;
 }
 
 function createAvatarMaterial(THREE, options) {
@@ -425,8 +456,8 @@ function createAvatarMaterial(THREE, options) {
     color,
     transparent: opacity < 1,
     opacity,
-    depthWrite: false,
-    depthTest: false,
+    depthWrite: opacity >= 1,
+    depthTest: true,
     side
   };
   if (!phong) {
