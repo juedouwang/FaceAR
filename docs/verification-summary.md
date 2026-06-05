@@ -55,10 +55,10 @@ npm run profile:mediapipe-ar
 | MediaPipe 视频筛选 | `party-hats-crop-wide_faces.webm` 达到 4 张脸，`birthday-party-hats-mixkit-4608.mp4` 达到 3 张脸 |
 | 主浏览器验证 | 4 个活动 track，暂停帧 FPS 60 |
 | 手动隐私动作绑定 | 点击 `Track 1 / Face 1` 后绑定 `Privacy blur shield`，页面进入 manual 模式 |
-| 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，2 个身份绑定 track，FPS 57 |
+| 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，2 个身份绑定 track，FPS 58 |
 | 身份绑定负例 | 注册 `Stranger -> privacyBlur` 后，4 个活动 track 的身份绑定数为 0 |
 | 受保护帧输出 | 成功导出 `verification-personashield-protected-frame.png` |
-| 性能 profile | p50 FPS 66.913，avg FPS 66.805，p50 活动人脸数 4 |
+| 性能 profile | p50 FPS 66.796，avg FPS 66.416，p50 活动人脸数 4 |
 
 ## 可视化证据
 
@@ -90,7 +90,7 @@ npm run profile:mediapipe-ar
 - `Person B`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `avatarFemale`，距离 0.0638。
 - 活动 track 数：4。
 - 身份绑定 track 数：2。
-- FPS：57。
+- FPS：58。
 
 ## 身份绑定负例详情
 
@@ -112,14 +112,14 @@ npm run profile:mediapipe-ar
 
 ## 性能结果
 
-`npm run profile:mediapipe-ar` 采样 35 次：
+`npm run profile:mediapipe-ar` 采样 37 次：
 
-- 后端：worker 35/35。
-- FPS：min 60.343，p50 66.913，p90 72.470，max 73.443，avg 66.805。
-- 检测耗时：p50 53.800 ms。
-- worker round trip：p50 58.900 ms。
-- 活动人脸：min 3，p50 4，avg 3.829。
-- jitter：p50 0.025，avg 0.039。
+- 后端：worker 37/37。
+- FPS：min 60.162，p50 66.796，p90 70.819，max 76.004，avg 66.416。
+- 检测耗时：p50 51.500 ms。
+- worker round trip：p50 57.000 ms。
+- 活动人脸：min 3，p50 4，avg 3.811。
+- jitter：p50 0.021，avg 0.036。
 
 ## 已知限制
 
@@ -127,5 +127,5 @@ npm run profile:mediapipe-ar
 - FaceAPI 身份识别不是法律意义上的身份认证。
 - 单张参考图仍受光照、姿态、清晰度影响。
 - 当前只能约束合规拍摄端，无法阻止不接入协议的设备。
-- 数字替身已升级为程序化 3D 卡通半身 avatar，可继续增强表情、骨骼动画和自定义外观。
+- 数字替身已升级为程序化高质感 3D 卡通半身 avatar，可继续增强表情、骨骼动画和自定义外观。
 - 当前输出为受保护 PNG 帧，后续可扩展为受保护视频录制。

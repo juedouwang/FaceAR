@@ -110,7 +110,7 @@ function createPrivacyAvatar(THREE, avatarType) {
       x: 0,
       y: -0.075,
       z: 0.42,
-      scale: 1.78
+      scale: 1.68
     });
   };
 
@@ -125,7 +125,9 @@ function createPrivacyAvatar(THREE, avatarType) {
         accent: 0xf72585,
         rim: 0xfbcfe8,
         cheek: 0xff7aa8,
-        mouth: 0xbe185d
+        mouth: 0xbe185d,
+        accessory: 0xf4e2cf,
+        glasses: 0x7c3aed
       }
     : {
         skin: 0xe9ad7c,
@@ -137,11 +139,14 @@ function createPrivacyAvatar(THREE, avatarType) {
         accent: 0x38bdf8,
         rim: 0xbae6fd,
         cheek: 0xfb923c,
-        mouth: 0x1d4ed8
+        mouth: 0x1d4ed8,
+        accessory: 0x22c55e,
+        glasses: 0x22c55e
       };
 
   addAvatarBust(THREE, group, palette, isFemale);
   addAvatarHair(THREE, group, palette, isFemale);
+  addAvatarHeadAccessory(THREE, group, palette, isFemale);
   const face = new THREE.Mesh(
     new THREE.SphereGeometry(0.39, 64, 32),
     createAvatarMaterial(THREE, { color: palette.skin, shininess: 48, specular: 0xfff4df })
@@ -163,6 +168,7 @@ function createPrivacyAvatar(THREE, avatarType) {
   group.add(face, chinVolume);
   addAvatarHeadVolumes(THREE, group, palette);
   addAvatarFaceDetails(THREE, group, palette, isFemale);
+  addAvatarAccessories(THREE, group, palette, isFemale);
 
   const badge = createAvatarPrivacyBadge(THREE, isFemale);
   badge.position.set(0, -0.78, 0.68);
@@ -345,11 +351,48 @@ function addAvatarHair(THREE, group, palette, isFemale) {
   group.add(crown, quiff, shine);
 }
 
+function addAvatarHeadAccessory(THREE, group, palette, isFemale) {
+  if (isFemale) {
+    const scarfMaterial = createAvatarMaterial(THREE, { color: palette.accessory, shininess: 38, specular: 0xffffff });
+    const scarf = new THREE.Mesh(new THREE.SphereGeometry(0.43, 48, 20), scarfMaterial);
+    scarf.name = "avatar-soft-headscarf";
+    scarf.scale.set(1.2, 0.76, 0.34);
+    scarf.position.set(0, 0.27, 0.39);
+    scarf.renderOrder = 43;
+
+    const foldMaterial = createAvatarMaterial(THREE, { color: 0xffffff, opacity: 0.32, phong: false });
+    const fold = new THREE.Mesh(new THREE.SphereGeometry(0.08, 18, 8), foldMaterial);
+    fold.name = "avatar-headscarf-highlight";
+    fold.scale.set(1.8, 0.52, 0.12);
+    fold.position.set(-0.18, 0.31, 0.68);
+    fold.rotation.z = 0.22;
+    fold.renderOrder = 52;
+    group.add(scarf, fold);
+    return;
+  }
+
+  const spikeMaterial = createAvatarMaterial(THREE, { color: palette.hairAccent, shininess: 42, specular: 0x445566 });
+  [
+    { x: -0.15, rz: 0.45, s: 0.9 },
+    { x: 0.02, rz: 0.08, s: 1.08 },
+    { x: 0.18, rz: -0.38, s: 0.84 }
+  ].forEach((part, index) => {
+    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.055, 0.22, 24), spikeMaterial);
+    spike.name = `avatar-hair-spike-${index}`;
+    spike.scale.set(part.s, 1, 0.8);
+    spike.position.set(part.x, 0.48, 0.58);
+    spike.rotation.z = part.rz;
+    spike.rotation.x = -0.45;
+    spike.renderOrder = 52;
+    group.add(spike);
+  });
+}
+
 function addAvatarFaceDetails(THREE, group, palette, isFemale) {
   const white = createAvatarMaterial(THREE, { color: 0xfafafa, shininess: 18 });
   const pupil = createAvatarMaterial(THREE, { color: 0x111827, shininess: 22 });
   const brow = createAvatarMaterial(THREE, { color: palette.hair, shininess: 20 });
-  const cheek = createAvatarMaterial(THREE, { color: palette.cheek, opacity: isFemale ? 0.36 : 0.24, phong: false });
+  const cheek = createAvatarMaterial(THREE, { color: palette.cheek, opacity: isFemale ? 0.44 : 0.28, phong: false });
 
   [-1, 1].forEach((side) => {
     const ear = new THREE.Mesh(
@@ -390,9 +433,22 @@ function addAvatarFaceDetails(THREE, group, palette, isFemale) {
 
     const blush = new THREE.Mesh(new THREE.SphereGeometry(0.06, 18, 8), cheek);
     blush.name = `avatar-cheek-${side}`;
-    blush.scale.set(1.25, 0.5, 0.08);
+    blush.scale.set(1.42, 0.56, 0.08);
     blush.position.set(side * 0.225, -0.1, 0.72);
     blush.renderOrder = 49;
+
+    if (isFemale) {
+      const liner = new THREE.Mesh(
+        new THREE.TorusGeometry(0.06, 0.004, 6, 18, Math.PI * 0.72),
+        createAvatarMaterial(THREE, { color: 0x1f2937, shininess: 12 })
+      );
+      liner.name = `avatar-eye-liner-${side}`;
+      liner.position.set(side * 0.14, 0.054, 0.735);
+      liner.rotation.z = side > 0 ? -0.08 : Math.PI + 0.08;
+      liner.scale.set(1.3, 0.46, 0.1);
+      liner.renderOrder = 53;
+      group.add(liner);
+    }
 
     group.add(ear, eyeWhite, eyePupil, highlight, eyebrow, blush);
   });
@@ -427,6 +483,81 @@ function addAvatarFaceDetails(THREE, group, palette, isFemale) {
   lowerLip.renderOrder = 51;
 
   group.add(nose, smile, lowerLip);
+}
+
+function addAvatarAccessories(THREE, group, palette, isFemale) {
+  if (isFemale) {
+    addAvatarBeautyMarkAndFreckles(THREE, group, palette, {
+      beautyMark: { x: 0.22, y: -0.18 },
+      freckleColor: 0x8a4b37,
+      opacity: 0.28
+    });
+    const earringMaterial = createAvatarMaterial(THREE, { color: 0xfbbf24, shininess: 68, specular: 0xffffff });
+    [-1, 1].forEach((side) => {
+      const earring = new THREE.Mesh(new THREE.SphereGeometry(0.026, 16, 8), earringMaterial);
+      earring.name = `avatar-earring-${side}`;
+      earring.position.set(side * 0.41, -0.12, 0.5);
+      earring.renderOrder = 54;
+      group.add(earring);
+    });
+    return;
+  }
+
+  addAvatarGlasses(THREE, group, palette);
+  addAvatarBeautyMarkAndFreckles(THREE, group, palette, {
+    freckleColor: 0x7c3f25,
+    opacity: 0.34
+  });
+}
+
+function addAvatarGlasses(THREE, group, palette) {
+  const frameMaterial = createAvatarMaterial(THREE, { color: palette.glasses, shininess: 34, specular: 0xffffff });
+  [-1, 1].forEach((side) => {
+    const frame = new THREE.Mesh(new THREE.TorusGeometry(0.074, 0.009, 8, 32), frameMaterial);
+    frame.name = `avatar-glasses-frame-${side}`;
+    frame.scale.set(1.28, 0.9, 0.1);
+    frame.position.set(side * 0.145, 0.045, 0.82);
+    frame.renderOrder = 56;
+    group.add(frame);
+  });
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.012, 0.018), frameMaterial);
+  bridge.name = "avatar-glasses-bridge";
+  bridge.position.set(0, 0.045, 0.82);
+  bridge.renderOrder = 56;
+  group.add(bridge);
+}
+
+function addAvatarBeautyMarkAndFreckles(THREE, group, palette, options = {}) {
+  const freckleMaterial = createAvatarMaterial(THREE, {
+    color: options.freckleColor ?? palette.skinShadow,
+    opacity: options.opacity ?? 0.3,
+    phong: false
+  });
+  [
+    [-0.19, -0.03, 0.81],
+    [-0.14, -0.07, 0.82],
+    [0.15, -0.04, 0.82],
+    [0.2, -0.08, 0.81]
+  ].forEach(([x, y, z], index) => {
+    const freckle = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 6), freckleMaterial);
+    freckle.name = `avatar-freckle-${index}`;
+    freckle.scale.set(1, 1, 0.18);
+    freckle.position.set(x, y, z);
+    freckle.renderOrder = 54;
+    group.add(freckle);
+  });
+
+  if (options.beautyMark) {
+    const mark = new THREE.Mesh(
+      new THREE.SphereGeometry(0.016, 12, 6),
+      createAvatarMaterial(THREE, { color: 0x3f241d, opacity: 0.68, phong: false })
+    );
+    mark.name = "avatar-beauty-mark";
+    mark.scale.set(1, 1, 0.14);
+    mark.position.set(options.beautyMark.x, options.beautyMark.y, 0.82);
+    mark.renderOrder = 55;
+    group.add(mark);
+  }
 }
 
 function createAvatarCapsule(THREE, radius, height, material) {
