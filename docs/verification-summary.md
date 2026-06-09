@@ -1,12 +1,12 @@
 # PersonaShield 验证结果汇总
 
-生成位置：本地 PersonaShield 工程（当前目录名 `PartyFaceAR`）。生成日期：2026-06-05。
+生成位置：本地 PersonaShield 工程（当前目录名 `PartyFaceAR`）。生成日期：2026-06-06。
 
 ## 当前目标状态
 
 项目已从原来的“多人脸差异化 AR 特效 Demo”改造为：
 
-**PersonaShield：面向 AI 眼镜拍摄场景的数字替身隐私防护原型。**
+**PersonaShield：面向 AI 眼镜拍摄场景的数字替身隐私防护原型**
 
 当前版本支持：
 
@@ -15,6 +15,9 @@
 - MediaPipe 多人脸检测、关键点和短时追踪；
 - `personId -> trackId -> privacyAction` 绑定；
 - 男性数字替身、女性数字替身、隐私遮挡和允许真实出镜四类隐私动作；
+- 程序化 Three.js 3D 数字头替身渲染；
+- 基于人脸锚点推断的 `face-anchor-full-cover-head` 覆盖模式；
+- `Agni-style pain face` 本地私有素材覆盖动作，素材从 `assets/private/agni-pain-face.png` 加载；
 - 点击选脸后的手动隐私动作绑定；
 - 受保护画面截图输出；
 - 正例身份绑定和陌生参考图负例拒绝测试。
@@ -32,41 +35,36 @@ python -m http.server 8000
 ## 已验证命令
 
 ```powershell
-npm run verify:all
-```
-
-该命令包含：
-
-```powershell
-npm test
-npm run screen:mediapipe
-npm run verify:mediapipe-ar
-npm run verify:manual-binding
 npm run verify:identity-binding
-npm run verify:identity-negative
-npm run profile:mediapipe-ar
+npm run verify:agni-face
 ```
+
+本轮重新生成：
+
+- `docs/verification-personashield-identity-binding.png`
+- `docs/verification-personashield-protected-frame.png`
+- `docs/verification-agni-pain-face.png`（本地私有素材截图，已加入 `.gitignore`，不上传公开仓库）
 
 ## 自动化验证结果
 
 | 验证项 | 结果 |
 | --- | --- |
-| 单元测试 | 通过，覆盖 tracking、隐私动作 fallback、ReferenceFaceManager、异步身份识别和负例不绑定 |
-| MediaPipe 视频筛选 | `party-hats-crop-wide_faces.webm` 达到 4 张脸，`birthday-party-hats-mixkit-4608.mp4` 达到 3 张脸 |
-| 主浏览器验证 | 4 个活动 track，暂停帧 FPS 60 |
-| 手动隐私动作绑定 | 点击 `Track 1 / Face 1` 后绑定 `Privacy blur shield`，页面进入 manual 模式 |
-| 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，2 个身份绑定 track，FPS 57 |
-| 身份绑定负例 | 注册 `Stranger -> privacyBlur` 后，4 个活动 track 的身份绑定数为 0 |
+| 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，2 个身份绑定 track |
+| 活动人脸数量 | 4 个 active tracks |
+| FPS | 58-61（多次验证波动） |
+| 参考图 descriptor | provider 为 `face-api-face-recognition-net`，长度 128 |
+| 男性替身渲染 | `avatarRenderer = threejs-full-cover-head`，`avatarSource = Procedural 3D male head`，`avatarCoverage = face-anchor-full-cover-head` |
+| 女性替身渲染 | `avatarRenderer = threejs-full-cover-head`，`avatarSource = Procedural 3D female head`，`avatarCoverage = face-anchor-full-cover-head` |
+| 阿格尼痛苦脸本地素材 | `avatarRenderer = local-private-face-asset`，`avatarCoverage = face-mask-private-asset`，手动绑定到 Track 1 |
 | 受保护帧输出 | 成功导出 `verification-personashield-protected-frame.png` |
-| 性能 profile | p50 FPS 66.913，avg FPS 66.805，p50 活动人脸数 4 |
 
 ## 可视化证据
 
-- `docs/verification-mediapipe-ar-privacy.png`：主界面暂停帧，展示 4 个活动 track、默认 `Allow real appearance`、FPS 和 HUD。
-- `docs/verification-manual-privacy-action.png`：手动点击选脸后，为指定 track 应用 `Privacy blur shield`。
-- `docs/verification-personashield-identity-binding.png`：注册 `Person A/B` 后，分别绑定男性/女性数字替身。
-- `docs/verification-personashield-protected-frame.png`：合成后的受保护画面输出，只包含视频和隐私替身层，不包含右侧 UI。
+- `docs/verification-personashield-identity-binding.png`：注册 `Person A/B` 后，分别绑定男性/女性 3D 数字头替身。
+- `docs/verification-personashield-protected-frame.png`：合成后的受保护画面输出，只包含视频和隐私替身层，不包含右侧 UI；已识别人物由 3D 数字头替身覆盖真实脸。
+- `docs/verification-agni-pain-face.png`：本地私有阿格尼痛苦脸素材覆盖人脸的手动绑定截图。该截图包含私有素材，仅用于本地报告和课堂演示。
 - `docs/verification-personashield-negative.png`：注册陌生参考图后，当前视频人脸不被错误绑定。
+- `docs/verification-manual-privacy-action.png`：手动点击选脸后，为指定 track 应用 `Privacy blur shield`。
 - `docs/verification-reference-person-a.png` 和 `docs/verification-reference-person-b.png`：自动化正例中裁剪出的参考人脸。
 - `docs/verification-stranger-reference.png`：自动化负例中使用的陌生参考人脸。
 
@@ -90,36 +88,7 @@ npm run profile:mediapipe-ar
 - `Person B`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128，绑定 `avatarFemale`，距离 0.0638。
 - 活动 track 数：4。
 - 身份绑定 track 数：2。
-- FPS：57。
-
-## 身份绑定负例详情
-
-`npm run verify:identity-negative` 自动完成以下流程：
-
-1. 打开同一验证视频。
-2. 从 `docs/candidate-frames/pool.jpg` 裁剪一张当前视频中不存在的陌生人参考图。
-3. 注册 `Stranger -> Privacy blur shield`。
-4. 等待 FaceAPI 对当前活动 track 做身份识别。
-5. 验证当前视频中的 4 个活动 track 均没有绑定到 `Stranger`。
-
-本次结果：
-
-- `Stranger`：provider 为 `face-api-face-recognition-net`，descriptor 长度 128。
-- 活动 track 数：4。
-- 身份绑定 track 数：0。
-- 4 个活动 track 均为 `below-threshold`。
-- 距离范围约 0.7378-0.9144，高于阈值 0.5。
-
-## 性能结果
-
-`npm run profile:mediapipe-ar` 采样 35 次：
-
-- 后端：worker 35/35。
-- FPS：min 60.343，p50 66.913，p90 72.470，max 73.443，avg 66.805。
-- 检测耗时：p50 53.800 ms。
-- worker round trip：p50 58.900 ms。
-- 活动人脸：min 3，p50 4，avg 3.829。
-- jitter：p50 0.025，avg 0.039。
+- FPS：58-61（多次验证波动）。
 
 ## 已知限制
 
@@ -127,5 +96,5 @@ npm run profile:mediapipe-ar
 - FaceAPI 身份识别不是法律意义上的身份认证。
 - 单张参考图仍受光照、姿态、清晰度影响。
 - 当前只能约束合规拍摄端，无法阻止不接入协议的设备。
-- 数字替身已升级为程序化 3D 卡通半身 avatar，可继续增强表情、骨骼动画和自定义外观。
-- 当前输出为受保护 PNG 帧，后续可扩展为受保护视频录制。
+- 当前数字替身为程序化 3D 数字头；完整 VRM 骨骼、表情重定向和动画仍是后续升级方向。
+- 当前没有人体姿态追踪或前景分割，身体覆盖范围由人脸锚点和脸部尺度推断。

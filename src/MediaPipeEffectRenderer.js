@@ -33,7 +33,8 @@ export class MediaPipeEffectRenderer {
         position: new THREE.Vector3(),
         scale: 1,
         rotation: new THREE.Euler(),
-        anchors: null
+        anchors: null,
+        landmarks: null
       };
       this.scene.add(group);
       return group;
@@ -62,6 +63,7 @@ export class MediaPipeEffectRenderer {
       activeSlots.add(track.slotIndex);
       faceObject.visible = true;
       const anchors = toSceneAnchors(track, this.aspect);
+      const landmarks = toSceneLandmarks(track, this.aspect);
       const eyeCenter = anchors?.eyeCenter ?? { x: track.x * this.aspect, y: track.y };
       const renderState = faceObject.userData.renderState;
       const targetPosition = new this.THREE.Vector3(eyeCenter.x, eyeCenter.y, 0);
@@ -78,6 +80,7 @@ export class MediaPipeEffectRenderer {
         renderState.scale = scale;
         renderState.rotation.copy(targetRotation);
         renderState.anchors = anchors;
+        renderState.landmarks = landmarks;
         renderState.initialized = true;
       } else {
         const anchorAlpha = track.predicted ? 0.96 : 0.88;
@@ -87,9 +90,11 @@ export class MediaPipeEffectRenderer {
         renderState.rotation.y = lerpAngle(renderState.rotation.y, targetRotation.y, track.predicted ? 0.94 : 0.9);
         renderState.rotation.z = lerpAngle(renderState.rotation.z, targetRotation.z, track.predicted ? 0.94 : 0.9);
         renderState.anchors = smoothSceneAnchors(renderState.anchors, anchors, anchorAlpha);
+        renderState.landmarks = smoothSceneLandmarks(renderState.landmarks, landmarks, anchorAlpha);
       }
 
       faceObject.userData.anchors = renderState.anchors;
+      faceObject.userData.landmarks = renderState.landmarks;
       faceObject.position.copy(renderState.position);
       faceObject.scale.setScalar(1);
       faceObject.rotation.copy(renderState.rotation);
@@ -97,6 +102,7 @@ export class MediaPipeEffectRenderer {
         child.userData.animate?.(timeSeconds);
         child.userData.update?.({
           anchors: renderState.anchors,
+          landmarks: renderState.landmarks,
           faceObject,
           track
         });
@@ -123,6 +129,13 @@ function toSceneAnchors(track, aspect) {
   return Object.fromEntries(
     Object.entries(track.anchors).map(([name, point]) => [name, toScenePoint(point, aspect)])
   );
+}
+
+function toSceneLandmarks(track, aspect) {
+  if (!Array.isArray(track.landmarks) || !track.landmarks.length) {
+    return null;
+  }
+  return track.landmarks.map((point) => toScenePoint(point, aspect));
 }
 
 function toScenePoint(point, aspect) {
@@ -183,6 +196,27 @@ function smoothSceneAnchors(previousAnchors, nextAnchors, alpha) {
   }));
 }
 
+function smoothSceneLandmarks(previousLandmarks, nextLandmarks, alpha) {
+  if (!nextLandmarks) {
+    return previousLandmarks;
+  }
+  if (!previousLandmarks || previousLandmarks.length !== nextLandmarks.length) {
+    return cloneLandmarks(nextLandmarks);
+  }
+  return nextLandmarks.map((point, index) => {
+    const previous = previousLandmarks[index];
+    return previous ? {
+      x: lerp(previous.x, point.x, alpha),
+      y: lerp(previous.y, point.y, alpha),
+      z: lerp(previous.z ?? 0, point.z ?? 0, alpha)
+    } : { ...point };
+  });
+}
+
 function cloneAnchors(anchors) {
   return Object.fromEntries(Object.entries(anchors).map(([name, point]) => [name, { ...point }]));
+}
+
+function cloneLandmarks(landmarks) {
+  return landmarks.map((point) => ({ ...point }));
 }

@@ -261,6 +261,38 @@ export class EffectManager {
     });
   }
 
+  getRuntimeEffectDebug() {
+    return Array.from(this.slotEffects.entries()).map(([slotIndex, { effectId, object }]) => ({
+      slotIndex,
+      effectId,
+      name: object?.name ?? "",
+      avatarSource: object?.userData?.avatarSource ?? null,
+      avatarRenderer: object?.userData?.avatarRenderer ?? null,
+      avatarCoverage: object?.userData?.avatarCoverage ?? null,
+      maskMode: object?.userData?.maskMode ?? getNestedUserDataValue(object, "maskMode"),
+      contourVisible: object?.userData?.contourVisible ?? getNestedUserDataValue(object, "contourVisible"),
+      maskPointCount: object?.userData?.maskPointCount ?? getNestedUserDataValue(object, "maskPointCount"),
+      sourceUvMode: object?.userData?.sourceUvMode ?? getNestedUserDataValue(object, "sourceUvMode"),
+      warpVertexCount: object?.userData?.warpVertexCount ?? getNestedUserDataValue(object, "warpVertexCount"),
+      childNames: object?.children?.map((child) => child.name).filter(Boolean) ?? []
+    }));
+  }
+
+}
+
+function getNestedUserDataValue(object, key) {
+  if (!object?.children?.length) {
+    return null;
+  }
+  const stack = [...object.children];
+  while (stack.length) {
+    const child = stack.shift();
+    if (child?.userData?.[key] != null) {
+      return child.userData[key];
+    }
+    stack.push(...(child?.children ?? []));
+  }
+  return null;
 }
 
 function facePriority(track) {
@@ -378,7 +410,7 @@ function getCinematicPreferredEffects(track, index) {
 }
 
 function isEffectSafeForTrack(effectId, track, index) {
-  if (["privacyAllow", "avatarMale", "avatarFemale", "privacyBlur"].includes(effectId)) {
+  if (["privacyAllow", "avatarMale", "avatarFemale", "agniPainFace", "privacyBlur"].includes(effectId)) {
     return true;
   }
   const x = Math.abs(track.x ?? 0);

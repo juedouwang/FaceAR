@@ -101,6 +101,24 @@ try {
     return activeBindings.length >= 2 && effectIds.size >= 2;
   }, null, { timeout: 15000 });
 
+  await page.waitForFunction(() => {
+    const effects = window.__PARTY_FACE_AR_MEDIAPIPE__?.effects ?? [];
+    return effects.some((effect) => (
+      effect.effectId === "avatarMale"
+      && effect.avatarRenderer === "threejs-full-cover-head"
+      && effect.avatarSource === "Procedural 3D male head"
+      && effect.avatarCoverage === "face-anchor-full-cover-head"
+      && effect.childNames?.includes("full-cover-digital-head-male")
+    ))
+      && effects.some((effect) => (
+        effect.effectId === "avatarFemale"
+        && effect.avatarRenderer === "threejs-full-cover-head"
+        && effect.avatarSource === "Procedural 3D female head"
+        && effect.avatarCoverage === "face-anchor-full-cover-head"
+        && effect.childNames?.includes("full-cover-digital-head-female")
+      ));
+  }, null, { timeout: 15000 });
+
   await page.waitForTimeout(900);
   const state = await page.evaluate(() => {
     const app = window.__PARTY_FACE_AR_MEDIAPIPE__;
@@ -108,6 +126,7 @@ try {
       activeTrackCount: app.activeTrackCount,
       fps: Math.round(app.fps),
       identity: app.identity,
+      effects: app.effects,
       tracks: app.tracks.map((track) => ({
         id: track.id,
         slotIndex: track.slotIndex,
@@ -164,6 +183,7 @@ try {
       distance: Number(binding.distance.toFixed(4)),
       confidence: Number(binding.confidence.toFixed(3))
     })),
+    effects: state.effects,
     screenshot: path.relative(rootDir, screenshotPath),
     protectedFrame: path.relative(rootDir, protectedFramePath)
   }, null, 2));

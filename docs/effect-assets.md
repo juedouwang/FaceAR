@@ -1,78 +1,76 @@
 # Effect Assets
 
-## What MediaPipe Provides
-
-MediaPipe Face Landmarker does not ship Douyin/TikTok-style commercial filter packs. It provides the tracking base:
-
-- Multiple face detection.
-- 478 3D landmarks per face.
-- Face pose and transformation data.
-- Blendshape scores for expression-driven effects.
-
-The privacy overlays and legacy visual filters in this project are built on top of those outputs.
-
 ## Current Privacy Action Set
 
-The main PersonaShield UI now exposes privacy actions instead of entertainment filters:
+The main PersonaShield UI exposes privacy actions instead of entertainment filters:
 
 | Action | Implementation | Source |
 | --- | --- | --- |
 | Allow real appearance | Keeps the live face unchanged when a registered person permits recording | Project logic |
-| Male digital substitute | Procedural Three.js 3D bust avatar with volumetric head, hair blocks, ears, raised eyes, brows, nose, smile, neck, shoulders, clothing, and status badge | Project implementation |
-| Female digital substitute | Procedural Three.js 3D bust avatar with volumetric head, long hair blocks, ears, raised eyes, brows, nose, smile, neck, shoulders, clothing, and status badge | Project implementation |
+| Male digital substitute | Procedural Three.js 3D full-cover digital head fitted from MediaPipe face landmarks, with hair volume, facial features, neck, and privacy badge | Project implementation |
+| Female digital substitute | Procedural Three.js 3D full-cover digital head fitted from MediaPipe face landmarks, with hair volume, facial features, neck, and privacy badge | Project implementation |
+| Agni-style pain face | Local private meme/reference face image loaded from an ignored local asset directory and fitted to the tracked face | `assets/private/agni-pain-face.png` local only, not committed |
 | Privacy blur shield | Opaque privacy/mosaic shield anchored to the tracked face | Project implementation |
+
+## Avatar Asset Decision
+
+We researched open-source avatar ecosystems before choosing the final asset path:
+
+- `pixiv/three-vrm`: strong reference ecosystem for VRM digital humans.
+- `ToxSam/open-source-avatars`: useful registry of open-source VRM avatar collections.
+- `madjin/vrm-samples`: useful VRoid/VRM sample source for future runtime experiments.
+
+However, direct full-body VRM usage was not adopted in the current MVP:
+
+- The project still depends on the older Jeeliz/Three.js r112 runtime.
+- Tested full-body VRM candidates were visually unsuitable for this privacy-substitute workflow: voxel characters looked too low-poly, while humanoid/robot models appeared as static T-pose overlays.
+- Newer `@pixiv/three-vrm` runtime integration would require a larger Three.js upgrade and broader visual regression testing.
+
+Final decision: use lightweight procedural Three.js full-cover digital heads in the real-time WebAR pipeline, while documenting VRM as a future upgrade direction. The renderer uses MediaPipe forehead, chin, and cheek landmarks to fit an oversized stylized 3D head that covers the real face, forehead, and hairline. This gives stable privacy coverage without requiring a Three.js upgrade or a full VRM runtime.
+
+## Avatar Rendering
+
+The current male/female substitutes are generated from code in `src/EffectFactory.js`. They are not Apple/Memoji assets
+and are not copied third-party character artwork. The public repository can therefore include the renderer without
+redistributing external avatar images.
+
+## Local Private Meme Asset
+
+The `Agni-style pain face` action is intentionally implemented as a local-only asset hook. The local demo can place a
+copyrighted or meme/reference image at:
+
+```text
+assets/private/agni-pain-face.png
+```
+
+`assets/private/` and `docs/verification-agni-pain-face.png` are ignored by Git. Public GitHub commits should include
+only the loader, UI option, and explanation, not the private image or screenshots containing that image.
 
 ## Legacy Effect Set
 
+The repository still keeps Apache-2.0 demo assets from `jeeliz/jeelizFaceFilter` as fallback and comparison material:
+
 | Effect | Implementation | Source |
 | --- | --- | --- |
-| Jeeliz VTO glasses | Reflective 3D frames and lenses with branch-fading shader, adapted from Jeeliz glasses VTO demo | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz face paint | Textured face mesh with alpha map, plus small cheek highlights for multi-person visibility | `jeeliz/jeelizFaceFilter` football makeup demo assets plus project overlay |
-| Textured party hat | Textured 3D straw hat adapted from the Jeeliz Luffy hat demo | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz puppy face | Textured 3D dog ears and nose with soft muzzle overlay, adapted from Jeeliz dog face demo | `jeeliz/jeelizFaceFilter` demo assets plus project overlay |
-| Jeeliz tiger mask | Textured tiger face mask adapted from the Jeeliz tiger demo, exposed as a manual high-impact effect | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz werewolf | Textured fur/head/teeth 3D headpiece adapted from the Jeeliz werewolf demo, used as the high-impact showcase effect | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz cinematic mask | Textured full-face mask with normal/emissive maps, adapted from the Casa-de-Papel demo | `jeeliz/jeelizFaceFilter` demo assets plus project overlay |
-| Jeeliz storm cloud | Textured cloud mesh, raindrops, and lightning animation adapted from the cloud demo | `jeeliz/jeelizFaceFilter` demo assets plus project animation |
-| Jeeliz party glasses | Textured Miel Pops glasses, exposed as a manual effect while calibration is refined | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz full mask | Textured Anonymous mask, exposed as a manual effect while calibration is refined | `jeeliz/jeelizFaceFilter` demo assets |
-| Jeeliz AR helmet | Rupy helmet shell and translucent visor, exposed as a manual effect while calibration is refined | `jeeliz/jeelizFaceFilter` demo assets |
-
-## Third-Party Asset Credits
-
-The repository also keeps Apache-2.0 demo assets from `jeeliz/jeelizFaceFilter` as fallback and comparison material:
-
-- `assets/jeeliz/glassesVTO/`: reflective sunglasses VTO frame/lens geometry and environment map.
-- `assets/jeeliz/football_makeup/`: alpha-mapped face paint mesh and texture.
-- `assets/jeeliz/luffys_hat/`: textured hat geometry and texture.
-- `assets/jeeliz/dog/`: dog ears/nose geometry and texture/normal/alpha maps.
-- `assets/jeeliz/miel_pops/`: party glasses frame/lens/branch/deco geometry and textures.
-- `assets/jeeliz/anonymous/`: full-face mask geometry and texture.
-- `assets/jeeliz/casa_de_papel/`: full-face cinematic mask geometry and diffuse/normal/reflect maps.
-- `assets/jeeliz/cloud/`: textured cloud geometry and drop texture.
-- `assets/jeeliz/rupy_helmet/`: helmet shell/visor geometry and texture.
-- `assets/jeeliz/tiger/`: tiger mask geometry and textures.
-- `assets/jeeliz/werewolf/`: werewolf head/fur/teeth geometry and diffuse/normal/alpha textures.
-
-The project uses selected assets from `hiukim/mind-ar-js` face-tracking examples. The MindAR project itself is MIT
-licensed, while several embedded 3D models are CC-BY-4.0 Sketchfab assets and require attribution.
-
-- `assets/mindar/glasses/`: "Thug Life | Cool glasses | Stylise goggles" by MR EXPERT, CC-BY-4.0.
-- `assets/mindar/glasses2/`: Sunglasses model by TiimB, CC-BY-4.0, according to the glTF asset metadata.
-- `assets/mindar/hat/`: "Clown Hat" by PatelDev, CC-BY-4.0.
-- `assets/mindar/earring/`: "Earring Jade" by Softmind Game Factory, CC-BY-4.0. Currently downloaded for evaluation, not used in the main effect cycle.
-
-The downloaded MindAR glTF assets are kept as documented references and fallback/evaluation material. `assets/mindar/hat2/`
-is intentionally not used in the main demo because it is clearly based on Mario's cap and is less suitable for a
-course/resume report screenshot.
+| Jeeliz VTO glasses | Reflective 3D frames and lenses with branch-fading shader | `jeeliz/jeelizFaceFilter` demo assets |
+| Jeeliz face paint | Textured face mesh with alpha map | `jeeliz/jeelizFaceFilter` football makeup demo assets plus project overlay |
+| Textured party hat | Textured 3D straw hat | `jeeliz/jeelizFaceFilter` Luffy hat demo |
+| Jeeliz puppy face | Textured 3D dog ears and nose with soft muzzle overlay | `jeeliz/jeelizFaceFilter` dog face demo |
+| Jeeliz tiger mask | Textured tiger face mask | `jeeliz/jeelizFaceFilter` tiger demo |
+| Jeeliz werewolf | Textured fur/head/teeth 3D headpiece | `jeeliz/jeelizFaceFilter` werewolf demo |
+| Jeeliz cinematic mask | Textured full-face mask with normal/emissive maps | `jeeliz/jeelizFaceFilter` Casa-de-Papel demo |
+| Jeeliz storm cloud | Textured cloud mesh, raindrops, and lightning animation | `jeeliz/jeelizFaceFilter` cloud demo |
+| Jeeliz party glasses | Textured Miel Pops glasses | `jeeliz/jeelizFaceFilter` demo assets |
+| Jeeliz full mask | Textured Anonymous mask | `jeeliz/jeelizFaceFilter` demo assets |
+| Jeeliz AR helmet | Rupy helmet shell and translucent visor | `jeeliz/jeelizFaceFilter` demo assets |
 
 ## Design Decision
 
-The goal is not to copy proprietary Douyin/TikTok filters. Those assets are normally commercial and not reusable in an
-open-source course project. PersonaShield uses the legacy open-source AR assets as background comparison material, while
-the primary deliverable is the identity-aware privacy action pipeline:
+The goal is not to copy proprietary Douyin/TikTok or Apple/Memoji assets. PersonaShield uses open-source AR effects as
+background comparison material, while the primary deliverable is the identity-aware privacy action pipeline:
 
-- Open-source/CC-attributed 3D models for recognizable AR accessories.
-- Procedural 3D cartoon bust avatars and privacy shields for face replacement.
 - MediaPipe landmarks and stable track IDs for real-time multi-person attachment.
-- FaceAPI identity descriptors for binding registered people to their selected privacy actions.
+- FaceAPI identity descriptors for binding registered people to selected privacy actions.
+- Local procedural 3D full-cover digital heads for clear, stable face replacement.
+- Local private face-asset loading for classroom-only meme-style face replacement without redistributing the image.
+- VRM ecosystem research as a documented future upgrade path, not a claim of current full VRM runtime integration.

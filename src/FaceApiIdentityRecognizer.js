@@ -7,6 +7,8 @@ const DEFAULT_INPUT_SIZE = 224;
 const DEFAULT_SCORE_THRESHOLD = 0.18;
 const DEFAULT_CROP_SIZE = 288;
 const DEFAULT_CROP_PADDING = [0.46, 0.72];
+const DEFAULT_WASM_PATH = "./vendor/tfjs-backend-wasm/";
+const DEFAULT_BACKEND_CANDIDATES = ["wasm", "cpu", "webgl"];
 
 export class FaceApiIdentityRecognizer {
   constructor({
@@ -16,7 +18,9 @@ export class FaceApiIdentityRecognizer {
     inputSize = DEFAULT_INPUT_SIZE,
     scoreThreshold = DEFAULT_SCORE_THRESHOLD,
     cropSize = DEFAULT_CROP_SIZE,
-    cropPadding = DEFAULT_CROP_PADDING
+    cropPadding = DEFAULT_CROP_PADDING,
+    wasmPath = DEFAULT_WASM_PATH,
+    backendCandidates = DEFAULT_BACKEND_CANDIDATES
   } = {}) {
     this.modelUrl = modelUrl;
     this.matchThreshold = matchThreshold;
@@ -25,10 +29,13 @@ export class FaceApiIdentityRecognizer {
     this.scoreThreshold = scoreThreshold;
     this.cropSize = cropSize;
     this.cropPadding = cropPadding;
+    this.wasmPath = wasmPath;
+    this.backendCandidates = backendCandidates;
     this.initialized = false;
     this.initPromise = null;
     this.queue = Promise.resolve();
     this.detectorOptions = null;
+    this.backend = null;
   }
 
   async init() {
@@ -42,9 +49,10 @@ export class FaceApiIdentityRecognizer {
   }
 
   async loadModels() {
-    faceapi.tf.setWasmPaths("./vendor/tfjs-backend-wasm/");
-    await faceapi.tf.setBackend("webgl");
-    await faceapi.tf.ready();
+    this.backend = await configureTensorflowBackend(faceapi.tf, {
+      wasmPath: this.wasmPath,
+      backendCandidates: this.backendCandidates
+    });
     await faceapi.tf.enableProdMode();
     await Promise.all([
       faceapi.nets.tinyFaceDetector.load(this.modelUrl),
@@ -240,9 +248,39 @@ export class FaceApiIdentityRecognizer {
       closeMatchGap: this.closeMatchGap,
       inputSize: this.inputSize,
       scoreThreshold: this.scoreThreshold,
-      initialized: this.initialized
+      initialized: this.initialized,
+      backend: this.backend
     };
   }
+}
+
+async function configureTensorflowBackend(tf, { wasmPath, backendCandidates }) {
+  if (wasmPath && typeof tf.setWasmPaths === "function") {
+    tf.setWasmPaths(wasmPath);
+  }
+
+  const candidates = Array.from(new Set(backendCandidates.filter(Boolean)));
+  const errors = [];
+  for (const backend of candidates) {
+    try {
+      const result = await tf.setBackend(backend);
+      await tf.ready();
+      const activeBackend = tf.getBackend?.() ?? backend;
+      if (result !== false && activeBackend === backend) {
+        return activeBackend;
+      }
+      errors.push(`${backend}: backend did not become active`);
+    } catch (error) {
+      errors.push(`${backend}: ${error?.message ?? error}`);
+    }
+  }
+
+  const activeBackend = tf.getBackend?.();
+  if (activeBackend) {
+    await tf.ready();
+    return activeBackend;
+  }
+  throw new Error(`No TensorFlow backend could be initialized (${errors.join("; ")})`);
 }
 
 export function faceDescriptorDistance(a, b) {
