@@ -10,6 +10,7 @@
     "screen:mediapipe": "node tools/run-mediapipe-video-screening.mjs",
     "verify:mediapipe-ar": "node tools/verify-mediapipe-ar.mjs",
     "verify:manual-binding": "node tools/verify-manual-face-binding.mjs",
+    "verify:agni-face": "node tools/verify-agni-pain-face.mjs",
     "verify:identity-binding": "node tools/verify-identity-binding.mjs",
     "verify:identity-negative": "node tools/verify-identity-negative.mjs",
     "profile:mediapipe-ar": "node tools/profile-mediapipe-ar.mjs",

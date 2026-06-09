@@ -218,7 +218,7 @@
           "matrixCount": 4
         }
       ],
-      "elapsedMs": 10018
+      "elapsedMs": 9688
     },
     {
       "sample": "birthday-party-hats-mixkit-4608.mp4",
@@ -435,7 +435,7 @@
           "matrixCount": 3
         }
       ],
-      "elapsedMs": 8864
+      "elapsedMs": 8520
     },
     {
       "sample": "friends-selfie-pool-mixkit-43089.mp4",
@@ -580,7 +580,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 4657
+      "elapsedMs": 4126
     },
     {
       "sample": "friends-group-selfie-mixkit-45657.mp4",
@@ -797,7 +797,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 2030
+      "elapsedMs": 1850
     },
     {
       "sample": "friends-smiling-camera-mixkit-5891.mp4",
@@ -1014,7 +1014,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 1976
+      "elapsedMs": 1810
     },
     {
       "sample": "friends-window-selfie-mixkit-8780.mp4",
@@ -1231,7 +1231,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 4089
+      "elapsedMs": 3865
     },
     {
       "sample": "nightclub-two-girls-mixkit-42292.mp4",
@@ -1448,7 +1448,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 4085
+      "elapsedMs": 3882
     },
     {
       "sample": "pexels-three-friends-selfie-35050402.mp4",
@@ -1593,7 +1593,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 4485
+      "elapsedMs": 4229
     },
     {
       "sample": "pexels-group-friends-5708805.mp4",
@@ -1696,7 +1696,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 2563
+      "elapsedMs": 2847
     },
     {
       "sample": "pexels-group-selfie-6214756.mp4",
@@ -1913,7 +1913,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 3906
+      "elapsedMs": 3718
     },
     {
       "sample": "pexels-friends-party-5529160.mp4",
@@ -2130,7 +2130,7 @@
           "matrixCount": 0
         }
       ],
-      "elapsedMs": 2232
+      "elapsedMs": 2109
     },
     {
       "sample": "pexels-group-selfie-crop-6214756.mp4",

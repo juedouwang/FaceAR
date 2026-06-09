@@ -467,7 +467,8 @@ function renderFrame() {
       motion: appState.latestMotionProfile
     },
     detectionBackend: appState.detectionBackend,
-    identity: identityState
+    identity: identityState,
+    effects: effectManager.getRuntimeEffectDebug()
   };
   window.__PERSONA_SHIELD__ = window.__PARTY_FACE_AR_MEDIAPIPE__;
 

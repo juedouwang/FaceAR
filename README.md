@@ -31,7 +31,10 @@ digital substitute or privacy shield instead of the real face.
   - `Allow real appearance`
   - `Male digital substitute`
   - `Female digital substitute`
+  - `Agni-style pain face`
   - `Privacy blur shield`
+- Render male/female procedural 3D full-cover digital heads with face-size fitting, soft materials, hair volumes, facial features, and privacy badges.
+- Load local private face assets from `assets/private/` for classroom-only meme-style face replacement without committing copyrighted images to Git.
 - Manually click a face and apply a privacy action as a fallback or demonstration tool.
 - Show per-track status, matched identity, distance, FPS, and active face count.
 - Capture a protected PNG frame by compositing the video and privacy overlay canvases.
@@ -39,6 +42,37 @@ digital substitute or privacy shield instead of the real face.
 
 Legacy Jeeliz/WebAR effect assets remain in the repository as fallback and comparison material, but the main UI now
 focuses on privacy actions instead of entertainment filters.
+
+## Avatar Rendering
+
+The current real-time substitutes are procedural Three.js 3D heads, not Apple/Memoji assets and not copied third-party
+character artwork. The renderer keeps the existing `avatarMale` and `avatarFemale` action IDs, but internally uses a
+`threejs-full-cover-head` path:
+
+- fit the digital head from MediaPipe forehead, chin, and cheek landmarks;
+- scale the head as an oversized cartoon head so the real forehead and hairline are covered, not just the inner face;
+- render a stylized 3D head shell, hair volumes, eyes, nose, mouth, neck, and a privacy badge;
+- keep the output lightweight enough for the existing Three.js r112 WebAR pipeline.
+
+This is suitable for the local course demo, but it is not yet full facial expression retargeting, body pose tracking, or
+video foreground segmentation.
+
+## Local Private Face Assets
+
+`Agni-style pain face` is implemented as a local private face-asset loader. The runtime looks for:
+
+```text
+assets/private/agni-pain-face.png
+```
+
+That directory is intentionally ignored by Git. This lets the local classroom demo use a meme/reference image while the
+public GitHub repository only contains the loading code and documentation, not the copyrighted image itself.
+
+We also researched and tested open-source VRM avatar ecosystems, including `pixiv/three-vrm`,
+`ToxSam/open-source-avatars`, and `madjin/vrm-samples`. In testing, the available full-body VRM candidates were either
+voxel/low-poly, static T-pose characters, or unstable in the existing Three.js r112 WebAR runtime, so the final real-time
+path uses lightweight procedural Three.js full-cover heads. This keeps the identity-binding demo stable and visually clear while
+leaving full VRM runtime integration as a future upgrade.
 
 ## Architecture
 
@@ -53,7 +87,7 @@ camera/local video
   -> FaceTrackManager short-term tracking
   -> IdentityTrackBinder low-frequency recognition
   -> EffectManager privacy action binding
-  -> Three.js digital substitute rendering
+  -> Three.js procedural full-cover head / privacy shield rendering
 ```
 
 MediaPipe handles multi-face detection, landmarks, and tracking anchors. FaceAPI handles local face-recognition
@@ -91,76 +125,29 @@ npm run verify:all
 The verification scripts generate screenshots under `docs/`, including identity binding, negative stranger rejection,
 manual privacy action binding, and MediaPipe runtime checks.
 
-## Current Scope
-
-This prototype intentionally does not implement:
-
-- real AI glasses SDK integration;
-- public deployment as a required deliverable;
-- Alipay or financial-grade identity verification;
-- decentralized identity / DID;
-- a production biometric authentication system;
-- legal enforcement against non-compliant cameras.
-
-The product positioning is:
-
-```text
-a reference implementation for compliant AI-glasses-style capture clients
-```
-
-The engineering goal is to prove that bystander privacy preferences can be registered, matched, visualized, and executed
-locally in a real-time browser video pipeline.
-
 ## 中文说明
 
-PersonaShield 是一个面向 AI 眼镜第一视角拍摄场景的本地 WebAR 隐私防护原型。项目从原来的多人脸 AR 特效 Demo 改造而来，核心目标不再是娱乐滤镜，而是验证一种“被拍摄者可以提前声明隐私偏好，拍摄端在画面中自动执行保护策略”的技术流程。
+PersonaShield 是一个面向 AI 眼镜第一视角拍摄场景的本地 WebAR 隐私防护原型。项目从原来的多人脸 AR 特效 Demo
+改造而来，核心目标不再是娱乐滤镜，而是验证一种“被拍摄者可提前声明隐私偏好，合规拍摄端在画面中自动执行保护策略”的技术流程。
 
-项目当前采用中心化/本地注册表 MVP 方案，不考虑 DID 或去中心化身份。用户可以上传参考人脸图像，注册一个受保护身份，并为该身份选择隐私动作。当摄像头或本地视频中出现该身份时，系统会把对应 track 绑定到该身份，并渲染该身份选择的数字替身或隐私遮挡。
+当前 MVP 采用本地注册表方案，不考虑 DID 或去中心化身份。用户可以上传参考人脸图像，注册受保护身份，并为该身份选择隐私动作。
+当摄像头或本地视频中出现该身份时，系统会把对应 track 绑定到该身份，并渲染该身份选择的数字替身或隐私遮挡。
 
-### 核心功能
+核心功能：
 
 - 使用 MediaPipe Face Landmarker 检测并追踪最多 4 张人脸。
 - 使用本地 FaceAPI 模型从参考图和实时 track crop 中提取 128 维人脸 descriptor。
-- 将注册身份与实时人脸 track 进行低频识别绑定，避免每帧做人脸识别。
-- 支持四类隐私动作：
-  - `Allow real appearance`：允许真实形象出镜。
-  - `Male digital substitute`：男性高质感 3D 卡通半身数字替身。
-  - `Female digital substitute`：女性高质感 3D 卡通半身数字替身。
-  - `Privacy blur shield`：隐私遮挡。
+- 通过“MediaPipe 实时检测追踪 + FaceAPI 低频身份识别”实现身份绑定，避免每帧做人脸识别。
+- 支持 `Allow real appearance`、`Male digital substitute`、`Female digital substitute`、`Privacy blur shield` 四类隐私动作。
+- 男性/女性数字替身使用程序化 Three.js 3D 数字头进行实时覆盖渲染，包含头部壳体、头发体块、五官、肩颈和隐私徽标。
+- 当前覆盖方式是根据已识别人脸锚点推断身体区域，并不等同于真实人体姿态追踪或视频分割。
+- 新增 `Agni-style pain face` 本地私有素材动作：运行时从 `assets/private/agni-pain-face.png` 加载素材覆盖人脸，素材目录已加入 `.gitignore`，不会上传到公开 GitHub。
 - 支持手动点击某张脸，为指定 track 临时选择隐私动作。
 - 支持导出受保护 PNG 帧，用于报告中的可视化展示。
 - 提供正例身份绑定、陌生人负例拒绝、手动绑定和性能 profile 的自动化验证脚本。
 
-### 本地运行
-
-```powershell
-cd "D:\研究生文件\20_Areas\研究生课程\增强现实与高级图形学\PartyFaceAR"
-python -m http.server 8000
-```
-
-打开：
-
-- 主页面：<http://127.0.0.1:8000/mediapipe-ar.html>
-- 固定验证帧：<http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25>
-
-摄像头模式需要在 `localhost`、`127.0.0.1` 或 HTTPS 下运行，因为浏览器摄像头权限要求安全上下文。
-
-### 测试与验收
-
-```powershell
-npm run verify:all
-```
-
-该命令会依次运行单元测试、MediaPipe 多人脸筛选、主页面验证、手动隐私动作绑定、身份绑定正例、身份绑定负例和性能 profile。报告可引用 `docs/` 目录下生成的截图，例如：
-
-- `docs/verification-personashield-identity-binding.png`
-- `docs/verification-personashield-protected-frame.png`
-- `docs/verification-personashield-negative.png`
-- `docs/verification-manual-privacy-action.png`
-
-### 项目边界
-
-当前版本是课程/简历项目级原型，不是生产级身份认证系统，也不接入真实 AI 眼镜 SDK。它不能阻止不接入协议的设备拍摄真实人脸，只能证明一种面向合规拍摄端的参考实现：注册身份、识别身份、读取隐私偏好，并在本地实时视频管线中执行数字替身替换。
+当前版本是课程/简历项目级原型，不是生产级身份认证系统，也不接入真实 AI 眼镜 SDK。它不能阻止未接入协议的设备拍摄真实人脸，
+只能证明一种面向合规拍摄端的参考实现：注册身份、识别身份、读取隐私偏好，并在本地实时视频管线中执行数字替身替换。
 
 ## License
 
