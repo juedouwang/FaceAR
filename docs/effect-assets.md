@@ -7,8 +7,8 @@ The main PersonaShield UI exposes privacy actions instead of entertainment filte
 | Action | Implementation | Source |
 | --- | --- | --- |
 | Allow real appearance | Keeps the live face unchanged when a registered person permits recording | Project logic |
-| Male digital substitute | Kenney CC0 GLB head-bust fitted from MediaPipe face landmarks, with procedural Three.js fallback | `assets/avatars/kenney-protagonists/` |
-| Female digital substitute | Kenney CC0 GLB head-bust fitted from MediaPipe face landmarks, with procedural Three.js fallback | `assets/avatars/kenney-protagonists/` |
+| Male digital substitute | Kenney CC0 GLB head-only mesh fitted from MediaPipe face landmarks, with procedural Three.js fallback | `assets/avatars/kenney-protagonists/` |
+| Female digital substitute | Kenney CC0 GLB head-only mesh fitted from MediaPipe face landmarks, with procedural Three.js fallback | `assets/avatars/kenney-protagonists/` |
 | Agni-style pain face | Local private meme/reference face image loaded from an ignored local asset directory and fitted to the tracked face | `assets/private/agni-pain-face.png` local only, not committed |
 | Privacy blur shield | Opaque privacy/mosaic shield anchored to the tracked face | Project implementation |
 
@@ -27,7 +27,7 @@ However, direct full-body VRM usage was not adopted in the current MVP:
 - Tested full-body VRM candidates were visually unsuitable for this privacy-substitute workflow: voxel characters looked too low-poly, while humanoid/robot models appeared as static T-pose overlays.
 - Newer `@pixiv/three-vrm` runtime integration would require a larger Three.js upgrade and broader visual regression testing.
 
-Final decision: use a lightweight Kenney CC0 head/neck/upper-shoulder bust in the real-time WebAR pipeline, while keeping the previous procedural Three.js avatar as a fallback. The Kenney FBX was converted to GLB and trimmed to the region that the current face-tracking pipeline can align reliably. The renderer uses MediaPipe forehead, chin, and cheek landmarks to fit an oversized stylized substitute that covers the real face, forehead, and hairline. Full VRM runtime integration remains a future upgrade direction.
+Final decision: use a lightweight Kenney CC0 head-only mesh in the real-time WebAR pipeline, while keeping the previous procedural Three.js avatar as a fallback. The Kenney FBX was converted to GLB and trimmed to the head region that the current face-tracking pipeline can align reliably. The renderer uses MediaPipe forehead, chin, and cheek landmarks to fit an oversized stylized substitute that covers the real face, forehead, and hairline. Full VRM runtime integration remains a future upgrade direction.
 
 ## Avatar Rendering
 
@@ -37,8 +37,8 @@ pack under CC0, so the public repository can include the extracted GLB, male/fem
 
 Runtime path:
 
-- primary: `kenney-glb-head-bust`;
-- assets: `kenney-protagonist-head-bust.glb`, `skaterMaleA.png`, `skaterFemaleA.png`;
+- primary: `kenney-glb-head-only`;
+- assets: `kenney-protagonist-head-only.glb`, `skaterMaleA.png`, `skaterFemaleA.png`;
 - fallback: procedural Three.js full-cover head if `GLTFLoader` or the GLB asset fails.
 
 ## Local Private Meme Asset
@@ -78,6 +78,6 @@ background comparison material, while the primary deliverable is the identity-aw
 
 - MediaPipe landmarks and stable track IDs for real-time multi-person attachment.
 - FaceAPI identity descriptors for binding registered people to selected privacy actions.
-- Kenney CC0 GLB head-bust substitutes for clearer face replacement, with procedural Three.js heads as fallback.
+- Kenney CC0 GLB head-only substitutes for clearer face replacement, with procedural Three.js heads as fallback.
 - Local private face-asset loading for classroom-only meme-style face replacement without redistributing the image.
 - VRM ecosystem research as a documented future upgrade path, not a claim of current full VRM runtime integration.

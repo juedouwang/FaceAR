@@ -16,7 +16,7 @@
 - MediaPipe 多人脸检测、关键点和短时追踪；
 - `personId -> trackId -> privacyAction` 绑定；
 - `Allow real appearance`、`Male digital substitute`、`Female digital substitute`、`Agni-style pain face`、`Privacy blur shield` 五类隐私动作；
-- Kenney CC0 GLB 头部/肩颈数字替身渲染，程序化 Three.js 数字头作为 fallback；
+- Kenney CC0 GLB 头部数字替身渲染，程序化 Three.js 数字头作为 fallback；
 - 基于人脸锚点推断的 `face-anchor-full-cover-head` 覆盖模式；
 - `Agni-style pain face` 本地私有素材覆盖动作，素材从 `assets/private/agni-pain-face.png` 加载；
 - 点击选脸后的手动隐私动作绑定；
@@ -46,7 +46,7 @@ npm run verify:all
 
 - `docs/verification-personashield-identity-binding.png`
 - `docs/verification-personashield-protected-frame.png`
-- `docs/avatar-candidate-screenshots/kenney-head-bust-render.png`
+- `docs/avatar-candidate-screenshots/kenney-head-only-render.png`
 
 `docs/verification-agni-pain-face.png` 属于本地私有素材截图，已通过 `.gitignore` 排除，不上传公开仓库。
 
@@ -56,17 +56,17 @@ npm run verify:all
 | --- | --- |
 | 身份绑定正例 | `Person A -> avatarMale`，`Person B -> avatarFemale`，共 2 个身份绑定 track |
 | 活动人脸数量 | 4 个 active tracks |
-| FPS | 身份绑定验证约 57-58；性能 profile 平均约 65 FPS，满足 24 FPS 以上实时性要求 |
+| FPS | 身份绑定验证约 60；性能 profile 平均约 65 FPS，满足 24 FPS 以上实时性要求 |
 | 参考图 descriptor | provider 为 `face-api-face-recognition-net`，长度 128 |
-| 男性替身渲染 | `avatarRenderer = kenney-glb-head-bust`，`avatarLoadState = kenney-glb-loaded`，`avatarCoverage = face-anchor-full-cover-head` |
-| 女性替身渲染 | `avatarRenderer = kenney-glb-head-bust`，`avatarLoadState = kenney-glb-loaded`，`avatarCoverage = face-anchor-full-cover-head` |
+| 男性替身渲染 | `avatarRenderer = kenney-glb-head-only`，`avatarLoadState = kenney-glb-loaded`，`avatarCoverage = face-anchor-full-cover-head` |
+| 女性替身渲染 | `avatarRenderer = kenney-glb-head-only`，`avatarLoadState = kenney-glb-loaded`，`avatarCoverage = face-anchor-full-cover-head` |
 | 受保护帧输出 | 成功导出 `verification-personashield-protected-frame.png` |
 
 ## 可视化证据
 
 - `docs/verification-personashield-identity-binding.png`：注册 `Person A/B` 后，系统分别绑定男性/女性 Kenney CC0 数字替身；右侧显示参考头像、隐私动作、识别距离和 track 状态。
 - `docs/verification-personashield-protected-frame.png`：最终导出的保护帧只包含视频画面和隐私替身层，不包含右侧 UI；已识别人物的真实脸、额头和发际线被数字替身覆盖。
-- `docs/avatar-candidate-screenshots/kenney-head-bust-render.png`：Kenney 头部/肩颈半身像的独立渲染预览，用于说明开源资产来源和视觉形态。
+- `docs/avatar-candidate-screenshots/kenney-head-only-render.png`：Kenney 头部模型的独立渲染预览，用于说明开源资产来源和视觉形态。
 - `docs/verification-personashield-negative.png`：注册视频中不存在的 `Stranger` 后，当前视频中的活动人脸没有被错误绑定。
 - `docs/verification-manual-privacy-action.png`：点击画面中的某个 face box 后，手动将该 track 设置为 `Privacy blur shield`。
 
@@ -91,5 +91,5 @@ npm run verify:all
 - FaceAPI 身份识别是技术匹配，不是法律意义上的身份认证。
 - 单张参考图仍受姿态、光照和清晰度影响。
 - 当前只能约束合规拍摄端，无法阻止未接入协议的设备。
-- 当前数字替身是 Kenney CC0 头部/肩颈半身像，不是完整 VRM 骨骼数字人，也没有表情重定向。
+- 当前数字替身是 Kenney CC0 头部模型，不是完整 VRM 骨骼数字人，也没有表情重定向。
 - 当前没有人体姿态追踪或前景分割，身体覆盖范围由人脸关键点和脸部尺寸推断。

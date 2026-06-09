@@ -13,12 +13,12 @@ These are VRM models with stable thumbnail access in the current environment. Th
 ## Priority 2: Kenney CC0 Character Packs
 
 Kenney assets have very clear CC0 licensing and low integration risk. Candidate C, `Animated Characters Protagonists`,
-was selected for the current feature branch. The runtime now uses an extracted GLB head/neck/upper-shoulder bust from
-this pack as the primary male/female digital substitute.
+was selected for the current feature branch. The runtime now uses an extracted GLB head-only mesh from this pack as the
+primary male/female digital substitute.
 
 ![Kenney Protagonists](05-kenney-protagonists.png)
 
-![Kenney Head Bust Runtime Preview](kenney-head-bust-render.png)
+![Kenney Head-Only Runtime Preview](kenney-head-only-render.png)
 
 ![Kenney Retro](05-kenney-retro.png)
 

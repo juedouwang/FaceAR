@@ -65,7 +65,7 @@ export const EFFECT_DEFINITIONS = [
 const ASSET_ROOT = "./assets/jeeliz";
 const PRIVATE_ASSET_ROOT = "./assets/private";
 const KENNEY_AVATAR_ROOT = "./assets/avatars/kenney-protagonists";
-const KENNEY_HEAD_BUST_MODEL = `${KENNEY_AVATAR_ROOT}/kenney-protagonist-head-bust.glb`;
+const KENNEY_HEAD_ONLY_MODEL = `${KENNEY_AVATAR_ROOT}/kenney-protagonist-head-only.glb`;
 const KENNEY_HEAD_BUST_SKINS = {
   male: `${KENNEY_AVATAR_ROOT}/skaterMaleA.png`,
   female: `${KENNEY_AVATAR_ROOT}/skaterFemaleA.png`
@@ -171,9 +171,9 @@ function createPrivacyAvatar(THREE, avatarType) {
   group.userData.privacyMode = "replace";
   group.userData.avatarType = avatarType;
   group.userData.avatarSource = isFemale
-    ? "Kenney CC0 female head-bust with procedural fallback"
-    : "Kenney CC0 male head-bust with procedural fallback";
-  group.userData.avatarRenderer = "kenney-glb-head-bust";
+    ? "Kenney CC0 female head-only with procedural fallback"
+    : "Kenney CC0 male head-only with procedural fallback";
+  group.userData.avatarRenderer = "kenney-glb-head-only";
   group.userData.avatarCoverage = "face-anchor-full-cover-head";
   return group;
 }
@@ -203,7 +203,7 @@ function createLocalFaceAssetEffect(THREE, assetId) {
 }
 
 function createKenneyPrivacyAvatar(THREE, avatarType) {
-  const group = createEffectGroup(THREE, `effect-kenney-head-bust-${avatarType}`);
+  const group = createEffectGroup(THREE, `effect-kenney-head-only-${avatarType}`);
   const fallback = createProceduralPrivacyAvatar(THREE, avatarType);
   fallback.name = `fallback-procedural-head-${avatarType}`;
   group.add(fallback);
@@ -220,10 +220,10 @@ function createKenneyPrivacyAvatar(THREE, avatarType) {
   }
 
   new THREE.GLTFLoader().load(
-    KENNEY_HEAD_BUST_MODEL,
+    KENNEY_HEAD_ONLY_MODEL,
     (gltf) => {
       const model = gltf.scene;
-      model.name = `kenney-head-bust-${avatarType}`;
+      model.name = `kenney-head-only-${avatarType}`;
       model.rotation.x = -Math.PI / 2;
       model.updateMatrixWorld(true);
       const box = new THREE.Box3().setFromObject(model);

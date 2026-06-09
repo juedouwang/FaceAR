@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Kenney Head Bust Preview</title>
+    <title>Kenney Head-Only Preview</title>
     <style>
       html,
       body {
@@ -49,13 +49,15 @@
       camera.position.set(0, -4, 0.02);
       camera.lookAt(0, 0, 0.004);
 
-      const texture = new THREE.TextureLoader().load(
-        "../../assets/avatars/kenney-protagonists/skaterMaleA.png"
-      );
+      const params = new URLSearchParams(window.location.search);
+      const modelPath = params.get("model") || "../../assets/avatars/kenney-protagonists/kenney-protagonist-head-only.glb";
+      const texturePath = params.get("texture") || "../../assets/avatars/kenney-protagonists/skaterMaleA.png";
+
+      const texture = new THREE.TextureLoader().load(texturePath);
       texture.flipY = false;
 
       new THREE.GLTFLoader().load(
-        "../../assets/avatars/kenney-protagonists/kenney-protagonist-head-bust.glb",
+        modelPath,
         (gltf) => {
           const model = gltf.scene;
           model.traverse((child) => {
