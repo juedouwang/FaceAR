@@ -64,6 +64,12 @@ export const EFFECT_DEFINITIONS = [
 
 const ASSET_ROOT = "./assets/jeeliz";
 const PRIVATE_ASSET_ROOT = "./assets/private";
+const KENNEY_AVATAR_ROOT = "./assets/avatars/kenney-protagonists";
+const KENNEY_HEAD_BUST_MODEL = `${KENNEY_AVATAR_ROOT}/kenney-protagonist-head-bust.glb`;
+const KENNEY_HEAD_BUST_SKINS = {
+  male: `${KENNEY_AVATAR_ROOT}/skaterMaleA.png`,
+  female: `${KENNEY_AVATAR_ROOT}/skaterFemaleA.png`
+};
 const FACE_OVAL_LANDMARK_INDICES = [
   10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288,
   397, 365, 379, 378, 400, 377, 152, 148, 176, 149, 150, 136,
@@ -152,18 +158,22 @@ function createPrivacyAvatar(THREE, avatarType) {
       z: 0.68,
       widthPadding: isFemale ? 1.78 : 1.7,
       heightPadding: 1.58,
+      modelWidth: 0.74,
+      modelHeight: 1.12,
       minScale: 0.92,
       maxScale: 2.42
     });
   };
 
-  const head = createProceduralPrivacyAvatar(THREE, avatarType);
+  const head = createKenneyPrivacyAvatar(THREE, avatarType);
   head.name = `full-cover-digital-head-${avatarType}`;
   group.add(head);
   group.userData.privacyMode = "replace";
   group.userData.avatarType = avatarType;
-  group.userData.avatarSource = isFemale ? "Procedural 3D female head" : "Procedural 3D male head";
-  group.userData.avatarRenderer = "threejs-full-cover-head";
+  group.userData.avatarSource = isFemale
+    ? "Kenney CC0 female head-bust with procedural fallback"
+    : "Kenney CC0 male head-bust with procedural fallback";
+  group.userData.avatarRenderer = "kenney-glb-head-bust";
   group.userData.avatarCoverage = "face-anchor-full-cover-head";
   return group;
 }
@@ -189,6 +199,69 @@ function createLocalFaceAssetEffect(THREE, assetId) {
   group.userData.avatarRenderer = "local-private-face-asset";
   group.userData.avatarCoverage = "face-mask-private-asset";
   group.userData.privateAsset = true;
+  return group;
+}
+
+function createKenneyPrivacyAvatar(THREE, avatarType) {
+  const group = createEffectGroup(THREE, `effect-kenney-head-bust-${avatarType}`);
+  const fallback = createProceduralPrivacyAvatar(THREE, avatarType);
+  fallback.name = `fallback-procedural-head-${avatarType}`;
+  group.add(fallback);
+
+  if (!THREE.GLTFLoader) {
+    group.userData.avatarLoadState = "fallback-no-gltf-loader";
+    return group;
+  }
+
+  const texture = getTexture(THREE, KENNEY_HEAD_BUST_SKINS[avatarType] ?? KENNEY_HEAD_BUST_SKINS.male);
+  texture.flipY = false;
+  if (THREE.sRGBEncoding) {
+    texture.encoding = THREE.sRGBEncoding;
+  }
+
+  new THREE.GLTFLoader().load(
+    KENNEY_HEAD_BUST_MODEL,
+    (gltf) => {
+      const model = gltf.scene;
+      model.name = `kenney-head-bust-${avatarType}`;
+      model.rotation.x = -Math.PI / 2;
+      model.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const targetHeight = 1.14;
+      const scale = targetHeight / Math.max(0.001, size.y);
+
+      model.scale.setScalar(scale);
+      model.position.set(
+        -center.x * scale,
+        -center.y * scale - 0.02,
+        -center.z * scale + 0.58
+      );
+
+      model.traverse((child) => {
+        if (!child.isMesh) {
+          return;
+        }
+        child.material = new THREE.MeshLambertMaterial({
+          map: texture,
+          side: THREE.DoubleSide
+        });
+        child.renderOrder = 58;
+        child.frustumCulled = false;
+      });
+
+      fallback.visible = false;
+      group.add(model);
+      group.userData.avatarLoadState = "kenney-glb-loaded";
+    },
+    undefined,
+    (error) => {
+      group.userData.avatarLoadState = "fallback-gltf-load-error";
+      console.warn("Failed to load Kenney privacy avatar:", error);
+    }
+  );
+
   return group;
 }
 

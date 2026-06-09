@@ -1,0 +1,90 @@
+[
+  {
+    "key": "robert",
+    "label": "Robert",
+    "note": "100Avatars R1 / CC0 shown in OSA UI / male candidate",
+    "ok": false,
+    "project": "100Avatars R1",
+    "format": "VRM",
+    "thumbnailUrl": "https://arweave.net/gaFPebQ9hSZDa_xNHkja8CH0Qde2y41L95VQTtroWNA",
+    "modelFileUrl": "https://arweave.net/gwG7w4bY-A5c3R6A6GOz3xBCgbPvkFQmqPIDtvnNsYI",
+    "error": "fetch failed"
+  },
+  {
+    "key": "rose",
+    "label": "Rose",
+    "note": "100Avatars R1 / CC0 shown in OSA UI / female candidate",
+    "ok": false,
+    "project": "100Avatars R1",
+    "format": "VRM",
+    "thumbnailUrl": "https://arweave.net/MsKV9G8Dvzv1rOfU8aCLlxZ2PtzQ-J9ijkdkFU-ExPo",
+    "modelFileUrl": "https://arweave.net/Ea1KXujzJatQgCFSMzGOzp_UtHqB1pyia--U3AtkMAY",
+    "error": "fetch failed"
+  },
+  {
+    "key": "anna",
+    "label": "Anna",
+    "note": "100Avatars R3 / human-style candidate",
+    "ok": false,
+    "project": "100Avatars R3",
+    "format": "VRM",
+    "thumbnailUrl": "https://arweave.net/w1coZXsJed2XwPaVJ-vBz2yb2NYu-g8AIzwwmZbY-Gk",
+    "modelFileUrl": "https://arweave.net/RqDioyluCcxDNHFPoXLUlbEQjhP1Fy9HtaGzLFVh0mE",
+    "error": "fetch failed"
+  },
+  {
+    "key": "vladi",
+    "label": "Vladi",
+    "note": "100Avatars R3 / human-style candidate",
+    "ok": false,
+    "project": "100Avatars R3",
+    "format": "VRM",
+    "thumbnailUrl": "https://arweave.net/qAtPvRdOC6DpSwv1RR7wjFFD6VeD8lJJK1P9bIXBfLI",
+    "modelFileUrl": "https://arweave.net/RFKE0Snx7V32gjvV82GcXT9-R7rDySQaKWlf1a2oYUc",
+    "error": "fetch failed"
+  },
+  {
+    "key": "aurora",
+    "label": "Aurora",
+    "note": "ToxSam / stylized robot-human candidate",
+    "ok": true,
+    "project": "ToxSam",
+    "format": "VRM",
+    "thumbnailUrl": "https://gateway.pinata.cloud/ipfs/QmWpCHs9ukHRzKGWFsCcoxYPZ88EGh7UCnnxmktVJPKPHp/aurora_normal.png",
+    "modelFileUrl": "https://gateway.pinata.cloud/ipfs/QmVvfCcAKYozNQwwxPbHyNohLyBJbTrCBSM1Ycck3ouJSj/Avartar_Aurora.vrm",
+    "file": "D:\\研究生文件\\20_Areas\\研究生课程\\增强现实与高级图形学\\PartyFaceAR\\docs\\avatar-candidate-screenshots\\thumbs\\aurora.png"
+  },
+  {
+    "key": "orion",
+    "label": "Orion",
+    "note": "ToxSam / stylized robot-human candidate",
+    "ok": true,
+    "project": "ToxSam",
+    "format": "VRM",
+    "thumbnailUrl": "https://gateway.pinata.cloud/ipfs/QmbFgSiuyBmcKDEHS3fonHM2EJQxiWmmr56crMKimcYf7m/orion_normal.png",
+    "modelFileUrl": "https://gateway.pinata.cloud/ipfs/Qmed8jVF5FvBn6Jerxk8Wm5DwRjuAHRfBXgofTue37orBC/Avatar_Orion.vrm",
+    "file": "D:\\研究生文件\\20_Areas\\研究生课程\\增强现实与高级图形学\\PartyFaceAR\\docs\\avatar-candidate-screenshots\\thumbs\\orion.png"
+  },
+  {
+    "key": "doze stocking",
+    "label": "Doze Stocking",
+    "note": "Xmas Chibis / cute big-head fallback",
+    "ok": false,
+    "project": "Xmas Chibis",
+    "format": "VRM",
+    "thumbnailUrl": "https://dweb.link/ipfs/Qmcy2yaDm9PxvG3VTmFrUNJJKgDHYAv3DshjAn1GBRDAsp/Avatar16_Pastel_r1.png",
+    "modelFileUrl": "https://dweb.link/ipfs/QmSpb8jZRtwDhpp7zjpfvU47GZyapmh8GvQApmzTxFcaLz/Avatar16_Pastel.vrm",
+    "error": "fetch failed"
+  },
+  {
+    "key": "snore stocking",
+    "label": "Snore Stocking",
+    "note": "Xmas Chibis / cute big-head fallback",
+    "ok": false,
+    "project": "Xmas Chibis",
+    "format": "VRM",
+    "thumbnailUrl": "https://dweb.link/ipfs/Qmcy2yaDm9PxvG3VTmFrUNJJKgDHYAv3DshjAn1GBRDAsp/Avatar16_Neutral_r1.png",
+    "modelFileUrl": "https://dweb.link/ipfs/QmSpb8jZRtwDhpp7zjpfvU47GZyapmh8GvQApmzTxFcaLz/Avatar16_Neutral.vrm",
+    "error": "fetch failed"
+  }
+]

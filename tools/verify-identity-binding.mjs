@@ -105,16 +105,18 @@ try {
     const effects = window.__PARTY_FACE_AR_MEDIAPIPE__?.effects ?? [];
     return effects.some((effect) => (
       effect.effectId === "avatarMale"
-      && effect.avatarRenderer === "threejs-full-cover-head"
-      && effect.avatarSource === "Procedural 3D male head"
+      && effect.avatarRenderer === "kenney-glb-head-bust"
+      && effect.avatarSource === "Kenney CC0 male head-bust with procedural fallback"
       && effect.avatarCoverage === "face-anchor-full-cover-head"
+      && effect.avatarLoadState === "kenney-glb-loaded"
       && effect.childNames?.includes("full-cover-digital-head-male")
     ))
       && effects.some((effect) => (
         effect.effectId === "avatarFemale"
-        && effect.avatarRenderer === "threejs-full-cover-head"
-        && effect.avatarSource === "Procedural 3D female head"
+        && effect.avatarRenderer === "kenney-glb-head-bust"
+        && effect.avatarSource === "Kenney CC0 female head-bust with procedural fallback"
         && effect.avatarCoverage === "face-anchor-full-cover-head"
+        && effect.avatarLoadState === "kenney-glb-loaded"
         && effect.childNames?.includes("full-cover-digital-head-female")
       ));
   }, null, { timeout: 15000 });

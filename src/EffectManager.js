@@ -269,6 +269,7 @@ export class EffectManager {
       avatarSource: object?.userData?.avatarSource ?? null,
       avatarRenderer: object?.userData?.avatarRenderer ?? null,
       avatarCoverage: object?.userData?.avatarCoverage ?? null,
+      avatarLoadState: object?.userData?.avatarLoadState ?? getNestedUserDataValue(object, "avatarLoadState"),
       maskMode: object?.userData?.maskMode ?? getNestedUserDataValue(object, "maskMode"),
       contourVisible: object?.userData?.contourVisible ?? getNestedUserDataValue(object, "contourVisible"),
       maskPointCount: object?.userData?.maskPointCount ?? getNestedUserDataValue(object, "maskPointCount"),

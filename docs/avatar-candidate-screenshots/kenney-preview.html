@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Kenney Head Bust Preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #1f2937;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+    <script src="../../vendor/jeeliz/libs/three/v112/three.min.js"></script>
+    <script src="../../vendor/three/examples/js/loaders/GLTFLoader.js"></script>
+  </head>
+  <body>
+    <canvas id="preview" width="900" height="700"></canvas>
+    <script>
+      window.__ready = false;
+      window.__error = null;
+      window.__debug = null;
+
+      const canvas = document.getElementById("preview");
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        preserveDrawingBuffer: true
+      });
+      renderer.setSize(900, 700, false);
+      renderer.setClearColor(0x1f2937, 1);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x1f2937);
+      scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+
+      const key = new THREE.DirectionalLight(0xffffff, 0.8);
+      key.position.set(0.4, -0.6, 1);
+      scene.add(key);
+
+      const camera = new THREE.OrthographicCamera(-2.2, 2.2, 1.7, -1.7, 0.001, 100);
+      camera.up.set(0, 0, 1);
+      camera.position.set(0, -4, 0.02);
+      camera.lookAt(0, 0, 0.004);
+
+      const texture = new THREE.TextureLoader().load(
+        "../../assets/avatars/kenney-protagonists/skaterMaleA.png"
+      );
+      texture.flipY = false;
+
+      new THREE.GLTFLoader().load(
+        "../../assets/avatars/kenney-protagonists/kenney-protagonist-head-bust.glb",
+        (gltf) => {
+          const model = gltf.scene;
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.material = new THREE.MeshLambertMaterial({
+                map: texture,
+                side: THREE.DoubleSide
+              });
+              child.frustumCulled = false;
+            }
+          });
+
+          const box = new THREE.Box3().setFromObject(model);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          const meshNames = [];
+          model.traverse((child) => {
+            if (child.isMesh) {
+              meshNames.push(child.name || "(mesh)");
+            }
+          });
+          window.__debug = {
+            before: {
+              min: box.min.toArray(),
+              max: box.max.toArray(),
+              center: center.toArray(),
+              size: size.toArray(),
+              meshNames
+            }
+          };
+          const scale = 3.1 / Math.max(size.x, size.y, size.z);
+          model.scale.setScalar(scale);
+          model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+          scene.add(model);
+          const afterBox = new THREE.Box3().setFromObject(model);
+          window.__debug.after = {
+            min: afterBox.min.toArray(),
+            max: afterBox.max.toArray(),
+            size: afterBox.getSize(new THREE.Vector3()).toArray()
+          };
+          renderer.render(scene, camera);
+          setTimeout(() => {
+            renderer.render(scene, camera);
+            window.__ready = true;
+          }, 500);
+        },
+        undefined,
+        (error) => {
+          window.__error = String(error?.message || error?.target?.status || error);
+        }
+      );
+    </script>
+  </body>
+</html>

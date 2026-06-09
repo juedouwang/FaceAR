@@ -55,7 +55,7 @@ flowchart LR
 - `FaceApiIdentityRecognizer`：加载本地 FaceAPI 模型，提取 128 维 descriptor 并计算距离。
 - `ReferenceFaceManager`：保存注册身份、参考头像、隐私动作、avatar 类型和 descriptor。
 - `IdentityTrackBinder`：负责 `personId -> trackId -> privacyAction` 的低频识别与绑定。
-- `EffectFactory`：新增四类隐私动作，并渲染程序化 Three.js 3D 数字头或隐私遮挡。
+- `EffectFactory`：新增隐私动作，并渲染 Kenney CC0 GLB 数字替身、程序化 fallback 或隐私遮挡。
 - `UIController`：提供身份注册、隐私动作选择、点击选脸、track 状态和截图输出。
 
 ## 5. 检测、识别与追踪策略
@@ -73,13 +73,13 @@ flowchart LR
 | 动作 | 含义 | 展示效果 |
 | --- | --- | --- |
 | Allow real appearance | 允许真实形象出镜 | 不遮挡 |
-| Male digital substitute | 使用男性数字替身 | 程序化 Three.js 3D 男性数字头，包含头部壳体、头发体块、五官、眼镜、肩颈和隐私徽标 |
-| Female digital substitute | 使用女性数字替身 | 程序化 Three.js 3D 女性数字头，包含头部壳体、长发体块、五官、肩颈和隐私徽标 |
+| Male digital substitute | 使用男性数字替身 | Kenney CC0 男性角色头部/肩颈半身像，按人脸关键点放大覆盖真实头部；模型加载失败时退回程序化 3D 数字头 |
+| Female digital substitute | 使用女性数字替身 | Kenney CC0 女性角色头部/肩颈半身像，按人脸关键点放大覆盖真实头部；模型加载失败时退回程序化 3D 数字头 |
 | Privacy blur shield | 隐私遮挡 | 马赛克/遮挡式保护 |
 
-本轮曾调研 `pixiv/three-vrm`、`ToxSam/open-source-avatars` 和 `madjin/vrm-samples`。实际测试后发现，部分 CC0 VRM 是 voxel 风格，部分模型是全身 T-pose/机甲风格，直接叠加到当前多人脸 WebAR 管线中容易出现错位或观感不稳定。因此当前主实现改为程序化 Three.js 3D 数字头，保证截图观感、遮脸稳定性和运行稳定性；完整 VRM 数字人作为后续升级方向。
+本轮曾调研 `pixiv/three-vrm`、`ToxSam/open-source-avatars`、`madjin/vrm-samples` 和 Kenney CC0 角色资源。实际测试后发现，部分 VRM 是 voxel 风格，部分模型是全身 T-pose/机甲风格，直接叠加到当前多人脸 WebAR 管线中容易出现错位或观感不稳定。最终选择 Kenney `Animated Characters Protagonists` 中的 CC0 角色资源，将 FBX 转换为 GLB，并提取头部、颈部和上肩区域作为当前主数字替身；完整 VRM 数字人作为后续升级方向。
 
-当前数字人替身采用 `face-anchor-full-cover-head` 覆盖方式：系统先识别人脸身份，再根据 MediaPipe forehead、chin、cheek landmarks 估算真实脸宽高，把 3D 数字头放在真实脸前方并略微放大。它已经能在画面中覆盖被保护者真实脸，但不是人体姿态追踪、前景分割或完整表情重定向。
+当前数字人替身采用 `face-anchor-full-cover-head` 覆盖方式：系统先识别人脸身份，再根据 MediaPipe forehead、chin、cheek landmarks 估算真实脸宽高，把 Kenney 头部半身像放在真实脸前方并放大。它已经能在画面中覆盖被保护者真实脸、额头和发际线，但不是人体姿态追踪、前景分割或完整表情重定向。
 
 ## 7. 可视化结果
 
@@ -126,7 +126,7 @@ http://127.0.0.1:8000/mediapipe-ar.html
 - 人脸识别是身份匹配，不是法律意义上的身份认证。
 - 单张参考图对姿态、光照和清晰度敏感。
 - 对未接入协议或恶意设备无法强制执行隐私保护。
-- 当前数字替身是程序化 3D 数字头，不是完整 VRM 骨骼数字人，也还没有表情重定向。
+- 当前数字替身是 Kenney CC0 头部/肩颈半身像，不是完整 VRM 骨骼数字人，也还没有表情重定向。
 - 当前身体覆盖区域由人脸锚点推断，没有人体姿态追踪和前景分割，人物靠近画面边缘或身体姿态变化大时可能出现裁切或贴合不准。
 - 中心化注册方案存在信任问题，DID/去中心化身份暂作未来方向。
 
