@@ -43,6 +43,7 @@ try {
     await page.waitForTimeout(assetSettleMs);
     state = await page.evaluate(() => window.__PARTY_FACE_AR_MEDIAPIPE__);
   }
+  const videoBackground = await sampleCanvasPixels(page, "videoCanvas");
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   const activeTracks = state.tracks.filter((track) => track.active);
@@ -53,6 +54,7 @@ try {
     pauseAt,
     rawDetected: state.rawDetected,
     profile: state.profile,
+    videoBackground,
     activeTracks: activeTracks.map((track) => ({
       id: track.id,
       slotIndex: track.slotIndex,
@@ -70,10 +72,45 @@ try {
   if (pauseAt === null && summary.fps < Number(process.env.MP_AR_MIN_FPS || 24)) {
     throw new Error(`Expected realtime FPS >= ${process.env.MP_AR_MIN_FPS || 24}, got ${summary.fps}`);
   }
+  if (!videoBackground || videoBackground.nonBlackRatio < 0.08) {
+    throw new Error(`Expected visible video background, got non-black ratio ${videoBackground?.nonBlackRatio ?? "n/a"}`);
+  }
 
   console.log(JSON.stringify(summary, null, 2));
 } finally {
   await browser.close();
+}
+
+async function sampleCanvasPixels(page, canvasId) {
+  return await page.evaluate((id) => {
+    const canvas = document.getElementById(id);
+    if (!canvas) {
+      return null;
+    }
+    const sample = document.createElement("canvas");
+    sample.width = 64;
+    sample.height = 64;
+    const context = sample.getContext("2d", { willReadFrequently: true });
+    context.drawImage(canvas, 0, 0, sample.width, sample.height);
+    const pixels = context.getImageData(0, 0, sample.width, sample.height).data;
+    let nonBlack = 0;
+    let alpha = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      if (pixels[index] || pixels[index + 1] || pixels[index + 2]) {
+        nonBlack += 1;
+      }
+      if (pixels[index + 3]) {
+        alpha += 1;
+      }
+    }
+    const total = sample.width * sample.height;
+    return {
+      width: canvas.width,
+      height: canvas.height,
+      nonBlackRatio: Number((nonBlack / total).toFixed(3)),
+      alphaRatio: Number((alpha / total).toFixed(3))
+    };
+  }, canvasId);
 }
 
 function compactAnchors(anchors) {

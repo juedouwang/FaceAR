@@ -7,6 +7,7 @@ export class MediaPipeEffectRenderer {
       canvas,
       alpha: true,
       antialias: false,
+      premultipliedAlpha: false,
       preserveDrawingBuffer: true,
       powerPreference: "high-performance"
     });
@@ -18,6 +19,7 @@ export class MediaPipeEffectRenderer {
       this.renderer.outputEncoding = this.THREE.sRGBEncoding;
     }
     this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearAlpha?.(0);
     this.scene = new THREE.Scene();
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -10, 10);
     this.scene.add(new THREE.AmbientLight(0xffffff, 1.35));
@@ -118,6 +120,9 @@ export class MediaPipeEffectRenderer {
   }
 
   render() {
+    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearAlpha?.(0);
+    this.renderer.clear(true, true, true);
     this.renderer.render(this.scene, this.camera);
   }
 }

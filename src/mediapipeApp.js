@@ -55,8 +55,13 @@ const appState = {
 };
 
 const video = document.getElementById("inputVideo");
+const videoCanvas = document.getElementById("videoCanvas");
 const canvas = document.getElementById("arCanvas");
 const beautyCanvas = document.getElementById("beautyCanvas");
+const videoCanvasContext = videoCanvas?.getContext("2d", {
+  alpha: false,
+  desynchronized: true
+});
 const faceSource = new MediaPipeFaceSource({ maxFaces: SETTINGS.maxFaces, detectionMaxWidth: SETTINGS.detectionMaxWidth });
 const anchorMotionTracker = new AnchorMotionTracker({ trackWidth: SETTINGS.detectionMaxWidth });
 const faceTrackManager = new FaceTrackManager({
@@ -334,23 +339,66 @@ async function startWithCamera() {
   appState.currentInputMode = "camera";
   ui.setInputMode("camera");
   stopLoop();
-  ui.setStatus("Requesting camera. Use HTTPS or localhost if the browser blocks access.");
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: "user",
-      width: { ideal: 960 },
-      height: { ideal: 720 }
-    },
-    audio: false
-  });
-  video.srcObject = stream;
-  video.removeAttribute("src");
-  video.loop = false;
-  video.muted = true;
-  video.playsInline = true;
-  await video.play();
-  resizeCanvas();
-  startLoop("MediaPipe camera mode running.");
+
+  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
+    const isSecure = window.isSecureContext || location.protocol === "https:" || location.hostname === "localhost";
+    ui.setStatus(isSecure
+      ? "This browser does not support camera access (getUserMedia unavailable)."
+      : "Camera needs a secure context. Open the page over HTTPS or via localhost.");
+    ui.setInputMode("video");
+    appState.currentInputMode = "video";
+    return;
+  }
+
+  ui.setStatus("Requesting camera access. Please allow the permission prompt.");
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: { ideal: 960 },
+        height: { ideal: 720 }
+      },
+      audio: false
+    });
+  } catch (error) {
+    ui.setStatus(describeCameraError(error));
+    ui.setInputMode("video");
+    appState.currentInputMode = "video";
+    return;
+  }
+
+  try {
+    video.srcObject = stream;
+    video.removeAttribute("src");
+    video.loop = false;
+    video.muted = true;
+    video.playsInline = true;
+    await video.play();
+    resizeCanvas();
+    startLoop("MediaPipe camera mode running.");
+  } catch (error) {
+    stream.getTracks().forEach((track) => track.stop());
+    ui.setStatus(`Failed to start the camera stream: ${error.message}`);
+    ui.setInputMode("video");
+    appState.currentInputMode = "video";
+  }
+}
+
+function describeCameraError(error) {
+  const name = error?.name || "";
+  switch (name) {
+    case "NotAllowedError":
+    case "SecurityError":
+      return "Camera permission was denied. Allow camera access in the browser site settings, then click Camera again.";
+    case "NotFoundError":
+    case "OverconstrainedError":
+      return "No usable camera was found. Connect a camera and try again.";
+    case "NotReadableError":
+      return "The camera is in use by another app. Close it and click Camera again.";
+    default:
+      return `Camera access failed: ${error?.message || name || "unknown error"}.`;
+  }
 }
 
 async function startVideoSource(src, status, pauseAt = null) {
@@ -412,6 +460,7 @@ function renderFrame() {
   }
 
   const now = performance.now();
+  drawVideoBackground();
   if (appState.detectionBackend === "worker") {
     requestWorkerDetectionIfNeeded(now);
   } else if ((!appState.freezeFrame && now >= appState.nextDetectionAt) || appState.latestTracks.length === 0) {
@@ -509,7 +558,7 @@ function captureProtectedFrame() {
   output.width = width;
   output.height = height;
   const context = output.getContext("2d");
-  context.drawImage(video, 0, 0, width, height);
+  context.drawImage(videoCanvas ?? video, 0, 0, width, height);
   context.drawImage(canvas, 0, 0, width, height);
   context.drawImage(beautyCanvas, 0, 0, width, height);
   const dataUrl = output.toDataURL("image/png");
@@ -661,10 +710,25 @@ async function fallbackToSyncDetector(error) {
 function resizeCanvas() {
   const width = video.videoWidth || 960;
   const height = video.videoHeight || 720;
+  if (videoCanvas) {
+    videoCanvas.width = width;
+    videoCanvas.height = height;
+  }
   canvas.width = width;
   canvas.height = height;
   renderer.resize(width, height);
   faceOverlay.resize(width, height);
+}
+
+function drawVideoBackground() {
+  if (!videoCanvasContext || !videoCanvas || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
+    return;
+  }
+  if (videoCanvas.width !== video.videoWidth || videoCanvas.height !== video.videoHeight) {
+    videoCanvas.width = video.videoWidth;
+    videoCanvas.height = video.videoHeight;
+  }
+  videoCanvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
 }
 
 function waitForVideo(element) {
