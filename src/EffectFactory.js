@@ -1,14 +1,14 @@
 const PRIVACY_ACTION_DEFINITIONS = [
   {
     id: "privacyAllow",
-    label: "Allow real appearance",
+    label: "保留真实容貌",
     color: "#45e0a3",
     category: "privacy",
     privacyMode: "allow"
   },
   {
     id: "avatarMale",
-    label: "Male digital substitute",
+    label: "男性数字替身",
     color: "#4cc9f0",
     category: "privacy",
     privacyMode: "replace",
@@ -16,7 +16,7 @@ const PRIVACY_ACTION_DEFINITIONS = [
   },
   {
     id: "avatarFemale",
-    label: "Female digital substitute",
+    label: "女性数字替身",
     color: "#f72585",
     category: "privacy",
     privacyMode: "replace",
@@ -24,7 +24,7 @@ const PRIVACY_ACTION_DEFINITIONS = [
   },
   {
     id: "agniPainFace",
-    label: "Agni-style pain face",
+    label: "Agni 痛苦表情脸",
     color: "#f8fafc",
     category: "privacy",
     privacyMode: "replace",
@@ -32,7 +32,7 @@ const PRIVACY_ACTION_DEFINITIONS = [
   },
   {
     id: "privacyBlur",
-    label: "Privacy blur shield",
+    label: "隐私模糊护盾",
     color: "#ffd166",
     category: "privacy",
     privacyMode: "blur"

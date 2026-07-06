@@ -55,13 +55,8 @@ const appState = {
 };
 
 const video = document.getElementById("inputVideo");
-const videoCanvas = document.getElementById("videoCanvas");
 const canvas = document.getElementById("arCanvas");
 const beautyCanvas = document.getElementById("beautyCanvas");
-const videoCanvasContext = videoCanvas?.getContext("2d", {
-  alpha: false,
-  desynchronized: true
-});
 const faceSource = new MediaPipeFaceSource({ maxFaces: SETTINGS.maxFaces, detectionMaxWidth: SETTINGS.detectionMaxWidth });
 const anchorMotionTracker = new AnchorMotionTracker({ trackWidth: SETTINGS.detectionMaxWidth });
 const faceTrackManager = new FaceTrackManager({
@@ -117,20 +112,20 @@ ui.bindHandlers({
   onInputModeChange: handleInputModeChange,
   onAssignmentModeChange: (mode) => {
     effectManager.setAssignmentMode(mode);
-    ui.setStatus(`Privacy action assignment mode: ${mode}`);
+    ui.setStatus(`隐私动作分配模式：${mode}`);
   },
   onFaceSelect: (track) => {
     effectManager.setAssignmentMode("manual");
     ui.setAssignmentMode?.("manual");
-    ui.setStatus(`Selected Track ${track.id} / Face ${track.slotIndex + 1}. Choose a privacy action.`);
+    ui.setStatus(`已选轨迹 ${track.id} / 人脸 ${track.slotIndex + 1}，请选择隐私动作。`);
   },
   onManualBindingChange: (target, effectId) => {
     effectManager.setAssignmentMode("manual");
     ui.setAssignmentMode?.("manual");
     effectManager.bindManualEffect(target, effectId);
     const effect = effectManager.getEffectDefinition(effectId);
-    const trackLabel = Number.isFinite(target?.trackId) ? `track ${target.trackId}` : `face ${Number(target?.slotIndex ?? target) + 1}`;
-    ui.setStatus(`Manual privacy action: ${trackLabel} -> ${effect.label}`);
+    const trackLabel = Number.isFinite(target?.trackId) ? `轨迹 ${target.trackId}` : `人脸 ${Number(target?.slotIndex ?? target) + 1}`;
+    ui.setStatus(`手动隐私动作：${trackLabel} -> ${effect.label}`);
   },
   onVideoFileChange: handleVideoFileChange,
   onToggleEffects: () => {
@@ -143,7 +138,7 @@ ui.bindHandlers({
     effectManager.resetBindings();
     identityTrackBinder.reset();
     ui.renderIdentityState(identityTrackBinder.getDebugState([]));
-    ui.setStatus("Bindings reset. Privacy decisions will be rebuilt from the next detected faces.");
+    ui.setStatus("绑定已重置，隐私决策将根据下次检测到的人脸重新生成。");
   },
   onReferenceFaceRegister: handleReferenceFaceRegister,
   onReferenceEffectChange: (personId, effectId) => {
@@ -153,7 +148,7 @@ ui.bindHandlers({
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
     if (person) {
-      ui.setStatus(`Updated ${person.name}: ${person.actionLabel ?? person.effectLabel}`);
+      ui.setStatus(`已更新 ${person.name}：${person.actionLabel ?? person.effectLabel}`);
     }
   },
   onReferenceRemove: (personId) => {
@@ -162,7 +157,7 @@ ui.bindHandlers({
     identityTrackBinder.reset();
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
-    ui.setStatus("Protected identity removed. Identity tracks will be rebuilt.");
+    ui.setStatus("受保护身份已移除，身份轨迹将重新生成。");
   },
   onCaptureFrame: captureProtectedFrame
 });
@@ -171,7 +166,7 @@ window.addEventListener("resize", resizeCanvas);
 
 window.addEventListener("load", async () => {
   try {
-    ui.setStatus("Loading privacy-aware face tracking...");
+    ui.setStatus("正在加载隐私感知人脸追踪...");
     const params = new URLSearchParams(window.location.search);
     applyRuntimeParams(params);
     await initDetectionBackend();
@@ -182,7 +177,7 @@ window.addEventListener("load", async () => {
     const videoUrl = SETTINGS.videoPresets[preset] ?? preset ?? SETTINGS.defaultVideo;
     await startWithVideoUrl(videoUrl, Number.isFinite(pauseAt) ? pauseAt : null);
   } catch (error) {
-    ui.setStatus(`MediaPipe AR failed: ${error.message}`);
+    ui.setStatus(`MediaPipe AR 启动失败：${error.message}`);
     throw error;
   }
 });
@@ -208,7 +203,7 @@ async function handleInputModeChange(mode) {
   if (mode === "camera") {
     await startWithCamera();
   } else {
-    ui.setStatus("Choose a local video file with visible faces.");
+    ui.setStatus("请选择一个含有清晰人脸的本地视频文件。");
     document.getElementById("videoFileInput").click();
   }
 }
@@ -223,16 +218,16 @@ async function handleVideoFileChange(file) {
     URL.revokeObjectURL(appState.inputObjectUrl);
   }
   appState.inputObjectUrl = URL.createObjectURL(file);
-  await startVideoSource(appState.inputObjectUrl, `Video loaded: ${file.name}`);
+  await startVideoSource(appState.inputObjectUrl, `已加载视频：${file.name}`);
 }
 
 async function handleReferenceFaceRegister({ name, effectId, file }) {
   if (!file) {
-    ui.setStatus("Choose a reference face image first.");
+    ui.setStatus("请先选择参考人脸图片。");
     return;
   }
   try {
-    ui.setStatus("Detecting the reference face locally...");
+    ui.setStatus("正在本地检测参考人脸...");
     const { descriptor, imageDataUrl } = await recognizer.createReferenceDescriptorFromFile(file);
     const person = referenceFaceManager.addPerson({
       name,
@@ -244,16 +239,16 @@ async function handleReferenceFaceRegister({ name, effectId, file }) {
     identityTrackBinder.reset();
     effectManager.clearIdentityBindings();
     ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
-    ui.setStatus(`Registered ${person.name}: ${person.actionLabel ?? person.effectLabel}`);
+    ui.setStatus(`已注册 ${person.name}：${person.actionLabel ?? person.effectLabel}`);
   } catch (error) {
-    ui.setStatus(`Reference registration failed: ${error.message}`);
+    ui.setStatus(`参考人脸注册失败：${error.message}`);
   }
 }
 
 async function startWithVideoUrl(url, pauseAt = null) {
   appState.currentInputMode = "video";
   ui.setInputMode("video");
-  await startVideoSource(url, `MediaPipe video mode: ${url}`, pauseAt);
+  await startVideoSource(url, `MediaPipe 视频模式：${url}`, pauseAt);
 }
 
 async function initDetectionBackend() {
@@ -261,7 +256,7 @@ async function initDetectionBackend() {
     try {
       await initDetectorWorker();
       appState.detectionBackend = "worker";
-      ui.setStatus("Face detector running in a worker.");
+      ui.setStatus("人脸检测器已在 Worker 线程中运行。");
       return;
     } catch (error) {
       console.warn("MediaPipe worker detector failed; falling back to main thread:", error);
@@ -343,14 +338,14 @@ async function startWithCamera() {
   if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
     const isSecure = window.isSecureContext || location.protocol === "https:" || location.hostname === "localhost";
     ui.setStatus(isSecure
-      ? "This browser does not support camera access (getUserMedia unavailable)."
-      : "Camera needs a secure context. Open the page over HTTPS or via localhost.");
+      ? "当前浏览器不支持摄像头访问（getUserMedia 不可用）。"
+      : "摄像头需要安全上下文，请通过 HTTPS 或 localhost 打开页面。");
     ui.setInputMode("video");
     appState.currentInputMode = "video";
     return;
   }
 
-  ui.setStatus("Requesting camera access. Please allow the permission prompt.");
+  ui.setStatus("正在请求摄像头访问，请在权限弹窗中允许。");
   let stream;
   try {
     stream = await navigator.mediaDevices.getUserMedia({
@@ -376,10 +371,10 @@ async function startWithCamera() {
     video.playsInline = true;
     await video.play();
     resizeCanvas();
-    startLoop("MediaPipe camera mode running.");
+    startLoop("MediaPipe 摄像头模式运行中。");
   } catch (error) {
     stream.getTracks().forEach((track) => track.stop());
-    ui.setStatus(`Failed to start the camera stream: ${error.message}`);
+    ui.setStatus(`摄像头视频流启动失败：${error.message}`);
     ui.setInputMode("video");
     appState.currentInputMode = "video";
   }
@@ -390,14 +385,14 @@ function describeCameraError(error) {
   switch (name) {
     case "NotAllowedError":
     case "SecurityError":
-      return "Camera permission was denied. Allow camera access in the browser site settings, then click Camera again.";
+      return "摄像头权限被拒绝。请在浏览器站点设置中允许摄像头访问，然后再次点击「摄像头」。";
     case "NotFoundError":
     case "OverconstrainedError":
-      return "No usable camera was found. Connect a camera and try again.";
+      return "未找到可用的摄像头。请连接摄像头后重试。";
     case "NotReadableError":
-      return "The camera is in use by another app. Close it and click Camera again.";
+      return "摄像头正被其他应用占用。请关闭该应用后再次点击「摄像头」。";
     default:
-      return `Camera access failed: ${error?.message || name || "unknown error"}.`;
+      return `摄像头访问失败：${error?.message || name || "未知错误"}。`;
   }
 }
 
@@ -460,7 +455,6 @@ function renderFrame() {
   }
 
   const now = performance.now();
-  drawVideoBackground();
   if (appState.detectionBackend === "worker") {
     requestWorkerDetectionIfNeeded(now);
   } else if ((!appState.freezeFrame && now >= appState.nextDetectionAt) || appState.latestTracks.length === 0) {
@@ -550,7 +544,7 @@ function captureProtectedFrame() {
   const width = video.videoWidth || canvas.width;
   const height = video.videoHeight || canvas.height;
   if (!width || !height) {
-    ui.setStatus("No video frame is available to capture yet.");
+    ui.setStatus("暂无可截取的视频画面。");
     return "";
   }
 
@@ -558,12 +552,12 @@ function captureProtectedFrame() {
   output.width = width;
   output.height = height;
   const context = output.getContext("2d");
-  context.drawImage(videoCanvas ?? video, 0, 0, width, height);
+  context.drawImage(video, 0, 0, width, height);
   context.drawImage(canvas, 0, 0, width, height);
   context.drawImage(beautyCanvas, 0, 0, width, height);
   const dataUrl = output.toDataURL("image/png");
   ui.setProtectedFrame?.(dataUrl);
-  ui.setStatus("Protected frame captured from the privacy-processed output.");
+  ui.setStatus("已从隐私处理后的画面截取受保护帧。");
   return dataUrl;
 }
 
@@ -700,7 +694,7 @@ async function fallbackToSyncDetector(error) {
   if (appState.detectionBackend === "sync") {
     return;
   }
-  ui.setStatus(`Worker detector fallback: ${error.message}`);
+  ui.setStatus(`Worker 检测器回退到主线程：${error.message}`);
   cleanupDetectorWorker();
   appState.detectionBackend = "sync";
   appState.detectorWorkerFailed = false;
@@ -710,25 +704,10 @@ async function fallbackToSyncDetector(error) {
 function resizeCanvas() {
   const width = video.videoWidth || 960;
   const height = video.videoHeight || 720;
-  if (videoCanvas) {
-    videoCanvas.width = width;
-    videoCanvas.height = height;
-  }
   canvas.width = width;
   canvas.height = height;
   renderer.resize(width, height);
   faceOverlay.resize(width, height);
-}
-
-function drawVideoBackground() {
-  if (!videoCanvasContext || !videoCanvas || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
-    return;
-  }
-  if (videoCanvas.width !== video.videoWidth || videoCanvas.height !== video.videoHeight) {
-    videoCanvas.width = video.videoWidth;
-    videoCanvas.height = video.videoHeight;
-  }
-  videoCanvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
 }
 
 function waitForVideo(element) {

@@ -1,85 +1,84 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>PersonaShield Privacy Avatar Demo</title>
+    <title>PersonaShield 隐私替身演示</title>
     <link rel="stylesheet" href="./src/styles.css">
     <script src="./vendor/jeeliz/libs/three/v112/three.min.js"></script>
     <script src="./vendor/three/examples/js/loaders/GLTFLoader.js"></script>
   </head>
   <body>
     <main class="app-shell">
-      <section class="stage" aria-label="PersonaShield privacy-protected preview">
+      <section class="stage" aria-label="PersonaShield 隐私保护预览">
         <video id="inputVideo" class="verify-video" muted playsinline loop preload="auto"></video>
-        <canvas id="videoCanvas" width="960" height="720"></canvas>
         <canvas id="arCanvas" width="960" height="720"></canvas>
         <canvas id="beautyCanvas" width="960" height="720"></canvas>
-        <div id="facePickerOverlay" class="face-picker-overlay" aria-label="Clickable face selector"></div>
-        <div class="status-bar" id="statusBar">Initializing PersonaShield...</div>
+        <div id="facePickerOverlay" class="face-picker-overlay" aria-label="可点击的人脸选择器"></div>
+        <div class="status-bar" id="statusBar">正在初始化 PersonaShield...</div>
       </section>
 
       <aside class="control-panel">
         <header>
-          <p class="eyebrow">AI glasses privacy prototype</p>
+          <p class="eyebrow">AI 眼镜隐私原型</p>
           <h1>PersonaShield</h1>
-          <p class="subtitle">Identity-aware digital substitutes for privacy-preserving first-person capture.</p>
+          <p class="subtitle">面向第一人称拍摄的身份感知数字替身，用于隐私保护。</p>
         </header>
 
         <div class="control-group">
-          <label for="inputMode">Input</label>
+          <label for="inputMode">输入源</label>
           <div class="segmented" id="inputMode">
-            <button type="button" data-input-mode="camera">Camera</button>
-            <button type="button" class="is-active" data-input-mode="video">Video</button>
+            <button type="button" data-input-mode="camera">摄像头</button>
+            <button type="button" class="is-active" data-input-mode="video">视频</button>
           </div>
           <input id="videoFileInput" class="file-input" type="file" accept="video/*">
         </div>
 
         <div class="control-group">
-          <label for="assignmentMode">Privacy action assignment</label>
+          <label for="assignmentMode">隐私动作分配</label>
           <div class="segmented" id="assignmentMode">
-            <button type="button" class="is-active" data-assignment-mode="auto">Auto</button>
-            <button type="button" data-assignment-mode="manual">Manual</button>
+            <button type="button" class="is-active" data-assignment-mode="auto">自动</button>
+            <button type="button" data-assignment-mode="manual">手动</button>
           </div>
         </div>
 
         <div class="control-group">
-          <label for="manualSlot">Manual privacy preview</label>
-          <div class="selected-face-summary" id="selectedFaceLabel">Selected face: none</div>
+          <label for="manualSlot">手动隐私预览</label>
+          <div class="selected-face-summary" id="selectedFaceLabel">已选人脸：无</div>
           <div class="manual-grid">
-            <select id="manualSlot" aria-label="Face slot"></select>
-            <select id="manualEffect" aria-label="Privacy action"></select>
+            <select id="manualSlot" aria-label="人脸槽位"></select>
+            <select id="manualEffect" aria-label="隐私动作"></select>
           </div>
         </div>
 
         <div class="control-group identity-panel">
-          <label for="referenceFaceInput">Protected identity registration</label>
+          <label for="referenceFaceInput">受保护身份注册</label>
           <div class="identity-grid">
-            <input id="referenceNameInput" class="text-input" type="text" value="Person A" aria-label="Reference person name">
-            <select id="referenceEffect" aria-label="Reference privacy action"></select>
+            <input id="referenceNameInput" class="text-input" type="text" value="人物 A" aria-label="参考人物姓名">
+            <select id="referenceEffect" aria-label="参考隐私动作"></select>
           </div>
           <input id="referenceFaceInput" class="file-input" type="file" accept="image/*">
-          <button type="button" id="registerReferenceButton" class="wide-button">Register protected identity</button>
-          <div id="referencePeopleList" class="reference-list" aria-label="Registered reference people"></div>
+          <button type="button" id="registerReferenceButton" class="wide-button">注册受保护身份</button>
+          <div id="referencePeopleList" class="reference-list" aria-label="已注册的参考人物"></div>
         </div>
 
         <div class="button-row">
-          <button type="button" id="toggleEffectsButton">Hide protection</button>
-          <button type="button" id="resetBindingsButton">Reset bindings</button>
+          <button type="button" id="toggleEffectsButton">隐藏保护</button>
+          <button type="button" id="resetBindingsButton">重置绑定</button>
         </div>
         <div class="control-group">
-          <button type="button" id="captureFrameButton" class="wide-button">Capture protected frame</button>
-          <a id="downloadFrameLink" class="download-link" hidden download="personashield-protected-frame.png">Download protected frame</a>
+          <button type="button" id="captureFrameButton" class="wide-button">截取受保护画面</button>
+          <a id="downloadFrameLink" class="download-link" hidden download="personashield-protected-frame.png">下载受保护画面</a>
         </div>
 
-        <section class="debug-panel" aria-label="Tracking debug panel">
+        <section class="debug-panel" aria-label="追踪调试面板">
           <div class="debug-kpis">
-            <div><span id="faceCount">0</span><small>faces</small></div>
-            <div><span id="fpsValue">0</span><small>fps</small></div>
-            <div><span id="modeValue">auto</span><small>mode</small></div>
+            <div><span id="faceCount">0</span><small>人脸</small></div>
+            <div><span id="fpsValue">0</span><small>帧率</small></div>
+            <div><span id="modeValue">自动</span><small>模式</small></div>
           </div>
-          <div class="slot-meter" id="slotMeter" aria-label="MediaPipe face slots"></div>
+          <div class="slot-meter" id="slotMeter" aria-label="MediaPipe 人脸槽位"></div>
           <div id="trackList" class="track-list"></div>
         </section>
       </aside>

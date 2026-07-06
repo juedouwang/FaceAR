@@ -404,7 +404,6 @@ select {
 }
 
 #verifyCanvas,
-#videoCanvas,
 #arCanvas,
 #beautyCanvas {
   position: absolute;
@@ -419,16 +418,12 @@ select {
   pointer-events: none;
 }
 
-#videoCanvas {
+#arCanvas {
   z-index: 1;
 }
 
-#arCanvas {
-  z-index: 2;
-}
-
 #beautyCanvas {
-  z-index: 3;
+  z-index: 2;
 }
 
 .stage:has(.face-picker-overlay) .status-bar {

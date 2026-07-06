@@ -135,7 +135,7 @@ export class UIController {
   }
 
   setEffectsButton(isVisible) {
-    this.elements.toggleEffectsButton.textContent = isVisible ? "Hide protection" : "Show protection";
+    this.elements.toggleEffectsButton.textContent = isVisible ? "隐藏保护" : "显示保护";
   }
 
   setProtectedFrame(dataUrl) {
@@ -145,7 +145,7 @@ export class UIController {
     }
     link.href = dataUrl;
     link.hidden = false;
-    link.textContent = "Download latest protected frame";
+    link.textContent = "下载最新受保护画面";
   }
 
   setInputMode(mode) {
@@ -183,7 +183,7 @@ export class UIController {
       const effect = effectManager.getTrackSummary(track);
       const identity = this.getIdentityForTrack(track.id);
       const confidence = Math.round((track.detected ?? 0) * 100);
-      const lost = track.active ? "tracking" : `lost ${Math.round(track.lostMs)}ms`;
+      const lost = track.active ? "追踪中" : `丢失 ${Math.round(track.lostMs)}ms`;
       const selectedClass = track.id === this.selectedTrackId ? " is-selected" : "";
       const identityText = isConfirmedIdentity(identity)
         ? `${identity.personName} / d ${formatDistance(identity.distance)}`
@@ -192,7 +192,7 @@ export class UIController {
         <article class="track-item${selectedClass}" data-track-id="${track.id}">
           <span class="track-swatch" style="background:${effect.color}"></span>
           <div>
-            <div class="track-title">Track ${track.id} / Slot ${track.slotIndex + 1}</div>
+            <div class="track-title">轨迹 ${track.id} / 槽位 ${track.slotIndex + 1}</div>
             <div class="track-meta">${effect.label} / ${confidence}% / x ${track.x.toFixed(2)} / y ${track.y.toFixed(2)}</div>
             <div class="track-identity">${identityText}</div>
           </div>
@@ -204,7 +204,7 @@ export class UIController {
 
   populateSelectors() {
     this.elements.manualSlot.innerHTML = Array.from({ length: this.maxFaces }, (_, index) => (
-      `<option value="${index}">Face ${index + 1}</option>`
+      `<option value="${index}">人脸 ${index + 1}</option>`
     )).join("");
 
     this.elements.manualEffect.innerHTML = this.privacyActionDefinitions.map((effect) => (
@@ -286,8 +286,8 @@ export class UIController {
             data-track-id="${track.id}"
             data-effect-id="${effect.id}"
             style="left:${box.left}%; top:${box.top}%; width:${box.width}%; height:${box.height}%; --face-color:${effect.color};"
-            aria-label="Select Track ${track.id} Slot ${track.slotIndex + 1}">
-            <span class="face-picker-tag">Track ${track.id} / Face ${track.slotIndex + 1}</span>
+            aria-label="选择轨迹 ${track.id} 槽位 ${track.slotIndex + 1}">
+            <span class="face-picker-tag">轨迹 ${track.id} / 人脸 ${track.slotIndex + 1}</span>
             <span class="face-picker-effect">${identityLabel}</span>
           </button>
         `;
@@ -326,13 +326,13 @@ export class UIController {
     }
     const track = this.getSelectedTrack();
     if (!track) {
-      label.textContent = "Selected face: none";
+      label.textContent = "已选人脸：无";
       return;
     }
     const effect = effectManager?.getTrackSummary(track);
     label.textContent = effect
-      ? `Selected face: Track ${track.id} / Face ${track.slotIndex + 1} / ${effect.label}`
-      : `Selected face: Track ${track.id} / Face ${track.slotIndex + 1}`;
+      ? `已选人脸：轨迹 ${track.id} / 人脸 ${track.slotIndex + 1} / ${effect.label}`
+      : `已选人脸：轨迹 ${track.id} / 人脸 ${track.slotIndex + 1}`;
   }
 
   activateSegment(selector, activeButton) {
@@ -349,27 +349,27 @@ export class UIController {
     }
     const people = this.identityState.registeredPeople ?? [];
     if (!people.length) {
-      list.innerHTML = `<div class="reference-empty">No protected identities registered</div>`;
+      list.innerHTML = `<div class="reference-empty">尚未注册受保护身份</div>`;
       return;
     }
     list.innerHTML = people.map((person) => {
       const binding = (this.identityState.bindings ?? []).find((candidate) => candidate.personId === person.personId && candidate.active);
       const status = binding
-        ? `Track ${binding.trackId} / d ${formatDistance(binding.distance)}`
+        ? `轨迹 ${binding.trackId} / d ${formatDistance(binding.distance)}`
         : person.status;
       return `
         <article class="reference-item" data-person-id="${person.personId}">
-          <img src="${person.imageDataUrl}" alt="${escapeHtml(person.name)} reference face">
+          <img src="${person.imageDataUrl}" alt="${escapeHtml(person.name)} 参考人脸">
           <div>
             <div class="reference-name">${escapeHtml(person.name)}</div>
-            <select data-reference-effect data-person-id="${person.personId}" aria-label="${escapeHtml(person.name)} privacy action">
+            <select data-reference-effect data-person-id="${person.personId}" aria-label="${escapeHtml(person.name)} 隐私动作">
               ${this.privacyActionDefinitions.map((effect) => (
                 `<option value="${effect.id}" ${effect.id === person.effectId ? "selected" : ""}>${effect.label}</option>`
               )).join("")}
             </select>
             <div class="reference-status">${privacyModeLabel(person.privacyMode)} / ${status}</div>
           </div>
-          <button type="button" class="icon-button" data-remove-person data-person-id="${person.personId}" aria-label="Remove ${escapeHtml(person.name)}">&times;</button>
+          <button type="button" class="icon-button" data-remove-person data-person-id="${person.personId}" aria-label="移除 ${escapeHtml(person.name)}">&times;</button>
         </article>
       `;
     }).join("");
@@ -446,20 +446,20 @@ function formatDistance(value) {
 
 function statusLabel(status) {
   if (!status) {
-    return "identity pending";
+    return "身份待定";
   }
   const labels = {
-    "no-reference": "no reference",
-    "no-descriptor": "no descriptor",
-    "below-threshold": "unmatched",
-    ambiguous: "ambiguous",
-    matched: "matched",
-    "global-matched": "identity matched",
-    tracking: "identity tracking",
-    recognizing: "recognizing",
-    "recognition-error": "recognition error",
-    "duplicate-rejected": "duplicate rejected",
-    "duplicate-removed": "duplicate removed"
+    "no-reference": "无参考",
+    "no-descriptor": "无特征",
+    "below-threshold": "未匹配",
+    ambiguous: "存在歧义",
+    matched: "已匹配",
+    "global-matched": "身份已匹配",
+    tracking: "身份追踪中",
+    recognizing: "识别中",
+    "recognition-error": "识别错误",
+    "duplicate-rejected": "重复已拒绝",
+    "duplicate-removed": "重复已移除"
   };
   return labels[status] ?? status;
 }
@@ -476,11 +476,11 @@ function isConfirmedIdentity(identity) {
 
 function privacyModeLabel(mode) {
   const labels = {
-    allow: "allow real face",
-    replace: "digital substitute",
-    blur: "privacy shield"
+    allow: "允许真实人脸",
+    replace: "数字替身",
+    blur: "隐私遮挡"
   };
-  return labels[mode] ?? "privacy action";
+  return labels[mode] ?? "隐私动作";
 }
 
 function escapeHtml(value) {
