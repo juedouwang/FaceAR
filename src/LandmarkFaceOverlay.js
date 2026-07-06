@@ -1,7 +1,7 @@
 export class LandmarkFaceOverlay {
   constructor({ canvas, maxFaces = 4 } = {}) {
     this.canvas = canvas;
-    this.context = canvas.getContext("2d", { alpha: true, desynchronized: true });
+    this.context = canvas.getContext("2d", { alpha: true });
     this.maxFaces = maxFaces;
     this.visible = true;
     this.width = canvas.width;

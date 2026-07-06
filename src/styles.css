@@ -42,6 +42,8 @@ input {
   border-radius: 8px;
   overflow: hidden;
   background: #05070b;
+  /* 隔离出独立层叠上下文，强制 stage 内所有图层在同一 GPU 合成树中混合 */
+  isolation: isolate;
 }
 
 #jeeFaceFilterCanvas {
@@ -193,6 +195,15 @@ select {
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+select {
+  background-color: #1b2430;
+}
+
+select option {
+  background-color: #1b2430;
   color: #f8fafc;
 }
 
@@ -401,6 +412,12 @@ select {
   object-fit: contain;
   background: #0f1117;
   z-index: 0;
+  /* 强制视频进入常规 GPU 合成层，避免落到硬件 overlay 平面。
+     否则 Chrome 会在半透明 canvas 叠加时留白（需鼠标移入才刷新），
+     Edge 会把 overlay 平面渲染成黑屏。 */
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 #verifyCanvas,
