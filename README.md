@@ -1,162 +1,137 @@
-﻿# PersonaShield
-## Online Demo
+# PersonaShield
 
-Open the hosted GitHub Pages demo directly:
+> 面向 AI 眼镜第一视角拍摄场景的本地 WebAR 隐私保护原型。
 
-- Main privacy prototype: <https://juedouwang.github.io/FaceAR/mediapipe-ar.html>
-- MediaPipe screening page: <https://juedouwang.github.io/FaceAR/mediapipe-verify.html>
+PersonaShield 由多人脸 AR 特效 Demo 改造而来，核心目标不再是娱乐滤镜，而是验证一套隐私保护流程：**被拍摄者预先注册身份并声明隐私偏好，合规拍摄端在实时画面中自动用数字替身或隐私遮挡替换其真实容貌。**
 
-> Camera access requires HTTPS, so the GitHub Pages URL can use the browser camera without running a local server.
+本项目定位为课程与作品集 Demo，**不是**生产级身份认证系统。它以静态网页形式在本地运行，无需后端服务、云端人脸 API、数据库，也不接入真实 AI 眼镜硬件。
 
-PersonaShield is a local WebAR prototype for privacy-preserving AI glasses capture scenarios. It turns the original
-multi-face AR effects demo into an identity-aware privacy workflow: a user registers a reference face, chooses a privacy
-action, and the browser replaces or shields the matched live face during camera/video playback.
+## 在线演示
 
-The project is designed as a course and resume demo, not as a production identity-authentication system. It runs locally
-as a static web app and does not require a backend server, cloud face API, database, public deployment, or real AI glasses
-hardware.
+- 主原型：<https://juedouwang.github.io/FaceAR/mediapipe-ar.html>
+- MediaPipe 检测筛查页：<https://juedouwang.github.io/FaceAR/mediapipe-verify.html>
 
-## Concept
+> 摄像头访问要求 HTTPS 安全上下文，因此 GitHub Pages 地址可直接调用浏览器摄像头，无需本地起服务。
 
-The target scenario is first-person capture by AI glasses. Current smart glasses make recording much easier than phone
-recording, but most privacy mechanisms still focus on capture indicators or device permissions. PersonaShield explores a
-stronger bystander-side idea:
+## 设计理念
+
+目标场景是 AI 眼镜的第一视角拍摄。智能眼镜让拍摄变得比手机更隐蔽，但目前多数隐私机制仍停留在拍摄提示灯或设备权限层面。PersonaShield 探索一种更强的、站在被拍摄者一侧的思路：
 
 ```text
-registered identity -> privacy preference -> real-time face recognition -> digital substitute rendering
+注册身份 → 隐私偏好 → 实时人脸识别 → 数字替身渲染
 ```
 
-If a registered person appears in the video and has chosen protection, the preview and exported protected frame show a
-digital substitute or privacy shield instead of the real face.
+当已注册且选择保护的人物出现在画面中时，预览和导出的受保护帧会显示数字替身或隐私遮挡，而不是其真实容貌。
 
-## MVP Features
+## 核心功能
 
-- Detect and track up to 4 faces using MediaPipe Face Landmarker.
-- Register protected identities from local reference face images.
-- Extract local FaceAPI 128-dimensional face descriptors from reference images and low-frequency live track crops.
-- Bind matched identities to stable short-term face tracks.
-- Choose one privacy action per identity:
-  - `Allow real appearance`
-  - `Male digital substitute`
-  - `Female digital substitute`
-  - `Agni-style pain face`
-  - `Privacy blur shield`
-- Render male/female Kenney CC0 GLB head-only digital substitutes with face-size fitting, with a procedural Three.js fallback if the model cannot load.
-- Load local private face assets from `assets/private/` for classroom-only meme-style face replacement without committing copyrighted images to Git.
-- Manually click a face and apply a privacy action as a fallback or demonstration tool.
-- Show per-track status, matched identity, distance, FPS, and active face count.
-- Capture a protected PNG frame by compositing the video and privacy overlay canvases.
-- Verify positive identity binding and negative stranger rejection with Playwright scripts.
+- 基于 **MediaPipe Face Landmarker** 检测并追踪最多 4 张人脸。
+- 从本地参考图注册受保护身份。
+- 使用本地 **FaceAPI** 模型，从参考图和低频采样的实时人脸裁剪中提取 128 维人脸描述符。
+- 通过「MediaPipe 高频追踪 + FaceAPI 低频识别」将身份绑定到稳定的短期人脸轨迹，避免每帧都跑一次识别。
+- 每个身份可选择一种隐私动作：
 
-Legacy Jeeliz/WebAR effect assets remain in the repository as fallback and comparison material, but the main UI now
-focuses on privacy actions instead of entertainment filters.
+  | 动作 | 说明 |
+  | --- | --- |
+  | 保留真实容貌 | 不做处理 |
+  | 男性数字替身 | Kenney CC0 头部模型替换 |
+  | 女性数字替身 | Kenney CC0 头部模型替换 |
+  | Agni 痛苦表情脸 | 本地私有素材遮盖 |
+  | 隐私模糊护盾 | 模糊遮挡 |
 
-## Avatar Rendering
+- 男/女数字替身使用 Kenney CC0 开源素材提取出的 GLB 头部模型做实时覆盖渲染；模型加载失败时回退到程序化生成的 Three.js 3D 头部。
+- 支持手动点选人脸并临时指定隐私动作，作为演示与兜底手段。
+- 显示每条轨迹的状态、匹配身份、距离、FPS 和活跃人脸数。
+- 通过合成视频层与隐私叠加层，导出受保护的 PNG 画面帧。
+- 提供正例身份绑定、陌生人负例拒绝、手动绑定和性能 profile 的自动化验证脚本。
 
-The current real-time substitutes use CC0 assets from Kenney's `Animated Characters Protagonists` pack. The original FBX
-was converted to GLB and reduced to a head-only mesh so it can load through the existing Three.js r112
-`GLTFLoader`. The renderer keeps the existing `avatarMale` and `avatarFemale` action IDs, but internally uses a
-`kenney-glb-head-only` path:
+## 架构
 
-- load the extracted Kenney head-only GLB and apply the male/female skin texture;
-- fit the digital substitute from MediaPipe forehead, chin, and cheek landmarks;
-- scale it as an oversized cartoon head so the real forehead and hairline are covered, not just the inner face;
-- fall back to the procedural Three.js full-cover head if the GLB loader or asset fails.
+```text
+参考图
+  → FaceAPI 本地描述符
+  → ReferenceFaceManager
+  → personId + 隐私动作 + descriptor
 
-This is suitable for the local course demo, but it is not yet full facial expression retargeting, body pose tracking,
-video foreground segmentation, or a full VRM digital human runtime.
+摄像头 / 本地视频
+  → MediaPipe Face Landmarker
+  → FaceTrackManager 短期追踪
+  → IdentityTrackBinder 低频识别
+  → EffectManager 隐私动作绑定
+  → Kenney GLB 头部 / 程序化回退 / 隐私遮挡渲染
+```
 
-## Local Private Face Assets
+MediaPipe 负责多人脸检测、关键点与追踪锚点；FaceAPI 负责本地人脸识别描述符。身份绑定器把低频识别与高频追踪结合起来，因此浏览器无需每帧重跑人脸识别。
 
-`Agni-style pain face` is implemented as a local private face-asset loader. The runtime looks for:
+## 数字替身说明
+
+实时替身采用 Kenney `Animated Characters Protagonists` 素材包中的 CC0 资源。原始 FBX 已转换为 GLB 并精简为纯头部网格，以便通过现有的 Three.js r112 `GLTFLoader` 加载。渲染器保留了 `avatarMale` / `avatarFemale` 动作 ID，内部走 `kenney-glb-head-only` 路径：
+
+- 加载精简后的 Kenney 头部 GLB，并贴上男 / 女皮肤纹理；
+- 依据 MediaPipe 的额头、下巴、脸颊关键点做尺寸拟合；
+- 放大为夸张的卡通头，以覆盖真实的额头与发际线，而不仅是内脸；
+- 若 GLB 加载或素材失败，回退到程序化的全覆盖 Three.js 头部。
+
+这适用于本地课程 Demo，但尚未实现完整的表情重定向、身体姿态追踪、视频前景分割或完整的 VRM 数字人运行时。
+
+## 本地私有人脸素材
+
+`Agni 痛苦表情脸` 实现为本地私有素材加载器，运行时读取：
 
 ```text
 assets/private/agni-pain-face.png
 ```
 
-That directory is intentionally ignored by Git. This lets the local classroom demo use a meme/reference image while the
-public GitHub repository only contains the loading code and documentation, not the copyrighted image itself.
+该目录已被 `.gitignore` 忽略。这样本地课堂 Demo 可以使用梗图 / 参考图，而公开的 GitHub 仓库只包含加载代码和文档，不包含受版权保护的图片本身。
 
-We also researched and tested open-source avatar ecosystems, including `pixiv/three-vrm`,
-`ToxSam/open-source-avatars`, `madjin/vrm-samples`, and Kenney CC0 character packs. The current implementation uses the
-Kenney protagonist bust as the primary runtime substitute because it is lightweight, redistributable, and compatible with
-the existing Three.js r112 pipeline. Full VRM runtime integration remains a future upgrade.
+我们也调研并测试了开源虚拟形象生态（`pixiv/three-vrm`、`ToxSam/open-source-avatars`、`madjin/vrm-samples` 及 Kenney CC0 角色包）。当前实现选用 Kenney 半身像作为主要运行时替身，因为它轻量、可再分发，且兼容现有 Three.js r112 管线。完整的 VRM 运行时集成留作后续升级。
 
-## Architecture
-
-```text
-reference image
-  -> FaceAPI local descriptor
-  -> ReferenceFaceManager
-  -> personId + privacyAction + descriptor
-
-camera/local video
-  -> MediaPipe Face Landmarker
-  -> FaceTrackManager short-term tracking
-  -> IdentityTrackBinder low-frequency recognition
-  -> EffectManager privacy action binding
-  -> Kenney GLB head-only / procedural fallback / privacy shield rendering
-```
-
-MediaPipe handles multi-face detection, landmarks, and tracking anchors. FaceAPI handles local face-recognition
-descriptors. The identity binder combines low-frequency recognition with high-frequency tracking so the browser does not
-rerun face recognition every frame.
-
-## Run Locally
+## 本地运行
 
 ```powershell
-cd "D:\鐮旂┒鐢熸枃浠禱20_Areas\鐮旂┒鐢熻绋媆澧炲己鐜板疄涓庨珮绾у浘褰㈠\PartyFaceAR"
+cd PartyFaceAR
 python -m http.server 8000
 ```
 
-Open:
+打开：
 
-- Main privacy prototype: <http://127.0.0.1:8000/mediapipe-ar.html>
-- Paused verification frame: <http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25>
-- MediaPipe screening page: <http://127.0.0.1:8000/mediapipe-verify.html>
+- 主原型：<http://127.0.0.1:8000/mediapipe-ar.html>
+- 暂停验证帧：<http://127.0.0.1:8000/mediapipe-ar.html?video=partyHats4&profile=privacy&pauseAt=0.25>
+- MediaPipe 检测筛查页：<http://127.0.0.1:8000/mediapipe-verify.html>
 
-Camera access requires `localhost`, `127.0.0.1`, or HTTPS in most browsers.
+> 大多数浏览器要求摄像头运行在 `localhost`、`127.0.0.1` 或 HTTPS 下。
 
-## Test
+## 测试
 
 ```powershell
-npm test
-npm run screen:mediapipe
-npm run verify:mediapipe-ar
-npm run verify:manual-binding
-npm run verify:identity-binding
-npm run verify:identity-negative
-npm run profile:mediapipe-ar
-npm run verify:all
+npm test                        # 单元测试
+npm run screen:mediapipe        # MediaPipe 视频筛查
+npm run verify:mediapipe-ar     # AR 运行时验证
+npm run verify:manual-binding   # 手动绑定验证
+npm run verify:identity-binding # 身份绑定正例
+npm run verify:identity-negative# 陌生人负例拒绝
+npm run profile:mediapipe-ar    # 性能 profile
+npm run verify:all              # 全部串行执行
 ```
 
-The verification scripts generate screenshots under `docs/`, including identity binding, negative stranger rejection,
-manual privacy action binding, and MediaPipe runtime checks.
+验证脚本会在 `docs/` 下生成截图，包括身份绑定、陌生人负例拒绝、手动隐私动作绑定和 MediaPipe 运行时检查。
 
-## 涓枃璇存槑
+## 目录结构
 
-PersonaShield 鏄竴涓潰鍚?AI 鐪奸暅绗竴瑙嗚鎷嶆憚鍦烘櫙鐨勬湰鍦?WebAR 闅愮闃叉姢鍘熷瀷銆傞」鐩粠鍘熸潵鐨勫浜鸿劯 AR 鐗规晥 Demo
-鏀归€犺€屾潵锛屾牳蹇冪洰鏍囦笉鍐嶆槸濞变箰婊ら暅锛岃€屾槸楠岃瘉涓€绉嶁€滆鎷嶆憚鑰呭彲鎻愬墠澹版槑闅愮鍋忓ソ锛屽悎瑙勬媿鎽勭鍦ㄧ敾闈腑鑷姩鎵ц淇濇姢绛栫暐鈥濈殑鎶€鏈祦绋嬨€?
+```text
+PartyFaceAR/
+├── index.html              # 入口，重定向到 mediapipe-ar.html
+├── mediapipe-ar.html       # 主原型页面
+├── mediapipe-verify.html   # MediaPipe 检测筛查页
+├── src/                    # 前端源码（ES module）
+├── assets/                 # 数字替身与素材（private/ 不入库）
+├── samples/                # 演示用视频样本
+├── vendor/                 # 第三方运行时（Three.js、FaceAPI 等）
+├── tools/                  # Playwright 验证与筛查脚本
+├── tests/                  # 单元测试
+└── docs/                   # 验证截图与设计文档
+```
 
-褰撳墠 MVP 閲囩敤鏈湴娉ㄥ唽琛ㄦ柟妗堬紝涓嶈€冭檻 DID 鎴栧幓涓績鍖栬韩浠姐€傜敤鎴峰彲浠ヤ笂浼犲弬鑰冧汉鑴稿浘鍍忥紝娉ㄥ唽鍙椾繚鎶よ韩浠斤紝骞朵负璇ヨ韩浠介€夋嫨闅愮鍔ㄤ綔銆?
-褰撴憚鍍忓ご鎴栨湰鍦拌棰戜腑鍑虹幇璇ヨ韩浠芥椂锛岀郴缁熶細鎶婂搴?track 缁戝畾鍒拌韬唤锛屽苟娓叉煋璇ヨ韩浠介€夋嫨鐨勬暟瀛楁浛韬垨闅愮閬尅銆?
+## 许可
 
-鏍稿績鍔熻兘锛?
-
-- 浣跨敤 MediaPipe Face Landmarker 妫€娴嬪苟杩借釜鏈€澶?4 寮犱汉鑴搞€?
-- 浣跨敤鏈湴 FaceAPI 妯″瀷浠庡弬鑰冨浘鍜屽疄鏃?track crop 涓彁鍙?128 缁翠汉鑴?descriptor銆?
-- 閫氳繃鈥淢ediaPipe 瀹炴椂妫€娴嬭拷韪?+ FaceAPI 浣庨韬唤璇嗗埆鈥濆疄鐜拌韩浠界粦瀹氾紝閬垮厤姣忓抚鍋氫汉鑴歌瘑鍒€?
-- 鏀寔 `Allow real appearance`銆乣Male digital substitute`銆乣Female digital substitute`銆乣Agni-style pain face`銆乣Privacy blur shield` 浜旂被闅愮鍔ㄤ綔銆?- 鐢锋€?濂虫€ф暟瀛楁浛韬娇鐢?Kenney CC0 寮€婧愯鑹茶祫婧愭彁鍙栧嚭鐨?GLB 澶撮儴妯″瀷杩涜瀹炴椂瑕嗙洊娓叉煋锛涘鏋滄ā鍨嬪姞杞藉け璐ワ紝浼氶€€鍥炲埌绋嬪簭鍖?Three.js 3D 鏁板瓧澶淬€?- 褰撳墠瑕嗙洊鏂瑰紡鏄牴鎹凡璇嗗埆浜鸿劯閿氱偣鎺ㄦ柇韬綋鍖哄煙锛屽苟涓嶇瓑鍚屼簬鐪熷疄浜轰綋濮挎€佽拷韪垨瑙嗛鍒嗗壊銆?
-- 鏂板 `Agni-style pain face` 鏈湴绉佹湁绱犳潗鍔ㄤ綔锛氳繍琛屾椂浠?`assets/private/agni-pain-face.png` 鍔犺浇绱犳潗瑕嗙洊浜鸿劯锛岀礌鏉愮洰褰曞凡鍔犲叆 `.gitignore`锛屼笉浼氫笂浼犲埌鍏紑 GitHub銆?
-- 鏀寔鎵嬪姩鐐瑰嚮鏌愬紶鑴革紝涓烘寚瀹?track 涓存椂閫夋嫨闅愮鍔ㄤ綔銆?
-- 鏀寔瀵煎嚭鍙椾繚鎶?PNG 甯э紝鐢ㄤ簬鎶ュ憡涓殑鍙鍖栧睍绀恒€?
-- 鎻愪緵姝ｄ緥韬唤缁戝畾銆侀檶鐢熶汉璐熶緥鎷掔粷銆佹墜鍔ㄧ粦瀹氬拰鎬ц兘 profile 鐨勮嚜鍔ㄥ寲楠岃瘉鑴氭湰銆?
-
-褰撳墠鐗堟湰鏄绋?绠€鍘嗛」鐩骇鍘熷瀷锛屼笉鏄敓浜х骇韬唤璁よ瘉绯荤粺锛屼篃涓嶆帴鍏ョ湡瀹?AI 鐪奸暅 SDK銆傚畠涓嶈兘闃绘鏈帴鍏ュ崗璁殑璁惧鎷嶆憚鐪熷疄浜鸿劯锛?
-鍙兘璇佹槑涓€绉嶉潰鍚戝悎瑙勬媿鎽勭鐨勫弬鑰冨疄鐜帮細娉ㄥ唽韬唤銆佽瘑鍒韩浠姐€佽鍙栭殣绉佸亸濂斤紝骞跺湪鏈湴瀹炴椂瑙嗛绠＄嚎涓墽琛屾暟瀛楁浛韬浛鎹€?
-
-## License
-
-The copied Jeeliz runtime files under `vendor/jeeliz` retain the original Apache-2.0 license. This project layer is also
-intended for Apache-2.0 compatible use.
-
+`vendor/jeeliz` 下复制的 Jeeliz 运行时文件保留其原始 Apache-2.0 许可。本项目层同样以 Apache-2.0 兼容方式发布。
