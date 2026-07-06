@@ -25,7 +25,15 @@ const SETTINGS = {
     partyHats4: "./samples/party-hats-crop-wide_faces.webm",
     partyHats3: "./samples/birthday-party-hats-mixkit-4608.mp4",
     party: "./samples/friends-selfie-pool-mixkit-43089.mp4"
-  }
+  },
+  builtInReferences: [
+    {
+      name: "人物 A",
+      effectId: "avatarMale",
+      src: "./assets/reference/person-a.png",
+      fileName: "person-a.png"
+    }
+  ]
 };
 
 const appState = {
@@ -176,6 +184,7 @@ window.addEventListener("load", async () => {
     const pauseAt = pauseAtParam === null ? null : Number(pauseAtParam);
     const videoUrl = SETTINGS.videoPresets[preset] ?? preset ?? SETTINGS.defaultVideo;
     await startWithVideoUrl(videoUrl, Number.isFinite(pauseAt) ? pauseAt : null);
+    registerBuiltInReferences();
   } catch (error) {
     ui.setStatus(`MediaPipe AR 启动失败：${error.message}`);
     throw error;
@@ -242,6 +251,42 @@ async function handleReferenceFaceRegister({ name, effectId, file }) {
     ui.setStatus(`已注册 ${person.name}：${person.actionLabel ?? person.effectLabel}`);
   } catch (error) {
     ui.setStatus(`参考人脸注册失败：${error.message}`);
+  }
+}
+
+async function registerBuiltInReferences() {
+  const presets = SETTINGS.builtInReferences ?? [];
+  if (!presets.length) {
+    return;
+  }
+  let registered = 0;
+  for (const preset of presets) {
+    try {
+      const response = await fetch(preset.src);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const blob = await response.blob();
+      const file = new File([blob], preset.fileName ?? "reference.png", {
+        type: blob.type || "image/png"
+      });
+      const { descriptor, imageDataUrl } = await recognizer.createReferenceDescriptorFromFile(file);
+      referenceFaceManager.addPerson({
+        name: preset.name,
+        effectId: preset.effectId,
+        descriptor,
+        imageDataUrl,
+        status: "registered"
+      });
+      registered += 1;
+    } catch (error) {
+      console.warn(`内置参考身份注册失败 (${preset.name}):`, error);
+    }
+  }
+  if (registered > 0) {
+    identityTrackBinder.reset();
+    effectManager.clearIdentityBindings();
+    ui.renderIdentityState(identityTrackBinder.getDebugState(appState.latestPredictedTracks));
   }
 }
 
